@@ -1,0 +1,18 @@
+@font-face {
+    font-family: 'Sugarcubes';
+    src: url('SugarcubesRegular.woff2') format('woff2'),
+        url('SugarcubesRegular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sugarcubes';
+    src: url('SugarcubesBold.woff2') format('woff2'),
+        url('SugarcubesBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
