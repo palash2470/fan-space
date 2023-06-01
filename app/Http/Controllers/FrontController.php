@@ -587,4 +587,28 @@ class FrontController extends Controller
         Auth::logout();
         return redirect('/');
     }
+
+    public function userLiveVideo(Request $request,$username) {
+        $user_data = $this->user_data;
+        $helper_settings = Helpers::get_settings();
+        $vip_member = User::vip_member_details(['search' => $username, 'search_by' => 'username']);
+        $vip_member = $vip_member['data'];
+        if(!isset($vip_member['user']->id)) abort(404);
+        $cupsizes = Cupsize::orderBy('title')->get();
+        $sexual_orientations = Sexual_orientation::orderBy('title')->get();
+        $zodiacs = Zodiac::orderBy('title')->get();
+        $model_attributes = Model_attribute::orderBy('title')->get();
+        
+        $subscriber = Subscriber::where('user_id', $vip_member['user']->id)->where('subscriber_id', ($user_data['id']??0))->first();
+        $meta_data['vip_member'] = $vip_member;
+        $meta_data['cupsizes'] = $cupsizes;
+        $meta_data['sexual_orientations'] = $sexual_orientations;
+        $meta_data['zodiacs'] = $zodiacs;
+        $meta_data['model_attributes'] = $model_attributes;
+        $meta_data['subscriber'] = $subscriber;
+        $meta_data['global_settings'] = $this->meta_data['settings'];
+        $meta_data['helper_settings'] = $helper_settings;
+        //dd($meta_data);
+        return view('front.user_live_video', ['user_data' => $user_data, 'meta_data' => $meta_data, 'page_title' => $vip_member['user']->display_name]);
+    }
 }

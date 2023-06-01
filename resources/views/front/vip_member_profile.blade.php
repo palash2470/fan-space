@@ -323,9 +323,10 @@ if($banner != '') $banner = url('public/uploads/profile_banner/' . $banner);
                         <li class="{{ $section == 'photos' ? 'active' : '' }}"><a href="{{ url('u/' . $user->username . '/photos?scrollto=Cprofile-sec') }}" class="link">Photo</a></li>
                         <li class="{{ $section == 'videos' ? 'active' : '' }}"><a href="{{ url('u/' . $user->username . '/videos?scrollto=Cprofile-sec') }}" class="link">Video</a></li>
                         <li class="{{ $section == 'store' ? 'active' : '' }}"><a href="{{ url('u/' . $user->username . '/store?scrollto=Cprofile-sec') }}" class="link">My Store</a></li>
-                        <?php if(isset($live_session->id)) { ?>
-                            <li><a class="live-btn" href="{{ url('u/' . $user->username . '/live?scrollto=Clive-sec') }}">live<span></span></a></li>
-                        <?php } ?>
+                        <?php //if(isset($live_session->id)) { ?>
+                            {{-- <li><a class="live-btn" href="{{ url('u/' . $user->username . '/live?scrollto=Clive-sec') }}">live<span></span></a></li> --}}
+                            <li><a class="live-btn" href="{{route('user_live_video',$user->username)}}" target="_blank">live<span></span></a></li>
+                        <?php //} ?>
                     </ul>
                 </div>
                 <div class="post-wrap">

@@ -57,6 +57,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'dashboard', 'middleware' => 'user'], function () {
         //Route::get('home', 'UserController@home');
         Route::match(['get', 'post'], '{slug}', 'UserController@index');
+        
+    });
+    Route::group(['middleware' => 'user'], function () {
+        Route::get('/live-video-chat/{username}', 'FrontController@userLiveVideo')->name('user_live_video');
+        
     });
 
     Route::group(['prefix' => 'admin'], function () {
