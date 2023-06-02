@@ -8188,6 +8188,7 @@ h5.alert-content {
     border-radius: 0;
     padding: 0;
     background-color: #f1f1f1;
+    border-bottom: none;
 }
 .live-sec-new .chatbox .chatlist {
     height: 100%;

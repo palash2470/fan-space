@@ -227,7 +227,7 @@
         $('.video_area_jq').css({"height": wrapHeight});
         // Right        
         $('.chatbox_wrap').css({"padding-bottom": controlHeight});
-        $('.chat_box_wrap').css({"height": wrapHeight - 6});
+        $('.chat_box_wrap').css({"height": wrapHeight - 2});
       });
     </script>
 
