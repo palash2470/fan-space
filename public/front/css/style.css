@@ -8181,4 +8181,37 @@ h5.alert-content {
     width: 100%;
     bottom: 0;
 }
+.live-sec-new .opentok_player_area {
+    height: 100% !important;
+}
+.live-sec-new .chatbox {
+    border-radius: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+    border-bottom: none;
+}
+.live-sec-new .chatbox .chatlist {
+    height: 100%;
+    overflow-y: auto;
+}
+.live-sec-new .chatbox .chat-box-wrap {
+    padding: 5px;
+}
+.live-sec-new .chatbox .chatfields {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    border-top: 1px solid #ccc;
+}
+.live-sec-new .emojionearea {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+}
+.live-sec-new .chatbox .emojionearea .emojionearea-editor {
+    min-height: 65px;
+    max-height: 65px;
+    padding-top: 18px;
+}
 /* New Design user Live Chat End */
