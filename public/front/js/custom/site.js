@@ -3142,10 +3142,10 @@ function reset_opentok_player_area() {
         $(this).height(ht);
     });
     allht -= 8;
-    $('.chatbox').height(allht);
+    // $('.chatbox').height(allht);
     //var cfht = $('.chatbox .chatfields').height();
     var cfht = 82;
-    $('.chatbox .chatlist').height((allht - cfht));
+    // $('.chatbox .chatlist').height((allht - cfht));
 }
 
 function opentok_live_stream() {

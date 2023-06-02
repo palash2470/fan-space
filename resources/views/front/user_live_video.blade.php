@@ -113,12 +113,12 @@
       </div>
       <div class="row h-100vh">
         <div class="new-video-chat-lft">
-          <div class="video-chat-lft-video">
-            <div class="video-wrap-lft">
-              <div class="video_area relative">
+          <div class="video-chat-lft-video video_chat_lft">
+            <div class="video-wrap-lft video_wrap_lft">
+              <div class="video_area relative video_area_jq">
                 <div id="opentok_subscriber" class="opentok_player_area" style="display: none;"></div>
                 <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a>
-                <div class="opentok_placeholder_img" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
+                <div class="opentok_placeholder_img opentok_placeholder_jq" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
                   <div class="offCont">
                     <h3>I am currently offline</h3>
                   </div>
@@ -135,7 +135,7 @@
                   </ul>
               </div>
             </div>
-            <div class="video-chat-lft-control">
+            <div class="video-chat-lft-control control_left">
               <div class="row align-items-center justify-content-between">
                 <div class="col-auto">
                   <div class="watch-cost"><i class="fas fa-coins"></i>9.36</div>
@@ -156,29 +156,31 @@
         </div>
         <div class="new-video-chat-rgt">
           <!-- <h3>Messages</h3> -->
-          <div class="chatbox offline blk-user-wrap" vip_member_id="{{ $user->id }}" ts="{{ time() }}">
-            <div class="chatoffline">Chatting unavailable. Model is not live</div>
-            <div class="chatlist"></div>
-            <div class="chatfields">
+          <div class="chatbox chatbox_wrap offline blk-user-wrap" vip_member_id="{{ $user->id }}" ts="{{ time() }}">
+            <div class="chat-box-wrap chat_box_wrap">
+              <div class="chatoffline">Chatting unavailable. Model is not live</div>
+              <div class="chatlist"></div>
+              <div class="chatfields">
 
-              <a href="javascript:;" class="chat_tips"><i class="fas fa-coins"></i></a>
-              <!-- <input type="text" class="form-control" placeholder="Say Something ...." name="chat_input"> -->
-              <div class="emoji_pad" save_action="live_session_chat_send_message" save_params='{!! json_encode(['vip_member_id' => $user->id]) !!}'>
-                <textarea placeholder="Say Something ...."></textarea>
-                <div class="emoji_container" id="emoji_container_live"></div>
-                <a href="javascript:;" class="emoji_submit"><i class="far fa-paper-plane"></i></a>
-              </div>
-              <div class="chat_tips_popup">
-                <div class="chat_tips_popup_content">
-                  <div class="row no-gutters">
-                    <div class="col-md-9 col-12">
-                      <input type="text" class="form-control" name="chat_tips_amount" value="" placeholder="Enter coin amount" />
+                <!--<a href="javascript:;" class="chat_tips"><i class="fas fa-coins"></i></a>-->
+                <!-- <input type="text" class="form-control" placeholder="Say Something ...." name="chat_input"> -->
+                <div class="emoji_pad" save_action="live_session_chat_send_message" save_params='{!! json_encode(['vip_member_id' => $user->id]) !!}'>
+                  <textarea placeholder="Say Something ...."></textarea>
+                  <div class="emoji_container" id="emoji_container_live"></div>
+                  <a href="javascript:;" class="emoji_submit"><i class="far fa-paper-plane"></i></a>
+                </div>
+                <div class="chat_tips_popup">
+                  <div class="chat_tips_popup_content">
+                    <div class="row no-gutters">
+                      <div class="col-md-9 col-12">
+                        <input type="text" class="form-control" name="chat_tips_amount" value="" placeholder="Enter coin amount" />
+                      </div>
+                      <div class="col-md-3 col-12">
+                        <a href="javascript:;" class="chat_tips_submit"><i class="far fa-paper-plane"></i></a>
+                      </div>
                     </div>
-                    <div class="col-md-3 col-12">
-                      <a href="javascript:;" class="chat_tips_submit"><i class="far fa-paper-plane"></i></a>
-                    </div>
+                    <div class="ajax_response"></div>
                   </div>
-                  <div class="ajax_response"></div>
                 </div>
               </div>
             </div>
@@ -217,14 +219,15 @@
         var bodyHeight = $(document).height();
         $('body').css({"min-height": bodyHeight });
         var headerHeight = $('.header_height').outerHeight(true);
-        var controlHeight = $('.video-chat-lft-control').outerHeight(true);
-        $('.video-chat-lft-video').css({"padding-bottom": controlHeight});
+        var controlHeight = $('.control_left').outerHeight(true);
+        $('.video_chat_lft').css({"padding-bottom": controlHeight});
         var wrapHeight = bodyHeight - (headerHeight + controlHeight);
-        $('.video-wrap-lft').css({"height": wrapHeight});
-        $('.opentok_placeholder_img').css({"height": wrapHeight});
-        $('.video_area').css({"height": wrapHeight});
-        // Right
-        $('.chatbox').css({"height": wrapHeight});
+        $('.video_wrap_lft').css({"height": wrapHeight});
+        $('.opentok_placeholder_jq').css({"height": wrapHeight});
+        $('.video_area_jq').css({"height": wrapHeight});
+        // Right        
+        $('.chatbox_wrap').css({"padding-bottom": controlHeight});
+        $('.chat_box_wrap').css({"height": wrapHeight - 6});
       });
     </script>
 
