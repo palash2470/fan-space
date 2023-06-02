@@ -8094,6 +8094,7 @@ h5.alert-content {
 }
 .chat-control-btn{
     border: 2px solid #000;
+    color: #000;
     height: 40px;
     line-height: 38px;
     padding: 0 1rem;
