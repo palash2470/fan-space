@@ -8181,4 +8181,22 @@ h5.alert-content {
     width: 100%;
     bottom: 0;
 }
+.opentok_player_area {
+    height: 100% !important;
+}
+.live-sec-new .chatbox {
+    border-radius: 0;
+}
+.live-sec-new .chatbox .chatfields {
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+.live-sec-new .emojionearea {
+    border-radius: 0;
+}
+.live-sec-new .chatbox .emojionearea .emojionearea-editor {
+    min-height: 70px;
+    max-height: 70px;
+}
 /* New Design user Live Chat End */

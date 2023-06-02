@@ -124,11 +124,11 @@
                   </div>
                 </div>
               </div>
-              <div class="private-chat" style="display: none;">
+              <!--<div class="private-chat" style="display: none;">
                   <ul class="d-flex justify-content-center">
                       <li><a href="javascript:;" class="prv-chat-btn" data-toggle="tooltip" data-placement="top" title="{{ $usermeta['private_chat_charge'] }} coin per minute">private chat</a></li>
                   </ul>
-              </div>
+              </div>-->
               <div class="private-chat-msg" style="display: none;">
                   <ul class="d-flex justify-content-center">
                       <li>You have requested for private chat. wait for model response</li>
@@ -215,12 +215,16 @@
     <script>
       $(document).ready(function(){
         var bodyHeight = $(document).height();
+        $('body').css({"min-height": bodyHeight });
         var headerHeight = $('.header_height').outerHeight(true);
         var controlHeight = $('.video-chat-lft-control').outerHeight(true);
         $('.video-chat-lft-video').css({"padding-bottom": controlHeight});
-        var wrapHeight = bodyHeight - headerHeight - controlHeight;
+        var wrapHeight = bodyHeight - (headerHeight + controlHeight);
         $('.video-wrap-lft').css({"height": wrapHeight});
         $('.opentok_placeholder_img').css({"height": wrapHeight});
+        $('.video_area').css({"height": wrapHeight});
+        // Right
+        $('.chatbox').css({"height": wrapHeight});
       });
     </script>
 
