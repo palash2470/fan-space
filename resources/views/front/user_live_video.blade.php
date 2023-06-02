@@ -97,31 +97,64 @@
     if(isset($usermeta['profile_photo']) && $usermeta['profile_photo'] != '')
       $profile_photo = url('public/uploads/profile_photo/' . $usermeta['profile_photo']);
     ?>
-    <section class="live-sec m-t-40 follower-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-12">
-          <div class="video_area relative">
-            <div id="opentok_subscriber" class="opentok_player_area" style="display: none;"></div>
-            <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a>
-            <div class="opentok_placeholder_img" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
-              <div class="offCont">
-                <h3>I am currently offline</h3>
+    <section class="live-sec follower-section live-sec-new">
+    <div class="container-fluid">
+      <div class="row header_height">
+        <div class="col-12">
+          <div class="chat-top-control">
+            <ul class="d-flex justify-content-end">
+              <li class="chat-tip"><button type="button" class="chat-control-btn">tip</button></li>
+              <li class="chat-group"><button type="button" class="chat-control-btn">group 1.69 P/M</button></li>
+              <li class="chat-private"><button type="button" class="chat-control-btn">private 2.69 P/M</button></li>
+              <li class="chat-exit"><button type="button" class="chat-control-btn">exit session</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row h-100vh">
+        <div class="new-video-chat-lft">
+          <div class="video-chat-lft-video">
+            <div class="video-wrap-lft">
+              <div class="video_area relative">
+                <div id="opentok_subscriber" class="opentok_player_area" style="display: none;"></div>
+                <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a>
+                <div class="opentok_placeholder_img" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
+                  <div class="offCont">
+                    <h3>I am currently offline</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="private-chat" style="display: none;">
+                  <ul class="d-flex justify-content-center">
+                      <li><a href="javascript:;" class="prv-chat-btn" data-toggle="tooltip" data-placement="top" title="{{ $usermeta['private_chat_charge'] }} coin per minute">private chat</a></li>
+                  </ul>
+              </div>
+              <div class="private-chat-msg" style="display: none;">
+                  <ul class="d-flex justify-content-center">
+                      <li>You have requested for private chat. wait for model response</li>
+                  </ul>
+              </div>
+            </div>
+            <div class="video-chat-lft-control">
+              <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                  <div class="watch-cost"><i class="fas fa-coins"></i>9.36</div>
+                </div>
+                <div class="col-auto">
+                  <div class="chat-top-control">
+                    <ul class="d-flex justify-content-end">
+                      <li><button type="button" class="chat-control-btn"><i class="fas fa-coins"></i>buy credits</button></li>
+                      <li><button type="button" class="chat-control-btn"><i class="fas fa-user-alt"></i>view profile</button></li>
+                      <li><button type="button" class="chat-control-btn"><i class="fas fa-percent"></i>super offer</button></li>
+                      <li><button type="button" class="chat-control-btn"><i class="fas fa-cog"></i></button></li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-            <div class="private-chat" style="display: none;">
-                <ul class="d-flex justify-content-center">
-                    <li><a href="javascript:;" class="prv-chat-btn" data-toggle="tooltip" data-placement="top" title="{{ $usermeta['private_chat_charge'] }} coin per minute">private chat</a></li>
-                </ul>
-            </div>
-            <div class="private-chat-msg" style="display: none;">
-                <ul class="d-flex justify-content-center">
-                    <li>You have requested for private chat. wait for model response</li>
-                </ul>
-            </div>
         </div>
-        <div class="col-md-4 col-12">
+        <div class="new-video-chat-rgt">
           <!-- <h3>Messages</h3> -->
           <div class="chatbox offline blk-user-wrap" vip_member_id="{{ $user->id }}" ts="{{ time() }}">
             <div class="chatoffline">Chatting unavailable. Model is not live</div>
@@ -178,6 +211,18 @@
     <!--<script src="{{ url('public/front/js/mCustomScrollbar.js') }}"></script>-->
     <script src="{{ url('public/front/js/jquery.mCustomScrollbar.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+    <script>
+      $(document).ready(function(){
+        var bodyHeight = $(document).height();
+        var headerHeight = $('.header_height').outerHeight(true);
+        var controlHeight = $('.video-chat-lft-control').outerHeight(true);
+        $('.video-chat-lft-video').css({"padding-bottom": controlHeight});
+        var wrapHeight = bodyHeight - headerHeight - controlHeight;
+        $('.video-wrap-lft').css({"height": wrapHeight});
+        $('.opentok_placeholder_img').css({"height": wrapHeight});
+      });
+    </script>
 
 
   <script type="text/javascript">
