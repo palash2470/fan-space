@@ -373,6 +373,10 @@ foreach ($meta_data['own_cats'] as $key => $value) {
       <textarea rows="" cols="" class="textArea" name="thank_you_msg">{{ $user_data['meta_data']['thank_you_msg']??'' }}</textarea>
     </div>
     <div class="form-group from-input-wrap">
+      <label for="">Live cam price per minute in group chat</label>
+      <input type="text" name="group_chat_charge" id="group_chat_charge" class="input-3" placeholder="Live cam price per minute in group chat" value="{{ $user_data['meta_data']['group_chat_charge']??'' }}" />
+    </div>
+    <div class="form-group from-input-wrap">
       <label for="">Private Chat Charge Per Minute</label>
       <input type="text" name="private_chat_charge" id="private_chat_charge" class="input-3" placeholder="Private Chat Charge Per Minute" value="{{ $user_data['meta_data']['private_chat_charge']??'' }}" />
     </div>
@@ -382,6 +386,7 @@ foreach ($meta_data['own_cats'] as $key => $value) {
         <label for="agreeCb5">Enable Free Followers</label>
       </div>
     </div>
+    
     <div class="form-group from-input-wrap">
       <label for="">Tags</label>
       <input type="text" name="profile_keywords" id="" class="input-3" placeholder="Tags" value="{{ $user_data['meta_data']['profile_keywords'] }}" />

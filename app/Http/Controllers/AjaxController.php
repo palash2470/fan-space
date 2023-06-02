@@ -1115,6 +1115,7 @@ class AjaxController extends Controller
       $about_bio = trim($request->about_bio);
       $thank_you_msg = trim($request->thank_you_msg);
       $private_chat_charge = trim($request->private_chat_charge);
+      $group_chat_charge = trim($request->group_chat_charge);
       $free_follower = trim($request->free_follower);
       $profile_keywords = trim($request->profile_keywords);
       $profile_photo_removed = trim($request->profile_photo_removed);
@@ -1215,6 +1216,7 @@ class AjaxController extends Controller
         User_meta::updateOrCreate(['user_id' => $user_id, 'key' => 'about_bio'], ['value' => $about_bio]);
         User_meta::updateOrCreate(['user_id' => $user_id, 'key' => 'thank_you_msg'], ['value' => $thank_you_msg]);
         User_meta::updateOrCreate(['user_id' => $user_id, 'key' => 'private_chat_charge'], ['value' => $private_chat_charge]);
+        User_meta::updateOrCreate(['user_id' => $user_id, 'key' => 'group_chat_charge'], ['value' => $group_chat_charge]);
         User_meta::updateOrCreate(['user_id' => $user_id, 'key' => 'free_follower'], ['value' => $free_follower]);
         User_meta::updateOrCreate(['user_id' => $user_id, 'key' => 'profile_keywords'], ['value' => $profile_keywords]);
         if ($request->hasFile('id_proof_doc')) {
