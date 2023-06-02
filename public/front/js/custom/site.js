@@ -1367,6 +1367,7 @@ function settings_submit() {
             var private_chat_charge = $.trim($('.settings_form input[name="private_chat_charge"]').val());
             // alert(private_chat_charge)
             var free_follower = $('.settings_form input[name="free_follower"]:checked').length;
+            var group_chat_charge = $.trim($('.settings_form input[name="group_chat_charge"]').val());
             var profile_keywords = $.trim($('.settings_form input[name="profile_keywords"]').val());
             var interest_cats = [];
             $('.settings_form input[name^="interest_cat_id"]:checked').each(function() {
@@ -1467,6 +1468,14 @@ function settings_submit() {
                 $('.settings_form input[name="private_chat_charge"]').closest('.form-group').append("<div class='error'>Put your charge in number</div>");
                 error = 1;
             }
+            if (group_chat_charge == "") {
+                $('.settings_form input[name="group_chat_charge"]').closest('.form-group').append("<div class='error'>Put your group chat charge</div>");
+                error = 1;
+            }
+            if (isNaN(group_chat_charge)) {
+                $('.settings_form input[name="group_chat_charge"]').closest('.form-group').append("<div class='error'>Put your group chat charge in number</div>");
+                error = 1;
+            }
             if (error == 0) {
                 var id_proof_doc = $('.settings_form input[name="id_proof_doc"]')[0];
                 var id_proof = $('.settings_form input[name="id_proof"]')[0];
@@ -1508,6 +1517,7 @@ function settings_submit() {
                 data.append('about_bio', about_bio);
                 data.append('thank_you_msg', thank_you_msg);
                 data.append('private_chat_charge', private_chat_charge);
+                data.append('group_chat_charge', group_chat_charge);
                 data.append('free_follower', free_follower);
                 data.append('profile_keywords', profile_keywords);
                 data.append('id_proof_doc', id_proof_doc.files[0]);
