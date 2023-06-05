@@ -104,7 +104,15 @@
         <div class="col-12">
           <div class="chat-top-control">
             <ul class="d-flex justify-content-end">
-              <li class="chat-tip"><button type="button" class="chat-control-btn">tip</button></li>
+              <li class="chat-tip">
+                <button type="button" class="chat-control-btn send_tip_btn">tip</button>
+                <div class="send-tips-wrap" style="display: none;">
+                  <div class="input-wrap">
+                    <input type="number" class="form-control tip-input-style" name="" value="" placeholder="Enter coin amount" />
+                    <button type="button" class="tip-send-btn tip_send_btn"><i class="far fa-paper-plane"></i></button>
+                  </div>
+                </div>
+              </li>
               <li class="chat-group"><button type="button" class="chat-control-btn join_group_chat_btn">group {{ @$usermeta['group_chat_charge'] }} coin P/M</button></li>
               <li class="chat-private"><button type="button" class="chat-control-btn private-chat">private {{ $usermeta['private_chat_charge'] }} coin P/M</button></li>
               <li class="chat-exit"><button type="button" class="chat-control-btn exit_session_btn" style="display: none;">exit session</button></li>
@@ -250,6 +258,16 @@
         // Right        
         $('.chatbox_wrap').css({"padding-bottom": controlHeight});
         $('.chat_box_wrap').css({"height": wrapHeight - 2});
+
+
+        // Tip toggle
+        $(document).on('click', '.send_tip_btn', function(){
+          $('.send-tips-wrap').slideToggle();
+        });
+
+        $(document).on('click', '.tip_send_btn', function(){
+          $('.send-tips-wrap').slideToggle();
+        });
       });
     </script>
 

@@ -8110,10 +8110,10 @@ h5.alert-content {
     border-color: #3c06a0;
     color: #fff;
 }
-.chat-tip .chat-control-btn:hover {
+/* .chat-tip .chat-control-btn:hover {
     background-color: #fff;
     color: #3c06a0;
-}
+} */
 .chat-group .chat-control-btn {
     background-color: #fff;
     border-color: #898d52;
@@ -8214,5 +8214,59 @@ h5.alert-content {
     min-height: 65px;
     max-height: 65px;
     padding-top: 18px;
+}
+.chat-tip {
+    position: relative;
+}
+.send-tips-wrap {
+    position: absolute;
+    width: 300px;
+    left: 0;
+    top: 100%;
+    z-index: 9;
+    background: #fff;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+}
+.input-wrap{
+    position: relative;
+}
+.input-wrap .tip-input-style{
+    border-radius: 0.25rem;
+    height: 42px;
+    line-height: 40px;
+    padding-right: 3rem;
+}
+.input-wrap .tip-input-style::placeholder{
+    font-size: 0.875rem;
+}
+.tip-send-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 42px;
+    line-height: 42px;
+    border: none;
+    outline: none !important;
+    padding: 0 0.75rem;
+    background: #0cb3f0;
+    color: #fff;
+    display: block;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+input[type=number]{
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
 }
 /* New Design user Live Chat End */
