@@ -3074,4 +3074,32 @@ class AjaxController extends Controller
     }
     echo json_encode(['success' => 1, 'message' => 'message sent successfully']);
   }
+
+  public function ajaxpost_check_follower_balance_for_group_chat($request)
+  {
+
+    $follower_id = $request->follower_id;
+    $model_id = $request->vip_id;
+
+
+    $model_charge = User::find($model_id)->user_meta_array()['private_chat_charge'];
+    $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];
+    $follower_detail = User::find($follower_id);
+    $follower_sub_to_models = $follower_detail->check_subscribe_to_model($model_id);
+    $data = [
+      'follower_id' => $follower_id,
+      'model_id' => $model_id,
+      'model_charge' => $model_charge,
+      'follower_bal' => $follower_bal,
+      'insufficient_balance' => true,
+      'follower_sub_to_models' => $follower_sub_to_models,
+      'follower_detail' => $follower_detail,
+    ];
+    if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
+      $data['insufficient_balance'] = false;
+    }
+    // dd($model_charge,$follower_bal);
+    echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
+    // return ['request'=>$request->all()];
+  }
 }

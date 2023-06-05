@@ -30,7 +30,8 @@
     <script src="{{ URL::asset('/public/front/js/jquery-3.5.1.min.js') }}" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     <script type="text/javascript">
-        var prop = <?php echo json_encode(['ajaxurl' => url('/ajaxpost'), 'ajaxgeturl' => url('/ajaxget'), 'url' => url('/'), 'csrf_token' => csrf_token(), 'user_data' => $user_data, 'opentok' => ['apiKey' => '', 'sessionId' => '', 'token' => '', 'session' => null]]); ?>;
+        var prop = @php
+         echo json_encode(['ajaxurl' => url('/ajaxpost'), 'ajaxgeturl' => url('/ajaxget'), 'url' => url('/'), 'csrf_token' => csrf_token(), 'user_data' => $user_data, 'opentok' => ['apiKey' => '', 'sessionId' => '', 'token' => '', 'session' => null]]); @endphp;
     </script>
 </head>
     <body>
@@ -104,9 +105,9 @@
           <div class="chat-top-control">
             <ul class="d-flex justify-content-end">
               <li class="chat-tip"><button type="button" class="chat-control-btn">tip</button></li>
-              <li class="chat-group"><button type="button" class="chat-control-btn">group 1.69 P/M</button></li>
-              <li class="chat-private"><button type="button" class="chat-control-btn">private 2.69 P/M</button></li>
-              <li class="chat-exit"><button type="button" class="chat-control-btn">exit session</button></li>
+              <li class="chat-group"><button type="button" class="chat-control-btn join_group_chat_btn">group {{ @$usermeta['group_chat_charge'] }} coin P/M</button></li>
+              <li class="chat-private"><button type="button" class="chat-control-btn private-chat">private {{ $usermeta['private_chat_charge'] }} coin P/M</button></li>
+              <li class="chat-exit"><button type="button" class="chat-control-btn exit_session_btn" style="display: none;">exit session</button></li>
             </ul>
           </div>
         </div>
@@ -120,7 +121,12 @@
                 <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a>
                 <div class="opentok_placeholder_img opentok_placeholder_jq" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
                   <div class="offCont">
-                    <h3>I am currently offline</h3>
+                    @if (isset($live_session->id))
+                      <h3>Please click Group or Private button </h3>
+                    @else
+                      <h3>I am currently offline</h3>
+                    @endif
+                    
                   </div>
                 </div>
               </div>
@@ -135,16 +141,32 @@
                   </ul>
               </div>
             </div>
+            <?php if(isset($user_data['id'])) {
+              if(in_array($user_data['role'], [2, 3])) {
+                $wallet_coins = 0;
+                if(in_array($user_data['role'], [2])) {
+                    /*$wallet_coins += User_earning::where('user_id', $user_data['id'])->sum('token_coins');
+                    $wallet_coins += User_earning::where('referral_user_id', $user_data['id'])->sum('referral_token_coins');
+                    $wallet_coins -= User_payout::where('user_id', $user_data['id'])->sum('token_coins');*/
+                    $wallet = User::wallet(['user_id' => $user_data['id']]);
+                    $wallet_coins = $wallet['balance'];
+                }
+                if(in_array($user_data['role'], [3])) {
+                    $wallet_coins = $user_data['meta_data']['wallet_coins'] ?? 0;
+                }
+              }
+            }
+            ?>
             <div class="video-chat-lft-control control_left">
               <div class="row align-items-center justify-content-between">
                 <div class="col-auto">
-                  <div class="watch-cost"><i class="fas fa-coins"></i>9.36</div>
+                  <div class="watch-cost"><i class="fas fa-coins"></i>{{ $wallet_coins . ' ' . ($wallet_coins == 1 ? 'Coin' : 'Coins') }}</div>
                 </div>
                 <div class="col-auto">
                   <div class="chat-top-control">
                     <ul class="d-flex justify-content-end">
-                      <li><button type="button" class="chat-control-btn"><i class="fas fa-coins"></i>buy credits</button></li>
-                      <li><button type="button" class="chat-control-btn"><i class="fas fa-user-alt"></i>view profile</button></li>
+                      <li><button type="button" class="chat-control-btn balanceBtn"><i class="fas fa-coins"></i>buy credits</button></li>
+                      <li><a href="{{ url('u/' . $user->username) }}" target="_blank" type="button" class="chat-control-btn"><i class="fas fa-user-alt"></i>view profile</a></li>
                       <li><button type="button" class="chat-control-btn"><i class="fas fa-percent"></i>super offer</button></li>
                       <li><button type="button" class="chat-control-btn"><i class="fas fa-cog"></i></button></li>
                     </ul>
@@ -237,8 +259,9 @@
         $('#opentok_subscriber').hide();
         $('.opentok_placeholder_img').show();
         $('.chatbox').addClass('offline');
-        $('.private-chat').css('display','none');
-        $('.private-chat-msg').hide();
+        $('.exit_session_btn').css('display','none');
+        //$('.private-chat').css('display','none');
+        //$('.private-chat-msg').hide();
         clearInterval(myInterval);
         $('#model_low_alert').val('no');
     }
@@ -307,24 +330,25 @@
             var ot = data.data.opentok_data;
             if(typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
             var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-            session.unsubscribe(prop.opentok.subscriber);
+              session.unsubscribe(prop.opentok.subscriber);
             }
             prop.opentok.apiKey = ot.apiKey;
             prop.opentok.sessionId = ot.sessionId;
             prop.opentok.token = ot.token;
             if(ot.sessionId != '') {
-            $('#opentok_subscriber').show();
-            $('.opentok_placeholder_img').hide();
-            $('.chatbox').removeClass('offline');
-            $('.private-chat').css('display','block');
-            reset_opentok_player_area();
-            opentok_initializeSubSession(ot);
-                // console.log(OT);
-            /*  var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-            session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name, 'vip_id': {{ $user->id }}
+              $('#opentok_subscriber').show();
+              $('.opentok_placeholder_img').hide();
+              $('.chatbox').removeClass('offline');
+              $('.private-chat').css('display','block');
+              $('.exit_session_btn').css('display','block');
+              reset_opentok_player_area();
+              opentok_initializeSubSession(ot);
+                  // console.log(OT);
+              /*  var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+              session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name, 'vip_id': {{ $user->id }}
             })}); */
             } else {
-            session_is_offline();
+              session_is_offline();
             }
         }
         });
@@ -332,13 +356,16 @@
 
     $(document).ready(function(){
 
-        check_user_session({'user_id': {{ $user->id }}});
+        //check_user_session({'user_id': {{ $user->id }}});
 
         /*  var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
             session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name, 'vip_id': {{ $user->id }}
             })}); */
 
     });
+    $('.join_group_chat_btn').click(()=>{
+      check_user_session({'user_id': {{ $user->id }}});
+    })
 
     $('.private-chat').click(()=>{
         //   alert();
@@ -372,6 +399,22 @@
 
         }
     });
+    $('.exit_session_btn').click(()=>{
+      var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+      session.disconnect();
+      prop.opentok.apiKey = '';
+      prop.opentok.sessionId = '';
+      prop.opentok.token = '';
+      $('#opentok_subscriber').hide();
+      $('.opentok_placeholder_img').show();
+      $('.chatbox').addClass('offline');
+      $('.exit_session_btn').css('display','none');
+      //$('.private-chat').css('display','none');
+      //$('.private-chat-msg').hide();
+      clearInterval(myInterval);
+      $('#model_low_alert').val('no');
+    })
+    
   </script>
 
 
