@@ -48,6 +48,7 @@ use App\Live_session_chat_message;
 use App\Live_session_tip;
 use App\PrivateChat;
 use App\AdminNotification;
+use App\GroupChat;
 use OpenTok\OpenTok;
 use OpenTok\MediaMode;
 use OpenTok\ArchiveMode;
@@ -2894,7 +2895,7 @@ class AjaxController extends Controller
     $insufficient_bal = 0;
     $model_id = $request->model_id;
     $follower_id = $request->follower_id;
-
+    //dd($request->all());
     $vip_member = User::find($model_id);
     $model_charge = $vip_member->user_meta_array()['private_chat_charge'];
     $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];
@@ -2939,6 +2940,126 @@ class AjaxController extends Controller
     }
     $data = ['low_balance_alert' => $low_balance_alert, 'insufficient_bal' => $insufficient_bal, 'private_chat_id' => $request->private_chat_id];
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
+  }
+  public function ajaxpost_group_chat_balance_update($request)
+  {
+    $low_balance_alert = 0;
+    $insufficient_bal = 0;
+    $model_id = $request->model_id;
+    $follower_id = $request->follower_id;
+
+    $vip_member = User::find($model_id);
+    //dd($request->all());
+    $model_charge = $vip_member->user_meta_array()['group_chat_charge'];
+    $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];
+
+    $total_group_chat_minutes = (int)$follower_bal / $model_charge;
+
+    if ($total_group_chat_minutes <= 3) {
+      $low_balance_alert = 1;
+    }
+    if ($follower_bal >= $model_charge) {
+      if ($request->created_by == $follower_id) {
+        // follower coin update
+        //dd($request->sessionId);
+        $value = $follower_bal - $model_charge;
+        User_meta::where('user_id', $follower_id)->where('key', 'wallet_coins')->update([
+          'value' => $value
+        ]);
+        
+        $live_session = Live_session::where('user_id', $model_id)->first();
+        $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+        //model coin update
+        $model_earning_for_this_chat = User_earning::where('live_session_history_id', $live_session_history->id)->first();
+        $affiliate_earning_percentage = $this->meta_data['settings']['settings_payment_affiliate_earning_percentage'];
+        $affiliate_earning = (($model_charge * $affiliate_earning_percentage / 100));
+        if ($vip_member->affiliate_user_id == '') $affiliate_earning = 0;
+        // dd($model_earning_for_this_chat);
+        if (empty($model_earning_for_this_chat)) {
+          //dd( $live_session_history->id);
+
+          $dd = User_earning::create([
+            'user_id' => $model_id,
+            'token_coins' => $model_charge,
+            'referral_user_id' => ($vip_member->affiliate_user_id == null ? 0 : $vip_member->affiliate_user_id),
+            'referral_token_coins' => round($affiliate_earning),
+            'live_session_history_id' => $live_session_history->id
+          ]);
+          // dd($dd->id);
+        } else {
+          User_earning::where('live_session_history_id', $live_session_history->id)->update([
+            'token_coins' => $model_earning_for_this_chat->token_coins + $model_charge,
+            'referral_token_coins' => round($model_earning_for_this_chat->referral_token_coins + $affiliate_earning),
+
+          ]);
+        }
+        //Group chat table user spend coin this event
+        GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->increment('coins',$model_charge);
+        
+      }
+    } else {
+      $insufficient_bal = 1;
+    }
+    $data = ['low_balance_alert' => $low_balance_alert, 'insufficient_bal' => $insufficient_bal, 'live_session_history_id' => @$live_session_history->id,'follower_coin' => @$value == null ? 0 :@$value];
+    echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
+  }
+  public function ajaxpost_check_follower_balance_for_group_chat($request)
+  {
+
+    //dd($request->all());
+    $follower_id = $request->follower_id;
+    $model_id = $request->vip_id;
+
+
+    $model_charge = User::find($model_id)->user_meta_array()['group_chat_charge'];
+    $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];
+    $follower_detail = User::find($follower_id);
+    $follower_sub_to_models = $follower_detail->check_subscribe_to_model($model_id);
+    $data = [
+      'follower_id' => $follower_id,
+      'model_id' => $model_id,
+      'model_charge' => $model_charge,
+      'follower_bal' => $follower_bal,
+      'insufficient_balance' => true,
+      'follower_sub_to_models' => $follower_sub_to_models,
+      'follower_detail' => $follower_detail,
+    ];
+
+    $apiKey = $this->meta_data['settings']['settings_opentok_api_key'];
+    $live_session = Live_session::where('user_id', $model_id)->first();
+    $opentok_data = ['apiKey' => '', 'apiSecret' => '', 'sessionId' => '', 'token' => ''];
+    if (isset($live_session->id)) {
+      
+      //$live_session = Live_session::where('user_id', $model_id)->first();
+      $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+
+      $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->first();
+      if($chek_group_chat){
+        GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
+      }
+      $group_chat = GroupChat::create([
+        'live_session_history_id' => $live_session_history->id,
+        'session_id' => $live_session->session_id,
+        'model_id' => $model_id,
+        'follower_id' => $follower_id,
+        'video_chat_duration' => '',
+        'coins' => 0,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s'),
+        
+      ]);
+      //$data = ['private_chat_id' => $private_chat->id];
+
+      $opentok_data = ['apiKey' => $apiKey, 'sessionId' => $live_session->session_id, 'token' => $live_session->token];
+      
+    }
+    $data['opentok_data'] = $opentok_data;
+    if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
+      $data['insufficient_balance'] = false;
+    }
+    // dd($model_charge,$follower_bal);
+    echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
+    // return ['request'=>$request->all()];
   }
 
   public function ajaxpost_check_follower_balance_for_private_chat($request)
@@ -3075,31 +3196,5 @@ class AjaxController extends Controller
     echo json_encode(['success' => 1, 'message' => 'message sent successfully']);
   }
 
-  public function ajaxpost_check_follower_balance_for_group_chat($request)
-  {
-
-    $follower_id = $request->follower_id;
-    $model_id = $request->vip_id;
-
-
-    $model_charge = User::find($model_id)->user_meta_array()['private_chat_charge'];
-    $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];
-    $follower_detail = User::find($follower_id);
-    $follower_sub_to_models = $follower_detail->check_subscribe_to_model($model_id);
-    $data = [
-      'follower_id' => $follower_id,
-      'model_id' => $model_id,
-      'model_charge' => $model_charge,
-      'follower_bal' => $follower_bal,
-      'insufficient_balance' => true,
-      'follower_sub_to_models' => $follower_sub_to_models,
-      'follower_detail' => $follower_detail,
-    ];
-    if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
-      $data['insufficient_balance'] = false;
-    }
-    // dd($model_charge,$follower_bal);
-    echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
-    // return ['request'=>$request->all()];
-  }
+  
 }

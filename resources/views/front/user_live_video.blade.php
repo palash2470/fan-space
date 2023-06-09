@@ -105,13 +105,15 @@
           <div class="chat-top-control">
             <ul class="d-flex justify-content-end">
               <li class="chat-tip">
-                <button type="button" class="chat-control-btn send_tip_btn">tip</button>
-                <div class="send-tips-wrap" style="display: none;">
+                <button type="button" class="chat-control-btn send_tip_btn" style="display: none;">tip</button>
+                <div class="send-tips-wrap video_chat_tips_popup" style="display: none;" vip_member_id="{{ $user->id }}">
                   <div class="input-wrap">
-                    <input type="number" class="form-control tip-input-style" name="" value="" placeholder="Enter coin amount" />
+                    <input type="number" class="form-control tip-input-style" name="vide_chat_tips_amount" value="" placeholder="Enter coin amount" />
                     <button type="button" class="tip-send-btn tip_send_btn"><i class="far fa-paper-plane"></i></button>
                   </div>
+                  <div class="ajax_response"></div>
                 </div>
+                
               </li>
               <li class="chat-group"><button type="button" class="chat-control-btn join_group_chat_btn">group {{ @$usermeta['group_chat_charge'] }} coin P/M</button></li>
               <li class="chat-private"><button type="button" class="chat-control-btn private-chat">private {{ $usermeta['private_chat_charge'] }} coin P/M</button></li>
@@ -168,7 +170,7 @@
             <div class="video-chat-lft-control control_left">
               <div class="row align-items-center justify-content-between">
                 <div class="col-auto">
-                  <div class="watch-cost"><i class="fas fa-coins"></i>{{ $wallet_coins . ' ' . ($wallet_coins == 1 ? 'Coin' : 'Coins') }}</div>
+                  <div class="watch-cost"><i class="fas fa-coins"></i><span id="follower_wallet_coins">{{ $wallet_coins . ' ' . ($wallet_coins == 1 ? 'Coin' : 'Coins') }}</span></div>
                 </div>
                 <div class="col-auto">
                   <div class="chat-top-control">
@@ -265,9 +267,9 @@
           $('.send-tips-wrap').slideToggle();
         });
 
-        $(document).on('click', '.tip_send_btn', function(){
+       /*  $(document).on('click', '.tip_send_btn', function(){
           $('.send-tips-wrap').slideToggle();
-        });
+        }); */
       });
     </script>
 
@@ -278,6 +280,7 @@
         $('.opentok_placeholder_img').show();
         $('.chatbox').addClass('offline');
         $('.exit_session_btn').css('display','none');
+        $('.send_tip_btn').css('display','none');
         //$('.private-chat').css('display','none');
         //$('.private-chat-msg').hide();
         clearInterval(myInterval);
@@ -286,13 +289,14 @@
 
 
     function opentok_initializeSubSession(data) {
+      //console.log(data);
         var apiKey = data.apiKey;
         var sessionId = data.sessionId;
         var token = data.token;
         var session = OT.initSession(apiKey, sessionId);
         session.on('streamCreated', function(event) {
         $('#opentok_subscriber').html('');
-        console.log('event',event);
+        //console.log('event',event);
         prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_subscriber', {
             insertMode: 'append',
             width: '100%',
@@ -312,7 +316,59 @@
         } else {
             //session.publish(publisher, handleOpentokError);
             // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+            session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name,'follower_id': prop.user_data.id, 'vip_id': {{ $user->id }} ,'sessionId':sessionId
+            })});
+
+        }
+        });
+
+        session.on('signal:global', function signalCallback(event) {
+        console.log(event.data);
+        var dt = JSON.parse(event.data);
+        process_global_message(dt);
+        });
+
+        session.on('signal:msg', function signalCallback(event) {
+        //console.log(event.data);
+        var dt = JSON.parse(event.data);
+        display_chatbox_message(dt);
+        });
+
+
+        /* var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
             session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name, 'vip_id': {{ $user->id }}
+            })}); */
+    }
+    function opentok_initializeSubSessionForGroup(data) {
+      //console.log(data);
+        var apiKey = data.apiKey;
+        var sessionId = data.sessionId;
+        var token = data.token;
+        var session = OT.initSession(apiKey, sessionId);
+        session.on('streamCreated', function(event) {
+        $('#opentok_subscriber').html('');
+        //console.log('event',event);
+        prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_subscriber', {
+            insertMode: 'append',
+            width: '100%',
+            height: '100%'
+        }, handleOpentokError);
+        });
+
+        session.on('streamDestroyed', function(event) {
+        //console.log('streamDestroyed = streamDestroyed');
+        session_is_offline();
+        reset_opentok_player_area();
+        });
+
+        session.connect(token, function(error) {
+        if (error) {
+            handleOpentokError(error);
+        } else {
+          
+            //session.publish(publisher, handleOpentokError);
+            // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+            session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join_for_group', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name,'follower_id': prop.user_data.id, 'vip_id': {{ $user->id }} ,'sessionId':sessionId ,'token':token
             })});
 
         }
@@ -359,6 +415,7 @@
               $('.chatbox').removeClass('offline');
               $('.private-chat').css('display','block');
               $('.exit_session_btn').css('display','block');
+              $('.send_tip_btn').css('display','block');
               reset_opentok_player_area();
               opentok_initializeSubSession(ot);
                   // console.log(OT);
@@ -382,19 +439,15 @@
 
     });
     $('.join_group_chat_btn').click(()=>{
-      check_user_session({'user_id': {{ $user->id }}});
-    })
-
-    $('.private-chat').click(()=>{
-        //   alert();
-        let conf = confirm("Are you sure you want private chat ? it charges {{ $usermeta['private_chat_charge'] }} coin per minute");
+      //check_user_session({'user_id': {{ $user->id }}});
+      var live_session = "{{@$live_session->id}}";
+      if(live_session != ''){
+        let conf = confirm("Are you sure you want group chat ? it charges {{ $usermeta['group_chat_charge'] }} coin per minute");
         if (conf == true) {
-            // $('#block_user_'+user_id).html('blocked');
-            let follower_id = prop.user_data.id;
-            let vip_id = "{{ $user->id }}";
-
-            var data = new FormData();
-            data.append('action', 'check_follower_balance_for_private_chat');
+          let follower_id = prop.user_data.id;
+          let vip_id = "{{ $user->id }}";
+          var data = new FormData();
+            data.append('action', 'check_follower_balance_for_group_chat');
             data.append('follower_id', follower_id);
             data.append('vip_id', vip_id);
             data.append('_token', prop.csrf_token);
@@ -403,18 +456,73 @@
                 success: function(data){
                     // console.log(data);
                     if(!data.data.insufficient_balance){
-                        var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-                        session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_private_chat_request', 'follower_id': follower_id, 'vip_id': vip_id,'follower_bal':data.data.follower_bal,'model_charge':data.data.model_charge,'follower_sub_to_models':data.data.follower_sub_to_models,'follower_detail':data.data.follower_detail})});
+                      var ot = data.data.opentok_data;
+                      if(typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
+                      var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                        session.unsubscribe(prop.opentok.subscriber);
+                      }
+                      prop.opentok.apiKey = ot.apiKey;
+                      prop.opentok.sessionId = ot.sessionId;
+                      prop.opentok.token = ot.token;
+                      if(ot.sessionId != '') {
+                        $('#opentok_subscriber').show();
+                        $('.opentok_placeholder_img').hide();
+                        $('.chatbox').removeClass('offline');
+                        $('.private-chat').css('display','block');
+                        $('.exit_session_btn').css('display','block');
+                        $('.send_tip_btn').css('display','block');
+                        reset_opentok_player_area();
+                        //opentok_initializeSubSession(ot);
+                        opentok_initializeSubSessionForGroup(ot);
+                            // console.log(OT);
+                      } else {
+                        session_is_offline();
+                      }
                     }else{
                         alert('Insufficient balance for this private chat !');
                     }
                 }
             });
-            // alert(vip_id);
-            // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-            // session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_chat_block', 'user_id': user_id, 'model_id': model_id})});
+        }
+      }else{
+        alert('Model currently offline');
+      }
+    })
+
+    $('.private-chat').click(()=>{
+        var live_session = "{{@$live_session->id}}";
+        if(live_session != ''){
+          let conf = confirm("Are you sure you want private chat ? it charges {{ $usermeta['private_chat_charge'] }} coin per minute");
+          if (conf == true) {
+              // $('#block_user_'+user_id).html('blocked');
+              let follower_id = prop.user_data.id;
+              let vip_id = "{{ $user->id }}";
+
+              var data = new FormData();
+              data.append('action', 'check_follower_balance_for_private_chat');
+              data.append('follower_id', follower_id);
+              data.append('vip_id', vip_id);
+              data.append('_token', prop.csrf_token);
+              $.ajax(
+                  {type: 'POST', dataType: 'json', url: prop.ajaxurl, data: data, processData: false, contentType: false,
+                  success: function(data){
+                      // console.log(data);
+                      if(!data.data.insufficient_balance){
+                          var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                          session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_private_chat_request', 'follower_id': follower_id, 'vip_id': vip_id,'follower_bal':data.data.follower_bal,'model_charge':data.data.model_charge,'follower_sub_to_models':data.data.follower_sub_to_models,'follower_detail':data.data.follower_detail})});
+                      }else{
+                          alert('Insufficient balance for this private chat !');
+                      }
+                  }
+              });
+              // alert(vip_id);
+              // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+              // session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_chat_block', 'user_id': user_id, 'model_id': model_id})});
 
 
+          }
+        }else{
+          alert('Model currently offline');
         }
     });
     $('.exit_session_btn').click(()=>{
@@ -427,6 +535,7 @@
       $('.opentok_placeholder_img').show();
       $('.chatbox').addClass('offline');
       $('.exit_session_btn').css('display','none');
+      $('.send_tip_btn').css('display','none');
       //$('.private-chat').css('display','none');
       //$('.private-chat-msg').hide();
       clearInterval(myInterval);

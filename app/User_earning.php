@@ -12,7 +12,7 @@ class User_earning extends Model
 
     protected $table = 'user_earnings';
 
-    protected $fillable = ['user_id', 'token_coins', 'referral_user_id', 'referral_token_coins', 'post_paid_users_id', 'post_tips_id', 'live_session_tips_id', 'order_id','private_chat_id'];
+    protected $fillable = ['user_id', 'token_coins', 'referral_user_id', 'referral_token_coins', 'post_paid_users_id', 'post_tips_id', 'live_session_tips_id', 'order_id','private_chat_id','live_session_history_id'];
 
     public static function earnings($param) {
     	$user_id = $param['user_id'] ?? '';

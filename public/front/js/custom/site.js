@@ -3190,6 +3190,40 @@ function opentok_live_stream() {
             });
         }
     });
+    $(document).on('click', '.tip_send_btn', function() {
+        var chat_tips_amount = $.trim($('.video_chat_tips_popup input[name="vide_chat_tips_amount"]').val());
+        var vip_member_id = $('.video_chat_tips_popup').attr('vip_member_id');
+        if (chat_tips_amount != '') {
+            $('.mw_loader').show();
+            var data = new FormData();
+            data.append('action', 'pay_send_chat_tip');
+            data.append('vip_member_id', vip_member_id);
+            data.append('token_coin', chat_tips_amount);
+            data.append('_token', prop.csrf_token);
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: prop.ajaxurl,
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    $('.mw_loader').hide();
+                    if (data.success == '1') {
+                        $('.video_chat_tips_popup input[name="vide_chat_tips_amount"]').val('');
+                        //$('.chatbox .chat_tips_popup').hide();
+                        $('.send-tips-wrap').slideToggle();
+                        var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                        session.signal({ type: 'msg', data: JSON.stringify({ 'action': 'live_session_chat_tip', 'tips_amount': chat_tips_amount, 'user_id': prop.user_data.id, 'first_name': prop.user_data.first_name, 'last_name': prop.user_data.last_name, 'username': prop.user_data.username, 'display_name': prop.user_data.display_name, 'role': prop.user_data.role, 'msg': '' }) });
+                        $('.balanceBtn span').html(data.data.wallet_coin + " Coins");
+
+                    } else {
+                        $(".video_chat_tips_popup .ajax_response").html('<p class="text-danger">' + data.message + '</p>');
+                    }
+                }
+            });
+        }
+    });
 }
 
 function process_global_message(data) {
@@ -3250,7 +3284,14 @@ function display_chatbox_message(data) {
         $('.chatbox .chatlist').append('<div class="chatitem info" user_id="' + data.user_id + '"><div class="chatitemin"><b>' + name + ' </b>has tipped ' + tips_amount + ' ' + (tips_amount > 1 ? 'coins' : 'coin') + '</div></div>');
     }
     if (action == 'live_session_follower_join') {
+        //console.log('live session');
         $('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
+    }
+    if (action == 'live_session_follower_join_for_group') {
+        //console.log('live session');
+        //$('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
+        group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
+        myInterval = setInterval(function() { group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token); }, 61 * 1000);
     }
     if (action == 'live_session_chat_block') {
         if (prop.user_data.id == data.user_id) {
@@ -3259,7 +3300,7 @@ function display_chatbox_message(data) {
         }
     }
     if (action == 'live_session_private_chat_request') {
-        // console.log('vip',data.vip_id,prop.user_data.id);
+        //console.log('vip', data.vip_id, prop.user_data.id);
         if (prop.user_data.id == data.follower_id) {
             $('.private-chat').hide();
             $('.private-chat-msg').show();
@@ -3348,6 +3389,85 @@ function private_chat_balance_update(model_id = null, follower_id = null, privat
                 if (prop.user_data.id == model_id) {
                     var model_low_alert = $('#model_low_alert').val();
                     console.log('model_id', model_id, follower_id);
+                    if (model_low_alert == 'no') {
+                        alert('user account balance is low. the session will be disconnected at any time');
+                    }
+                    $('#model_low_alert').val('yes');
+                }
+            }
+            if (res.data.insufficient_bal) {
+                var data = new FormData();
+                data.append('action', 'opentok_end_session');
+                data.append('_token', prop.csrf_token);
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: prop.ajaxurl,
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        if (prop.user_data.id == model_id) {
+
+                            opentok_destroyPubSession();
+                            $('.opentok_start_session').show();
+                            $('.opentok_end_session').hide();
+                            $('.chatbox').addClass('offline');
+                            $('.chatbox .chatlist').html('');
+                            $('.private-chat-req').css('display', 'none');
+                            $('.private-req-tbody').html('');
+                            //window['live_viewer'] = {};
+                            window['live_viewer_count'] = 0;
+                            $('.golive_page .view_counter span').text('0');
+                        }
+
+                        clearInterval(myInterval);
+                        $('#model_low_alert').val('no');
+                    }
+                });
+                // }
+            }
+        }
+    });
+}
+
+function group_chat_balance_update(model_id = null, follower_id = null, sessionId = null, created_by = null, token = null) {
+
+    var data = new FormData();
+    data.append('action', 'group_chat_balance_update');
+    data.append('_token', prop.csrf_token);
+    data.append('follower_id', follower_id);
+    data.append('model_id', model_id);
+    data.append('created_by', created_by);
+    data.append('sessionId', sessionId);
+    data.append('token', token);
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: prop.ajaxurl,
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            //console.log('private balance', res);
+            // let low_alert=0;
+            console.log(res.data.follower_coin);
+            if (res.data.follower_coin != 0) {
+                $("#follower_wallet_coins").html(res.data.follower_coin + ' Coins');
+            }
+            if (res.data.low_balance_alert) {
+                //console.log(prop.user_data.id, follower_id, model_id);
+                if (prop.user_data.id == follower_id) {
+                    var model_low_alert = $('#model_low_alert').val();
+                    //console.log('follower_id', follower_id);
+                    if (model_low_alert == 'no') {
+                        alert('your account balance is low. please recharge to continue this chat');
+                    }
+                    $('#model_low_alert').val('yes');
+                }
+                if (prop.user_data.id == model_id) {
+                    var model_low_alert = $('#model_low_alert').val();
+                    //console.log('model_id', model_id, follower_id);
                     if (model_low_alert == 'no') {
                         alert('user account balance is low. the session will be disconnected at any time');
                     }
