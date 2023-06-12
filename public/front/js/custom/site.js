@@ -3289,7 +3289,7 @@ function display_chatbox_message(data) {
     }
     if (action == 'live_session_follower_join_for_group') {
         //console.log('live session');
-        //$('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
+        $('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
         group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
         myInterval = setInterval(function() { group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token); }, 61 * 1000);
     }
