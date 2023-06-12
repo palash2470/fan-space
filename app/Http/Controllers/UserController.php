@@ -579,6 +579,16 @@ class UserController extends Controller
     Ticket::create($data);
     return redirect()->back()->with('success','Ticket created successfully !');
   }
+
+  public function go_live_chat($request){
+    $return = array();
+    $return['meta_data'] = array();
+    $user_id = $this->user_data['id'];
+    if($this->user_data['role'] != 2) abort(404);
+    $return['page_title'] = 'Live';
+    
+    return view('user.includes.vip_member.model_go_live',['return' =>$return,'user_data' => $this->user_data,'page_title' => $return['page_title']]);
+  }
 	
 	
 }
