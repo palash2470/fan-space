@@ -255,12 +255,12 @@
         var controlHeight = $('.control_left').outerHeight(true);
         $('.video_chat_lft').css({"padding-bottom": controlHeight});
         var wrapHeight = bodyHeight - (headerHeight + controlHeight);
-        $('.video_wrap_lft').css({"height": wrapHeight});
-        $('.opentok_placeholder_jq').css({"height": wrapHeight});
-        $('.video_area_jq').css({"height": wrapHeight});
+        // $('.video_wrap_lft').css({"height": wrapHeight});
+        // $('.opentok_placeholder_jq').css({"height": wrapHeight});
+        // $('.video_area_jq').css({"height": wrapHeight});
         // Right        
         $('.chatbox_wrap').css({"padding-bottom": controlHeight});
-        $('.chat_box_wrap').css({"height": wrapHeight - 2});
+        // $('.chat_box_wrap').css({"height": wrapHeight - 2});
 
 
         // Tip toggle

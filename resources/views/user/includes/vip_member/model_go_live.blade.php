@@ -35,68 +35,245 @@
     </script>
 </head>
 
-<section class="golive_page model-section">
-    <div class="row">
-        <div class="col-md-8 col-12">
-            <input type="hidden" name="model_low_alert" id="model_low_alert" value="no">
-            <div id="opentok_publisher" class="opentok_player_area"></div>
-            <div class="d-flex justify-content-center mt-3">
+<section class="golive_page model-section live-model-sec-new">
+  <div class="container-fluid">
+    <div class="row header_height">
+        <div class="col-12">
+          <div class="chat-top-control model-live-control">
+            <ul class="d-flex justify-content-end">
+              <li><button type="button" class="chat-control-btn d-flex align-items-center req_user_list"><span>user</span> <span class="total-live-badge ml-2">999</span></button></li>
+              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list"><span>private</span> <span class="total-live-badge ml-2">51</span></button></li>
+            </ul>
+            <div class="live-user-list req_user_list_wrap">
+              <span class="hide-popup"><button class="hide_popup"><i class="fas fa-times"></i></button></span>
+              <div class="live-user-list-head">
+                <h4>user list</h4>
+                <h5>online - 5</h5>
+              </div>
+              <div class="live-user-list-body">
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/user-placeholder.jpg')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <div class="d-flex justify-content-between">
+                      <div class="live-user-info-lft">
+                        <h4>barlowe</h4>
+                        <ul class="d-flex">
+                          <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                          <li><strong><i class="fas fa-user"></i>male</strong></li>
+                          <li><strong>Subscribe</strong></li>
+                        </ul>
+                      </div>
+                      <div class="live-user-info-rgt">
+                        <ul>
+                          <li><a class="privet-chat-req req-accept" href="#">accept</a></li>
+                          <li><a class="privet-chat-req req-decline" href="#">decline</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('/public/front/images/prf-lft-img.png')}}" alt="">
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <h4>barlowe</h4>
+                    <ul class="d-flex">
+                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
+                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
+                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="row h-100vh">
+        <div class="new-model-video-chat-lft">
+          <div class="new-model-video-chat-lft-wrap new_model_video">
+            <div class="new_model_video_main">
+              <input type="hidden" name="model_low_alert" id="model_low_alert" value="no">
+              <div id="opentok_publisher" class="opentok_player_area"></div>
+            </div>
+            {{-- <div class="d-flex justify-content-center mt-3">
                 <a href="javascript:void(0);" class="commonBtn2 opentok_start_session">Start session</a>
                 <a href="javascript:void(0);" class="commonBtn2 opentok_end_session" style="display: none;">End session</a>
                 <a href="javascript:;" class="view_counter"><i class="fa fa-eye"></i> <span>0</span></a>
+            </div> --}}
+            <div class="video-chat-lft-control control_left">
+              <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                  <div class="watch-cost"><i class="fas fa-coins"></i><span id="follower_wallet_coins">545</span></div>
+                </div>
+                <div class="col-auto">
+                  <div class="chat-btm-control">
+                    <ul class="d-flex justify-content-end">
+                      <li><a href="javascript:;" class="sesson-btn view_counter"><i class="fa fa-eye"></i> <span>0</span></a></li>
+                      <li><a href="javascript:void(0);" class="sesson-btn opentok_start_session">Start session</a>
+                        <a href="javascript:void(0);" class="sesson-btn opentok_end_session" style="display: none;">End session</a></li>                      
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-        <div class="col-md-4 col-12">
-            <div class="chatbox offline blk-user-wrap" vip_member_id="{{ $user_data['id'] }}" ts="{{ time() }}">
-                <div class="chatoffline">Chatting unavailable. Model is not live</div>
-                <div class="chatlist"></div>
-                <div class="chatfields">
-                <!-- <input type="text" class="form-control" placeholder="Say Something ...." name="chat_input"> -->
+        <div class="new-model-video-chat-rgt">
+          <div class="chatbox chatbox_wrap offline blk-user-wrap" vip_member_id="{{ $user_data['id'] }}" ts="{{ time() }}">
+            <div class="chat-box-wrap chat_box_wrap">
+              <div class="chatoffline" style="display: none">Chatting unavailable. Model is not live</div>
+              <div class="chatlist"></div>
+              <div class="chatfields">
+              <!-- <input type="text" class="form-control" placeholder="Say Something ...." name="chat_input"> -->
                 <div class="emoji_pad" save_action="live_session_chat_send_message" save_params='{!! json_encode(['vip_member_id' => $user_data['id']]) !!}'>
-                    <textarea placeholder="Say Something ...."></textarea>
-                    <div class="emoji_container" id="emoji_container_live"></div>
-                    <a href="javascript:;" class="emoji_submit"><i class="far fa-paper-plane"></i></a>
+                  <textarea placeholder="Say Something ...."></textarea>
+                  <div class="emoji_container" id="emoji_container_live"></div>
+                  <a href="javascript:;" class="emoji_submit"><i class="far fa-paper-plane"></i></a>
                 </div>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
     </div>
+  </div>
 </section>
-<div class="private-chat-req private-req-table" style="display: none;">
-    <h4>Private chat request</h4>
-    <div class="scrollFix">
-        <div class="tableHead">
-            <ul class="d-flex">
-                <li>Name</li>
-                <li class="text-center">Gender</li>
-                <li class="text-center">User Type</li>
-                <li class="text-right">Action</li>
-
-            </ul>
-        </div>
-        <div class="tableScroll">
-        <table class="table table-bordered mb-0">
-
-            <tbody class="private-req-tbody">
-                <!-- <tr>
-                    <td>Jhon Paul</td>
-                    <td class="text-center">Male</td>
-                    <td class="text-center">Male</td>
-                    <td>
-                        <div class="request-list-rgt">
-                            <ul class="d-flex justify-content-end">
-                                <li><button type="button" class="accept-private-chat-req accept-rq-btn acc-req"><i class="fas fa-check-square"></i></button></li>
-                                <li><button type="button" class="reject-private-chat-req accept-rq-btn rej-req"><i class="fas fa-times-circle"></i></button></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr> -->
-
-            </tbody>
-        </table>
-        </div>
-    </div>
-</div>
 
 
 <script src="{{ URL::asset('/public/front/js/jquery-ui.js') }}" type="text/javascript"></script>
@@ -125,6 +302,44 @@
 
 
 
+
+    <script>
+      $(document).ready(function(){
+        var bodyHeight = $(document).height();
+        $('body').css({"min-height": bodyHeight });
+        var headerHeight = $('.header_height').outerHeight(true);
+        var controlHeight = $('.control_left').outerHeight(true);
+        $('.new_model_video').css({"padding-bottom": controlHeight});
+        var wrapHeight = bodyHeight - (headerHeight + controlHeight);
+        // $('.new_model_video_main').css({"height": wrapHeight});
+        // Right        
+        $('.chatbox_wrap').css({"padding-bottom": controlHeight});
+
+
+        // Tip toggle
+        $(document).on('click', '.send_tip_btn', function(){
+          $('.send-tips-wrap').slideToggle();
+        });
+
+       /*  $(document).on('click', '.tip_send_btn', function(){
+          $('.send-tips-wrap').slideToggle();
+        }); */
+
+
+        $(document).on('click', '.req_user_list', function(){
+          $('.req_user_list_wrap').toggleClass('user_open');
+        });
+        $(document).on('click', '.hide_popup', function(){
+          $('.req_user_list_wrap').removeClass('user_open');
+        });
+        $(document).on('click', '.req_private_list', function(){
+          $('.req_private_list_wrap').toggleClass('private_open');
+        });
+        $(document).on('click', '.hide_popup', function(){
+          $('.req_private_list_wrap').removeClass('private_open');
+        });
+      });
+    </script>
   <script type="text/javascript">
    
    function opentok_initializePubSession(data) {
