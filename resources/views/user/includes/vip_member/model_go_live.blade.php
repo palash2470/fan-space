@@ -55,6 +55,7 @@
                   <div class="live-user-img">
                     <span class="live-user-img-box">
                       <img src="{{asset('public/front/images/user-placeholder.jpg')}}" alt="">
+                      <span class="online-badge onlie"></span>
                     </span>
                   </div>
                   <div class="live-user-info">
@@ -71,6 +72,7 @@
                   <div class="live-user-img">
                     <span class="live-user-img-box">
                       <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                      <span class="online-badge offlie"></span>
                     </span>
                   </div>
                   <div class="live-user-info">
@@ -87,6 +89,7 @@
                   <div class="live-user-img">
                     <span class="live-user-img-box">
                       <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                      <span class="online-badge onlie"></span>
                     </span>
                   </div>
                   <div class="live-user-info">
@@ -240,7 +243,9 @@
             <div class="video-chat-lft-control control_left">
               <div class="row align-items-center justify-content-between">
                 <div class="col-auto">
-                  <div class="watch-cost"><i class="fas fa-coins"></i><span id="follower_wallet_coins">545</span></div>
+                  <div class="watch-cost">
+                    <span class="coin-img"> <img src="{{asset('public/front/images/coin.png')}}"  alt=""></span>
+                    <span id="follower_wallet_coins">545</span></div>
                 </div>
                 <div class="col-auto">
                   <div class="chat-btm-control">

@@ -8431,6 +8431,22 @@ input[type=number]::-webkit-outer-spin-button{
     width: 40px;
     height: 40px;
     display: block;
+    position: relative;
+}
+.online-badge {
+    position: absolute;
+    right: 0px;
+    bottom: -4px;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+.online-badge.onlie{
+    background-color: #00b011;
+}
+.online-badge.offlie{
+    background-color: #f02c00;
 }
 .live-user-img-box img{
     width: 100%;
@@ -8507,5 +8523,17 @@ input[type=number]::-webkit-outer-spin-button{
     width: 30px;
     text-align: center;
     outline: none;
+}
+.h-100vh {
+    height: 100vh;
+}
+.coin-img {
+    max-width: 25px;
+    display: inline-block;
+    margin-right: 5px;
+}
+.coin-img img{
+    display: block;
+    width: 100%;
 }
 /* New Design user Live Chat End */
