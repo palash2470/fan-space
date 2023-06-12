@@ -3457,25 +3457,65 @@ function group_chat_balance_update(model_id = null, follower_id = null, sessionI
             }
             if (res.data.low_balance_alert) {
                 //console.log(prop.user_data.id, follower_id, model_id);
+                //console.log('low');
                 if (prop.user_data.id == follower_id) {
                     var model_low_alert = $('#model_low_alert').val();
-                    //console.log('follower_id', follower_id);
                     if (model_low_alert == 'no') {
                         alert('your account balance is low. please recharge to continue this chat');
                     }
                     $('#model_low_alert').val('yes');
                 }
-                if (prop.user_data.id == model_id) {
+
+                /* if (prop.user_data.id == model_id) {
                     var model_low_alert = $('#model_low_alert').val();
                     //console.log('model_id', model_id, follower_id);
                     if (model_low_alert == 'no') {
                         alert('user account balance is low. the session will be disconnected at any time');
                     }
                     $('#model_low_alert').val('yes');
-                }
+                } */
             }
             if (res.data.insufficient_bal) {
+                //update follower group chat by ajax call
                 var data = new FormData();
+                let follower_id = prop.user_data.id;
+                data.append('action', 'opentok_end_session_for_follower');
+                data.append('follower_id', follower_id);
+                data.append('model_id', model_id);
+                data.append('_token', prop.csrf_token);
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: prop.ajaxurl,
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        // console.log(data);
+                        var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                        session.disconnect();
+                        prop.opentok.apiKey = '';
+                        prop.opentok.sessionId = '';
+                        prop.opentok.token = '';
+                        $('#opentok_subscriber').hide();
+                        $('.opentok_placeholder_img').show();
+                        $('.chatbox').addClass('offline');
+                        $('.exit_session_btn').css('display', 'none');
+                        $('.send_tip_btn').css('display', 'none');
+                        //$('.private-chat').css('display','none');
+                        //$('.private-chat-msg').hide();
+                        clearInterval(myInterval);
+                        $('#model_low_alert').val('no');
+                        location.reload();
+
+                    }
+                });
+
+
+                //var data = new FormData();
+                //data.append('action', 'opentok_end_session_for_follower');
+                //data.append('_token', prop.csrf_token);
+                /* var data = new FormData();
                 data.append('action', 'opentok_end_session');
                 data.append('_token', prop.csrf_token);
                 $.ajax({
@@ -3503,8 +3543,8 @@ function group_chat_balance_update(model_id = null, follower_id = null, sessionI
                         clearInterval(myInterval);
                         $('#model_low_alert').val('no');
                     }
-                });
-                // }
+                }); */
+
             }
         }
     });

@@ -2955,7 +2955,7 @@ class AjaxController extends Controller
 
     $total_group_chat_minutes = (int)$follower_bal / $model_charge;
 
-    if ($total_group_chat_minutes <= 3) {
+    if ($total_group_chat_minutes <= 5) {
       $low_balance_alert = 1;
     }
     if ($follower_bal >= $model_charge) {
@@ -3192,6 +3192,20 @@ class AjaxController extends Controller
       Notification::create([
         'user_id' => $subscriber_id, 'object_type' => 'user', 'object_id' => $model_id, 'action' => 'sendMessageToSubscriber', 'message' => $request->message, 'json_data' => json_encode(['user_id' => $model_id]), 'created_at' => date('Y-m-d H:i:s')
       ]);
+    }
+    echo json_encode(['success' => 1, 'message' => 'message sent successfully']);
+  }
+
+  public function ajaxpost_opentok_end_session_for_follower($request){
+    //dd($request->all());
+    $live_session = Live_session::where('user_id', $request->model_id)->first();
+    if($live_session){
+      $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+
+      $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('follower_id',$request->follower_id)->where('exit_session',1)->first();
+      if($chek_group_chat){
+        GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('follower_id',$request->follower_id)->where('exit_session',1)->update(['exit_session'=>0,'exit_session_time'=>date('Y-m-d H:i:s')]);
+      }
     }
     echo json_encode(['success' => 1, 'message' => 'message sent successfully']);
   }

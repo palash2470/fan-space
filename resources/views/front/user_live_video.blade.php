@@ -99,6 +99,7 @@
       $profile_photo = url('public/uploads/profile_photo/' . $usermeta['profile_photo']);
     ?>
     <section class="live-sec follower-section live-sec-new">
+      <input type="hidden" name="model_low_alert" id="model_low_alert" value="no">
     <div class="container-fluid">
       <div class="row header_height">
         <div class="col-12">
@@ -526,20 +527,38 @@
         }
     });
     $('.exit_session_btn').click(()=>{
-      var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-      session.disconnect();
-      prop.opentok.apiKey = '';
-      prop.opentok.sessionId = '';
-      prop.opentok.token = '';
-      $('#opentok_subscriber').hide();
-      $('.opentok_placeholder_img').show();
-      $('.chatbox').addClass('offline');
-      $('.exit_session_btn').css('display','none');
-      $('.send_tip_btn').css('display','none');
-      //$('.private-chat').css('display','none');
-      //$('.private-chat-msg').hide();
-      clearInterval(myInterval);
-      $('#model_low_alert').val('no');
+      
+      //update follower group chat by ajax call
+      var data = new FormData();
+      let follower_id = prop.user_data.id;
+      let vip_id = "{{ $user->id }}";
+      data.append('action', 'opentok_end_session_for_follower');
+      data.append('follower_id', follower_id);
+      data.append('model_id', vip_id);
+      data.append('_token', prop.csrf_token);
+      $.ajax(
+          {type: 'POST', dataType: 'json', url: prop.ajaxurl, data: data, processData: false, contentType: false,
+          success: function(data){
+            // console.log(data);
+            var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+            session.disconnect();
+            prop.opentok.apiKey = '';
+            prop.opentok.sessionId = '';
+            prop.opentok.token = '';
+            $('#opentok_subscriber').hide();
+            $('.opentok_placeholder_img').show();
+            $('.chatbox').addClass('offline');
+            $('.exit_session_btn').css('display','none');
+            $('.send_tip_btn').css('display','none');
+            //$('.private-chat').css('display','none');
+            //$('.private-chat-msg').hide();
+            clearInterval(myInterval);
+            $('#model_low_alert').val('no'); 
+            location.reload();
+           
+          }
+      });
+      
     })
     
   </script>
