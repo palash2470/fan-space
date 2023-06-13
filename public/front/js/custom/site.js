@@ -3291,9 +3291,9 @@ function display_chatbox_message(data) {
     if (action == 'live_session_follower_join_for_group') {
         console.log(prop);
         var user_profile_photo = prop.url + '/public/front/images/user-placeholder.jpg';
-        /*  if (data.profile_photo != '') {
-             user_profile_photo = prop.url + '/public/uploads/profile_photo/' + profile_photo;
-         } */
+        if (data.profile_photo != '') {
+            user_profile_photo = prop.url + '/public/uploads/profile_photo/' + profile_photo;
+        }
         //console.log(profile_photo);
         $('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
         $('.req_user_list_wrap .onlineuser_list').append(`<div class="live-user-list-box d-flex" id="live_user_list_box_` + data.follower_id + `">
