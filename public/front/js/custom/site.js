@@ -3286,10 +3286,33 @@ function display_chatbox_message(data) {
     if (action == 'live_session_follower_join') {
         //console.log('live session');
         $('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
+
     }
     if (action == 'live_session_follower_join_for_group') {
-        //console.log('live session');
+        console.log(prop);
+        var user_profile_photo = prop.url + '/public/front/images/user-placeholder.jpg';
+        /*  if (data.profile_photo != '') {
+             user_profile_photo = prop.url + '/public/uploads/profile_photo/' + profile_photo;
+         } */
+        //console.log(profile_photo);
         $('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
+        $('.req_user_list_wrap .onlineuser_list').append(`<div class="live-user-list-box d-flex" id="live_user_list_box_` + data.follower_id + `">
+        <div class="live-user-img">
+          <span class="live-user-img-box">
+            <img src="` + user_profile_photo + `" alt="">
+            <span class="online-badge onlie"></span>
+          </span>
+        </div>
+        <div class="live-user-info">
+          <h4>` + data.follower_name + `</h4>
+          <ul class="d-flex">
+            <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+            <li><strong><i class="far fa-clock"></i>` + new Date() + `</strong></li>
+            <li><strong><i class="fas fa-hourglass-half"></i>0 minutes</strong></li>
+            <li><strong><i class="fas fa-coins"></i>1 coin</strong></li>
+          </ul>
+        </div>
+      </div>`);
         group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
         myInterval = setInterval(function() { group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token); }, 61 * 1000);
     }
