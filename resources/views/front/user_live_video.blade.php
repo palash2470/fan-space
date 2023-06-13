@@ -128,9 +128,16 @@
             <div class="video-wrap-lft video_wrap_lft">
               <div class="video_area relative video_area_jq">
                 <div class="full-screen-mode">
-                  <button onclick="$(document).toggleFullScreen()">Toggle Fullscreen mode (Document)</button>
+                  <button type="button" class="video-screen-mode" onclick="$('#opentok_subscriber').fullScreen(true)"><i class="fas fa-expand"></i></button>
                 </div>
-                <div id="opentok_subscriber" class="opentok_player_area" style="display: none;"></div>
+                {{-- <div class="full-video-wrap" id="full-screen-video-wrap"> --}}
+                  
+                  <div id="opentok_subscriber" class="opentok_player_area" style="display: none;">
+                    <div class="small-screen-mode">
+                      <button type="button" class="video-screen-mode" onclick="$(document).fullScreen(false)"><i class="fas fa-compress"></i></button>
+                    </div>
+                  </div>
+                {{-- </div> --}}
                 <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a>
                 <div class="opentok_placeholder_img opentok_placeholder_jq" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
                   <div class="offCont">
@@ -251,6 +258,9 @@
     <!--<script src="{{ url('public/front/js/mCustomScrollbar.js') }}"></script>-->
     <script src="{{ url('public/front/js/jquery.mCustomScrollbar.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+    {{-- Full Screen mode js --}}
+    <script src="{{ url('public/front/js/jquery.fullscreen-min.js') }}"></script>
 
     <script>
       $(document).ready(function(){
