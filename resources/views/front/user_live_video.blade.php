@@ -128,6 +128,9 @@
           <div class="video-chat-lft-video video_chat_lft">
             <div class="video-wrap-lft video_wrap_lft">
               <div class="video_area relative video_area_jq">
+                <div class="full-screen-mode">
+                  <button onclick="$(document).toggleFullScreen()">Toggle Fullscreen mode (Document)</button>
+                </div>
                 <div id="opentok_subscriber" class="opentok_player_area" style="display: none;"></div>
                 <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a>
                 <div class="opentok_placeholder_img opentok_placeholder_jq" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
@@ -171,7 +174,10 @@
             <div class="video-chat-lft-control control_left">
               <div class="row align-items-center justify-content-between">
                 <div class="col-auto">
-                  <div class="watch-cost"><i class="fas fa-coins"></i><span id="follower_wallet_coins">{{ $wallet_coins . ' ' . ($wallet_coins == 1 ? 'Coin' : 'Coins') }}</span></div>
+                  <div class="watch-cost">
+                    <span class="coin-img"> <img src="{{asset('public/front/images/coin.png')}}"  alt=""></span>
+                    <span id="follower_wallet_coins">{{ $wallet_coins . ' ' . ($wallet_coins == 1 ? 'Coin' : 'Coins') }}</span>
+                  </div>
                 </div>
                 <div class="col-auto">
                   <div class="chat-top-control">
@@ -191,7 +197,7 @@
           <!-- <h3>Messages</h3> -->
           <div class="chatbox chatbox_wrap offline blk-user-wrap" vip_member_id="{{ $user->id }}" ts="{{ time() }}">
             <div class="chat-box-wrap chat_box_wrap">
-              <div class="chatoffline">Chatting unavailable. Model is not live</div>
+              <div class="chatoffline" style="display: none">Chatting unavailable. Model is not live</div>
               <div class="chatlist"></div>
               <div class="chatfields">
 
@@ -250,7 +256,7 @@
     <script>
       $(document).ready(function(){
         var bodyHeight = $(document).height();
-        $('body').css({"min-height": bodyHeight });
+        // $('body').css({"min-height": bodyHeight });
         var headerHeight = $('.header_height').outerHeight(true);
         var controlHeight = $('.control_left').outerHeight(true);
         $('.video_chat_lft').css({"padding-bottom": controlHeight});
@@ -271,6 +277,22 @@
        /*  $(document).on('click', '.tip_send_btn', function(){
           $('.send-tips-wrap').slideToggle();
         }); */
+      });
+
+      $(function() {
+          $(".fullscreen-supported").toggle($(document).fullScreen() != null);
+          $(".fullscreen-not-supported").toggle($(document).fullScreen() == null);
+
+          $(document).on("fullscreenchange", function(e) {
+            console.log("Full screen changed.");
+            $("#status").text($(document).fullScreen() ?
+                "Full screen enabled" : "Full screen disabled");
+          });
+
+          $(document).on("fullscreenerror", function(e) {
+            console.log("Full screen error.");
+            $("#status").text("Browser won't enter full screen mode for some reason.");
+          });
       });
     </script>
 

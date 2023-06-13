@@ -8294,7 +8294,6 @@ input[type=number]::-webkit-outer-spin-button{
 }
 .new-model-video-chat-lft-wrap {
     position: relative;
-    height: 100%;
 }
 .new-model-video-chat-lft .opentok_player_area{
     height: 100% !important;
@@ -8479,13 +8478,13 @@ input[type=number]::-webkit-outer-spin-button{
 }
 /* .new_model_video_main {
     height: calc(100vh - 140px);
-}
+} */
 .chat_box_wrap {
     height: calc(100vh - 142px);
 }
 .video_wrap_lft {
     height: calc(100vh - 140px);
-} */
+}
 .live-user-info-rgt li:not(:last-child) {
     margin-right: 0;
     margin-bottom: 4px;
@@ -8537,4 +8536,12 @@ input[type=number]::-webkit-outer-spin-button{
     display: block;
     width: 100%;
 }
+/* Full screen mode */
+.full-screen-mode{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+/* Full screen mode */
+
 /* New Design user Live Chat End */
