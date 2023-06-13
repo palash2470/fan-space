@@ -379,7 +379,7 @@
         var token = data.token;
         var session = OT.initSession(apiKey, sessionId);
         session.on('streamCreated', function(event) {
-        $('#opentok_subscriber').html('');
+        // $('#opentok_subscriber').html('');
         //console.log('event',event);
         prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_subscriber', {
             insertMode: 'append',
