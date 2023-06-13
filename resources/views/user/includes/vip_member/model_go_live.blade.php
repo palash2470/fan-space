@@ -316,9 +316,10 @@
         var controlHeight = $('.control_left').outerHeight(true);
         $('.new_model_video').css({"padding-bottom": controlHeight});
         var wrapHeight = bodyHeight - (headerHeight + controlHeight);
-        // $('.new_model_video_main').css({"height": wrapHeight});
+        $('.new_model_video_main').css({"height": wrapHeight});
         // Right        
         $('.chatbox_wrap').css({"padding-bottom": controlHeight});
+        $('.chat_box_wrap').css({"height": wrapHeight - 2});
 
 
         // Tip toggle
