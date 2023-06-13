@@ -128,16 +128,17 @@
           <div class="video-chat-lft-video video_chat_lft">
             <div class="video-wrap-lft video_wrap_lft">
               <div class="video_area relative video_area_jq">
-                <div class="full-screen-mode">
+                <div class="full-screen-mode full_screen_mode" style="display: none;">
                   <button type="button" class="video-screen-mode" onclick="$('#opentok_subscriber').fullScreen(true)"><i class="fas fa-expand"></i></button>
                 </div>
                 {{-- <div class="full-video-wrap" id="full-screen-video-wrap"> --}}
                   
                   <div id="opentok_subscriber" class="opentok_player_area" style="display: none;">
-                    <div class="small-screen-mode">
+                    <div class="small-screen-mode small_screen_mode" style="display: none;">
                       <button type="button" class="video-screen-mode" onclick="$(document).fullScreen(false)"><i class="fas fa-compress"></i></button>
                     </div>
                   </div>
+                  
                 {{-- </div> --}}
                 <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a>
                 <div class="opentok_placeholder_img opentok_placeholder_jq" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
@@ -294,7 +295,12 @@
           $(".fullscreen-not-supported").toggle($(document).fullScreen() == null);
 
           $(document).on("fullscreenchange", function(e) {
-            console.log("Full screen changed.");
+            console.log($(document).fullScreen());
+            if($(document).fullScreen() == false){
+              $('.small_screen_mode').css('display','none');
+            }else{
+              $('.small_screen_mode').css('display','block');
+            }
             $("#status").text($(document).fullScreen() ?
                 "Full screen enabled" : "Full screen disabled");
           });
@@ -314,6 +320,7 @@
         $('.chatbox').addClass('offline');
         $('.exit_session_btn').css('display','none');
         $('.send_tip_btn').css('display','none');
+        $('.full_screen_mode').css('display','none');
         //$('.private-chat').css('display','none');
         //$('.private-chat-msg').hide();
         clearInterval(myInterval);
@@ -379,7 +386,8 @@
         var token = data.token;
         var session = OT.initSession(apiKey, sessionId);
         session.on('streamCreated', function(event) {
-        // $('#opentok_subscriber').html('');
+        //$('#opentok_subscriber').html('');
+        $('.full_screen_mode').css('display','block');
         //console.log('event',event);
         prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_subscriber', {
             insertMode: 'append',
@@ -401,7 +409,7 @@
           
             //session.publish(publisher, handleOpentokError);
             // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-            session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join_for_group', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name,'follower_id': prop.user_data.id, 'vip_id': {{ $user->id }} ,'sessionId':sessionId ,'token':token,'profile_photo': prop.user_data.id.meta_data.profile_photo
+            session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join_for_group', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name,'follower_id': prop.user_data.id, 'vip_id': {{ $user->id }} ,'sessionId':sessionId ,'token':token,'profile_photo': prop.user_data.meta_data.profile_photo
             })});
 
         }
@@ -471,6 +479,9 @@
             })}); */
 
     });
+    /* $('.full_screen_mode').click(()=>{
+      $('.small_screen_mode').css('display','block')
+    }); */
     $('.join_group_chat_btn').click(()=>{
       //check_user_session({'user_id': {{ $user->id }}});
       var live_session = "{{@$live_session->id}}";
@@ -512,7 +523,7 @@
                         session_is_offline();
                       }
                     }else{
-                        alert('Insufficient balance for this private chat !');
+                        alert('Insufficient balance for this group chat !');
                     }
                 }
             });
@@ -592,6 +603,8 @@
       });
       
     })
+    
+
     
   </script>
 

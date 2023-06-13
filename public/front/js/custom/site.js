@@ -3289,12 +3289,15 @@ function display_chatbox_message(data) {
 
     }
     if (action == 'live_session_follower_join_for_group') {
-        console.log(prop);
+        console.log('prop: ', prop);
         var user_profile_photo = prop.url + '/public/front/images/user-placeholder.jpg';
         if (data.profile_photo != '') {
-            user_profile_photo = prop.url + '/public/uploads/profile_photo/' + profile_photo;
+            user_profile_photo = prop.url + '/public/uploads/profile_photo/' + data.profile_photo;
         }
-        //console.log(profile_photo);
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time;
         $('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
         $('.req_user_list_wrap .onlineuser_list').append(`<div class="live-user-list-box d-flex" id="live_user_list_box_` + data.follower_id + `">
         <div class="live-user-img">
@@ -3306,15 +3309,28 @@ function display_chatbox_message(data) {
         <div class="live-user-info">
           <h4>` + data.follower_name + `</h4>
           <ul class="d-flex">
-            <li><p>Lorem Ipsum Lorem Ipsum</p></li>
-            <li><strong><i class="far fa-clock"></i>` + new Date() + `</strong></li>
-            <li><strong><i class="fas fa-hourglass-half"></i>0 minutes</strong></li>
-            <li><strong><i class="fas fa-coins"></i>1 coin</strong></li>
+            <li><strong><i class="far fa-clock"></i>` + dateTime + `</strong></li>
+            <li><strong><i class="fas fa-hourglass-half"></i><span class="total_time_spend">0 </span> minutes</strong></li>
+            <li><strong><i class="fas fa-coins"></i><span class="total_coin">1 </span> coin</strong></li>
           </ul>
         </div>
       </div>`);
-        group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
-        myInterval = setInterval(function() { group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token); }, 61 * 1000);
+        if (data.follower_id == prop.user_data.id) {
+            group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
+        }
+
+
+        if (data.follower_id == prop.user_data.id) {
+            myInterval = setInterval(function() {
+                group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
+            }, 61 * 1000);
+        }
+        if (data.vip_id == prop.user_data.id) {
+            myInterval = setInterval(function() {
+                group_chat_user_list_value_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
+            }, 61 * 1000);
+        }
+
     }
     if (action == 'live_session_chat_block') {
         if (prop.user_data.id == data.user_id) {
@@ -3474,7 +3490,7 @@ function group_chat_balance_update(model_id = null, follower_id = null, sessionI
         success: function(res) {
             //console.log('private balance', res);
             // let low_alert=0;
-            console.log(res.data.follower_coin);
+            console.log(res.data.group_chat_details);
             if (res.data.follower_coin != 0) {
                 $("#follower_wallet_coins").html(res.data.follower_coin + ' Coins');
             }
@@ -3572,6 +3588,41 @@ function group_chat_balance_update(model_id = null, follower_id = null, sessionI
         }
     });
 }
+
+function group_chat_user_list_value_update(model_id = null, follower_id = null, sessionId = null, created_by = null, token = null) {
+    var data = new FormData();
+    data.append('action', 'group_chat_user_list_value_update');
+    data.append('_token', prop.csrf_token);
+    data.append('follower_id', follower_id);
+    data.append('model_id', model_id);
+    data.append('created_by', created_by);
+    data.append('sessionId', sessionId);
+    data.append('token', token);
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: prop.ajaxurl,
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            console.log(res.data.model_earning_for_this_session.token_coins);
+            if (res.data.model_earning_for_this_session.token_coins != '') {
+                $("#model_wallet_coins").html(res.data.model_earning_for_this_session.token_coins + ' Coins Earn');
+            }
+            $(res.data.group_chat_details).each(function(i, v) {
+                console.log("i :", i);
+                console.log("v :", v);
+                $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_time_spend').text('1');
+                $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_coin').text(v.coins);
+                /* if (v.field == 'email') {
+                    $('input[name="email"]').closest('.form-group').append("<div class='error'>" + v.message + "</div>");
+                } */
+            });
+        }
+    });
+}
+
 
 $(document).ready(function() {
 

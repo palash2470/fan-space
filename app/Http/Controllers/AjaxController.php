@@ -3000,8 +3000,24 @@ class AjaxController extends Controller
     } else {
       $insufficient_bal = 1;
     }
+    
+
     $data = ['low_balance_alert' => $low_balance_alert, 'insufficient_bal' => $insufficient_bal, 'live_session_history_id' => @$live_session_history->id,'follower_coin' => @$value == null ? 0 :@$value];
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
+  }
+  public function ajaxpost_group_chat_user_list_value_update($request){
+    $model_id = $request->model_id;
+    $follower_id = $request->follower_id;
+    $live_session = Live_session::where('user_id', $model_id)->first();
+    $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+
+    $model_earning_for_this_session = User_earning::where('live_session_history_id', $live_session_history->id)->first();
+
+    $group_chat_details = GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('exit_session',1)->get();
+
+    $data = ['model_earning_for_this_session' => $model_earning_for_this_session, 'live_session_history_id' => @$live_session_history->id,'group_chat_details' => $group_chat_details];
+    echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
+
   }
   public function ajaxpost_check_follower_balance_for_group_chat($request)
   {
@@ -3009,7 +3025,6 @@ class AjaxController extends Controller
     //dd($request->all());
     $follower_id = $request->follower_id;
     $model_id = $request->vip_id;
-
 
     $model_charge = User::find($model_id)->user_meta_array()['group_chat_charge'];
     $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];

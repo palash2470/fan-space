@@ -134,7 +134,7 @@
                 <div class="col-auto">
                   <div class="watch-cost">
                     <span class="coin-img"> <img src="{{asset('public/front/images/coin.png')}}"  alt=""></span>
-                    <span id="follower_wallet_coins">545</span></div>
+                    <span id="model_wallet_coins">0</span></div>
                 </div>
                 <div class="col-auto">
                   <div class="chat-btm-control">
@@ -327,6 +327,7 @@ function opentok_destroyPubSession() {
           $(".mw_loader").hide();
           $('.opentok_start_session').hide();
           $('.opentok_end_session').show();
+          $('.req_user_list_wrap .onlineuser_list').html('');
 
           var ot = data.data.opentok_data;
           var type = data.data.type;
@@ -358,9 +359,11 @@ function opentok_destroyPubSession() {
           $('.chatbox .chatlist').html('');
           $('.private-chat-req').css('display','none');
           $('.private-req-tbody').html('');
+          $('.req_user_list_wrap .onlineuser_list').html('');
           //window['live_viewer'] = {};
           window['live_viewer_count'] = 0;
           $('.golive_page .view_counter span').text('0');
+          $('.online_user_count').text('0');
           clearInterval(myInterval);
           $('#model_low_alert').val('no');
         }
