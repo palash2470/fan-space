@@ -41,17 +41,17 @@
         <div class="col-12">
           <div class="chat-top-control model-live-control">
             <ul class="d-flex justify-content-end">
-              <li><button type="button" class="chat-control-btn d-flex align-items-center req_user_list"><span>user</span> <span class="total-live-badge ml-2">999</span></button></li>
+              <li><button type="button" class="chat-control-btn d-flex align-items-center req_user_list"><span>user</span> <span class="total-live-badge ml-2 online_user_count">0</span></button></li>
               <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list"><span>private</span> <span class="total-live-badge ml-2">51</span></button></li>
             </ul>
             <div class="live-user-list req_user_list_wrap">
               <span class="hide-popup"><button class="hide_popup"><i class="fas fa-times"></i></button></span>
               <div class="live-user-list-head">
                 <h4>user list</h4>
-                <h5>online - 5</h5>
+                {{-- <h5>online - 5</h5> --}}
               </div>
-              <div class="live-user-list-body">
-                <div class="live-user-list-box d-flex">
+              <div class="live-user-list-body onlineuser_list">
+                {{-- <div class="live-user-list-box d-flex">
                   <div class="live-user-img">
                     <span class="live-user-img-box">
                       <img src="{{asset('public/front/images/user-placeholder.jpg')}}" alt="">
@@ -67,8 +67,8 @@
                       <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
                     </ul>
                   </div>
-                </div>
-                <div class="live-user-list-box d-flex">
+                </div> --}}
+                {{-- <div class="live-user-list-box d-flex">
                   <div class="live-user-img">
                     <span class="live-user-img-box">
                       <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
@@ -84,8 +84,8 @@
                       <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
                     </ul>
                   </div>
-                </div>
-                <div class="live-user-list-box d-flex">
+                </div> --}}
+                {{-- <div class="live-user-list-box d-flex">
                   <div class="live-user-img">
                     <span class="live-user-img-box">
                       <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
@@ -110,119 +110,8 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="live-user-list-box d-flex">
-                  <div class="live-user-img">
-                    <span class="live-user-img-box">
-                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
-                    </span>
-                  </div>
-                  <div class="live-user-info">
-                    <h4>barlowe</h4>
-                    <ul class="d-flex">
-                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
-                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
-                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
-                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="live-user-list-box d-flex">
-                  <div class="live-user-img">
-                    <span class="live-user-img-box">
-                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
-                    </span>
-                  </div>
-                  <div class="live-user-info">
-                    <h4>barlowe</h4>
-                    <ul class="d-flex">
-                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
-                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
-                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
-                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="live-user-list-box d-flex">
-                  <div class="live-user-img">
-                    <span class="live-user-img-box">
-                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
-                    </span>
-                  </div>
-                  <div class="live-user-info">
-                    <h4>barlowe</h4>
-                    <ul class="d-flex">
-                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
-                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
-                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
-                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="live-user-list-box d-flex">
-                  <div class="live-user-img">
-                    <span class="live-user-img-box">
-                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
-                    </span>
-                  </div>
-                  <div class="live-user-info">
-                    <h4>barlowe</h4>
-                    <ul class="d-flex">
-                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
-                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
-                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
-                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="live-user-list-box d-flex">
-                  <div class="live-user-img">
-                    <span class="live-user-img-box">
-                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
-                    </span>
-                  </div>
-                  <div class="live-user-info">
-                    <h4>barlowe</h4>
-                    <ul class="d-flex">
-                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
-                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
-                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
-                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="live-user-list-box d-flex">
-                  <div class="live-user-img">
-                    <span class="live-user-img-box">
-                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
-                    </span>
-                  </div>
-                  <div class="live-user-info">
-                    <h4>barlowe</h4>
-                    <ul class="d-flex">
-                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
-                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
-                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
-                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="live-user-list-box d-flex">
-                  <div class="live-user-img">
-                    <span class="live-user-img-box">
-                      <img src="{{asset('/public/front/images/prf-lft-img.png')}}" alt="">
-                    </span>
-                  </div>
-                  <div class="live-user-info">
-                    <h4>barlowe</h4>
-                    <ul class="d-flex">
-                      <li><p>Lorem Ipsum Lorem Ipsum</p></li>
-                      <li><strong><i class="far fa-clock"></i>11.30am</strong></li>
-                      <li><strong><i class="fas fa-hourglass-half"></i>2hour</strong></li>
-                      <li><strong><i class="fas fa-coins"></i>350coin</strong></li>
-                    </ul>
-                  </div>
-                </div>
+                </div> --}}
+                
               </div>
             </div>
           </div>
@@ -263,7 +152,7 @@
         <div class="new-model-video-chat-rgt">
           <div class="chatbox chatbox_wrap offline blk-user-wrap" vip_member_id="{{ $user_data['id'] }}" ts="{{ time() }}">
             <div class="chat-box-wrap chat_box_wrap">
-              <div class="chatoffline" style="display: none">Chatting unavailable. Model is not live</div>
+              <div class="chatoffline">Chatting unavailable. Model is not live</div>
               <div class="chatlist"></div>
               <div class="chatfields">
               <!-- <input type="text" class="form-control" placeholder="Say Something ...." name="chat_input"> -->
@@ -393,12 +282,14 @@
     if(typeof window['live_viewer_count'] == 'undefined') window['live_viewer_count'] = 0;
       window['live_viewer_count']++;
     $('.golive_page .view_counter span').text((window['live_viewer_count'] - 1));
+    $('.online_user_count').text((window['live_viewer_count'] - 1));
 
   });
 
   session.on("connectionDestroyed", function(event) {
     window['live_viewer_count']--;
     $('.golive_page .view_counter span').text((window['live_viewer_count'] - 1));
+    $('.online_user_count').text((window['live_viewer_count'] - 1));
   });
 
   session.on('signal:global', function signalCallback(event) {
