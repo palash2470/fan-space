@@ -22,6 +22,8 @@
     <link href="{{ url('public/front/css/select2.min.css') }}" rel="stylesheet" />
 
     <link rel="stylesheet" href="{{ URL::asset('/public/front/css/jquery-ui.css') }}">
+  {{-- Toastr --}}
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/toastr.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/developer.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/media.css') }}">
@@ -263,7 +265,10 @@
 
     {{-- Full Screen mode js --}}
     <script src="{{ url('public/front/js/jquery.fullscreen-min.js') }}"></script>
-
+    {{-- Sweert Alert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- Toastr --}}
+    <script src="{{ URL::asset('/public/front/js/toastr.min.js') }}"></script>
     <script>
       $(document).ready(function(){
         var bodyHeight = $(document).height();
@@ -486,48 +491,61 @@
       //check_user_session({'user_id': {{ $user->id }}});
       var live_session = "{{@$live_session->id}}";
       if(live_session != ''){
-        let conf = confirm("Are you sure you want group chat ? it charges {{ $usermeta['group_chat_charge'] }} coin per minute");
-        if (conf == true) {
-          let follower_id = prop.user_data.id;
-          let vip_id = "{{ $user->id }}";
-          var data = new FormData();
-            data.append('action', 'check_follower_balance_for_group_chat');
-            data.append('follower_id', follower_id);
-            data.append('vip_id', vip_id);
-            data.append('_token', prop.csrf_token);
-            $.ajax(
-                {type: 'POST', dataType: 'json', url: prop.ajaxurl, data: data, processData: false, contentType: false,
-                success: function(data){
-                    // console.log(data);
-                    if(!data.data.insufficient_balance){
-                      var ot = data.data.opentok_data;
-                      if(typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
-                      var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-                        session.unsubscribe(prop.opentok.subscriber);
+        Swal.fire({
+          title: 'Are you sure you want group chat ?',
+          text: "it charges {{ $usermeta['group_chat_charge'] }} coin per minute",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0cb3f0',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // if (conf == true) {
+                let follower_id = prop.user_data.id;
+                let vip_id = "{{ $user->id }}";
+                var data = new FormData();
+                  data.append('action', 'check_follower_balance_for_group_chat');
+                  data.append('follower_id', follower_id);
+                  data.append('vip_id', vip_id);
+                  data.append('_token', prop.csrf_token);
+                  $.ajax(
+                      {type: 'POST', dataType: 'json', url: prop.ajaxurl, data: data, processData: false, contentType: false,
+                      success: function(data){
+                          // console.log(data);
+                          if(!data.data.insufficient_balance){
+                            var ot = data.data.opentok_data;
+                            if(typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
+                            var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                              session.unsubscribe(prop.opentok.subscriber);
+                            }
+                            prop.opentok.apiKey = ot.apiKey;
+                            prop.opentok.sessionId = ot.sessionId;
+                            prop.opentok.token = ot.token;
+                            if(ot.sessionId != '') {
+                              $('#opentok_subscriber').show();
+                              $('.opentok_placeholder_img').hide();
+                              $('.chatbox').removeClass('offline');
+                              $('.private-chat').css('display','block');
+                              $('.exit_session_btn').css('display','block');
+                              $('.send_tip_btn').css('display','block');
+                              reset_opentok_player_area();
+                              //opentok_initializeSubSession(ot);
+                              opentok_initializeSubSessionForGroup(ot);
+                                  // console.log(OT);
+                            } else {
+                              session_is_offline();
+                            }
+                          }else{
+                              alert('Insufficient balance for this group chat !');
+                          }
                       }
-                      prop.opentok.apiKey = ot.apiKey;
-                      prop.opentok.sessionId = ot.sessionId;
-                      prop.opentok.token = ot.token;
-                      if(ot.sessionId != '') {
-                        $('#opentok_subscriber').show();
-                        $('.opentok_placeholder_img').hide();
-                        $('.chatbox').removeClass('offline');
-                        $('.private-chat').css('display','block');
-                        $('.exit_session_btn').css('display','block');
-                        $('.send_tip_btn').css('display','block');
-                        reset_opentok_player_area();
-                        //opentok_initializeSubSession(ot);
-                        opentok_initializeSubSessionForGroup(ot);
-                            // console.log(OT);
-                      } else {
-                        session_is_offline();
-                      }
-                    }else{
-                        alert('Insufficient balance for this group chat !');
-                    }
-                }
-            });
-        }
+                  });
+              // }
+            }
+        })
+        // let conf = confirm("Are you sure you want group chat ? it charges {{ $usermeta['group_chat_charge'] }} coin per minute");
+        
       }else{
         alert('Model currently offline');
       }
