@@ -42,7 +42,7 @@
           <div class="chat-top-control model-live-control">
             <ul class="d-flex justify-content-end">
               <li><button type="button" class="chat-control-btn d-flex align-items-center req_user_list"><span>user</span> <span class="total-live-badge ml-2 online_user_count">0</span></button></li>
-              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list"><span>private</span> <span class="total-live-badge ml-2">51</span></button></li>
+              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list"><span>private</span> <span class="total-live-badge ml-2">0</span></button></li>
             </ul>
             <div class="live-user-list req_user_list_wrap">
               <span class="hide-popup"><button class="hide_popup"><i class="fas fa-times"></i></button></span>
@@ -198,6 +198,10 @@
 
 
     <script>
+      window.onbeforeunload = function(event)
+      {
+          return confirm("Confirm refresh");
+      };
       $(document).ready(function(){
         var bodyHeight = $(document).height();
         $('body').css({"min-height": bodyHeight });

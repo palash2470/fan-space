@@ -2994,7 +2994,9 @@ class AjaxController extends Controller
           ]);
         }
         //Group chat table user spend coin this event
-        GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->increment('coins',$model_charge);
+       $group_chat_update = GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1);
+       $group_chat_update->increment('coins',$model_charge);
+       $group_chat_update->increment('video_chat_duration',1);
         
       }
     } else {
