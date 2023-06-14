@@ -3289,13 +3289,14 @@ function display_chatbox_message(data) {
 
     }
     if (action == 'live_session_follower_join_for_group') {
-        toastr.success("I do not think that means what you think it means.")
+
+        toastr.success("<b>" + data.follower_name + " </b>has joined")
         toastr.options = {
             "closeButton": true,
             "debug": false,
             "newestOnTop": true,
             "progressBar": true,
-            "positionClass": "toast-top-right",
+            "positionClass": "toast-top-center",
             "preventDuplicates": false,
             "onclick": null,
             "showDuration": "300",
@@ -3316,19 +3317,20 @@ function display_chatbox_message(data) {
         var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         var dateTime = date + ' ' + time;
-        $('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
+        //$('.chatbox .chatlist').append('<div class="user_join" ><div class="joining"><b>' + data.follower_name + ' </b>has joined </div></div>');
+        $('.onlineuser_list #live_user_list_box_' + data.follower_id).remove();
         $('.req_user_list_wrap .onlineuser_list').append(`<div class="live-user-list-box d-flex" id="live_user_list_box_` + data.follower_id + `">
         <div class="live-user-img">
           <span class="live-user-img-box">
             <img src="` + user_profile_photo + `" alt="">
-            <span class="online-badge onlie"></span>
+            <span class="online-badge onlie user_online_status"></span>
           </span>
         </div>
         <div class="live-user-info">
           <h4>` + data.follower_name + `</h4>
           <ul class="d-flex">
             <li><strong><i class="far fa-clock"></i>` + dateTime + `</strong></li>
-            <li><strong><i class="fas fa-hourglass-half"></i><span class="total_time_spend">0 </span> minutes</strong></li>
+            <li><strong><i class="fas fa-hourglass-half"></i><span class="total_time_spend">1 </span> minutes</strong></li>
             <li><strong><i class="fas fa-coins"></i><span class="total_coin">1 </span> coin</strong></li>
           </ul>
         </div>
@@ -3336,8 +3338,9 @@ function display_chatbox_message(data) {
         if (data.follower_id == prop.user_data.id) {
             group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
         }
-
-
+        if (data.vip_id == prop.user_data.id) {
+            group_chat_user_list_value_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
+        }
         if (data.follower_id == prop.user_data.id) {
             myInterval = setInterval(function() {
                 group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
@@ -3624,18 +3627,23 @@ function group_chat_user_list_value_update(model_id = null, follower_id = null, 
         processData: false,
         contentType: false,
         success: function(res) {
-            console.log(res.data.model_earning_for_this_session.token_coins);
-            if (res.data.model_earning_for_this_session.token_coins != '') {
+            //console.log(res.data.model_earning_for_this_session.token_coins);
+            if (res.data.model_earning_for_this_session != null && res.data.model_earning_for_this_session.token_coins != '') {
                 $("#model_wallet_coins").html(res.data.model_earning_for_this_session.token_coins + ' Coins Earn');
             }
             $(res.data.group_chat_details).each(function(i, v) {
-                console.log("i :", i);
-                console.log("v :", v);
+                /* console.log("i :", i);
+                console.log("v :", v); */
+
                 $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_time_spend').text('1');
                 $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_coin').text(v.coins);
-                /* if (v.field == 'email') {
-                    $('input[name="email"]').closest('.form-group').append("<div class='error'>" + v.message + "</div>");
-                } */
+                $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_time_spend').text(v.video_chat_duration);
+                if (v.exit_session == 0) {
+                    $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.user_online_status').addClass('offlie').removeClass('onlie');
+                } else {
+                    $('.onlineuser_list').find('.user_online_status').addClass('onlie').removeClass('offlie');
+                }
+
             });
         }
     });

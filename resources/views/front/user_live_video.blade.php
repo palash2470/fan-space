@@ -270,7 +270,22 @@
     {{-- Toastr --}}
     <script src="{{ URL::asset('/public/front/js/toastr.min.js') }}"></script>
     <script>
+      /* window.addEventListener('beforeunload', (event) => {
+        event.returnValue = 'Are you sure you want to leave?';
+      }); */
+     /*  window.onbeforeunload = function(event)
+      {
+        if(prop.opentok.sessionId !=''){
+          return confirm("Confirm refresh");
+        }
+      }; */
       $(document).ready(function(){
+        
+        if(document.getElementById("opentok_subscriber").style.display != "none") {
+          console.log('display');
+        }
+
+
         var bodyHeight = $(document).height();
         // $('body').css({"min-height": bodyHeight });
         var headerHeight = $('.header_height').outerHeight(true);
@@ -547,7 +562,12 @@
         // let conf = confirm("Are you sure you want group chat ? it charges {{ $usermeta['group_chat_charge'] }} coin per minute");
         
       }else{
-        alert('Model currently offline');
+        Swal.fire({
+        icon: 'error',
+        title: 'Model currently offline',
+        //text: 'Something went wrong!',
+      })
+        //alert('Model currently offline');
       }
     })
 
@@ -613,6 +633,7 @@
             $('.send_tip_btn').css('display','none');
             //$('.private-chat').css('display','none');
             //$('.private-chat-msg').hide();
+            
             clearInterval(myInterval);
             $('#model_low_alert').val('no'); 
             location.reload();

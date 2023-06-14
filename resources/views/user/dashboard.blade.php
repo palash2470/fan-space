@@ -43,10 +43,16 @@
                                     <p>home</p>
                                 </a></li>
                             <?php if($user_data['role'] == 2) { ?>
-                            <li class="{{ $meta_data['slug'] == 'go_live' ? 'active' : '' }}"><a
+                            {{-- <li class="{{ $meta_data['slug'] == 'go_live' ? 'active' : '' }}"><a
                                     href="{{ url('dashboard/go_live') }}"><i class="fas fa-video"></i>
                                     <p>Live</p>
-                                </a></li>
+                                </a>
+                            </li> --}}
+                            <li class="{{ $meta_data['slug'] == 'go_live' ? 'active' : '' }}"><a
+                                    href="{{ url('dashboard/go_live_chat') }}" target="_blank"><i class="fas fa-video"></i>
+                                    <p>Live</p>
+                                </a>
+                            </li>
                             <li class="{{ $meta_data['slug'] == 'subscribers' ? 'active' : '' }}"><a
                                     href="{{ url('dashboard/subscribers') }}"><span class="ti-thumb-up"></span>
                                     <p>Subscribers</p>

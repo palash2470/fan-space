@@ -3015,7 +3015,7 @@ class AjaxController extends Controller
 
     $model_earning_for_this_session = User_earning::where('live_session_history_id', $live_session_history->id)->first();
 
-    $group_chat_details = GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('exit_session',1)->get();
+    $group_chat_details = GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->get();
 
     $data = ['model_earning_for_this_session' => $model_earning_for_this_session, 'live_session_history_id' => @$live_session_history->id,'group_chat_details' => $group_chat_details];
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
@@ -3059,7 +3059,7 @@ class AjaxController extends Controller
         'session_id' => $live_session->session_id,
         'model_id' => $model_id,
         'follower_id' => $follower_id,
-        'video_chat_duration' => '',
+        'video_chat_duration' => 0,
         'coins' => 0,
         'created_at' => date('Y-m-d H:i:s'),
         'updated_at' => date('Y-m-d H:i:s'),
