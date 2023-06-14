@@ -49,12 +49,11 @@ if (isset($url_segment)) {
     <link href="{{ url('public/front/css/select2.min.css') }}" rel="stylesheet" />
     {{-- <link href="{{ url('public/front/css/mCustomScrollbar.css') }}" rel="stylesheet" /> --}}
 
-    <link rel="stylesheet" href="{{ URL::asset('/public/front/css/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('/public/front/css/jquery-ui.css') }}">    
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/developer.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/media.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url('public/front/css/jquery.mCustomScrollbar.css') }}"
-        rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{{ url('public/front/css/jquery.mCustomScrollbar.css') }}" rel="stylesheet" />
     <script src="{{ URL::asset('/public/front/js/jquery-3.5.1.min.js') }}" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     @stack('head')

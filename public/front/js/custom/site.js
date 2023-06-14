@@ -3289,6 +3289,24 @@ function display_chatbox_message(data) {
 
     }
     if (action == 'live_session_follower_join_for_group') {
+        toastr.success("I do not think that means what you think it means.")
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
         console.log('prop: ', prop);
         var user_profile_photo = prop.url + '/public/front/images/user-placeholder.jpg';
         if (data.profile_photo != '') {
