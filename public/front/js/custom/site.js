@@ -3289,7 +3289,7 @@ function display_chatbox_message(data) {
 
     }
     if (action == 'live_session_follower_join_for_group') {
-
+        console.log('data -' + data.follower_spent_so_far);
         toastr.success("<b>" + data.follower_name + " </b>has joined")
         toastr.options = {
             "closeButton": true,
@@ -3332,7 +3332,7 @@ function display_chatbox_message(data) {
             <li><strong><i class="far fa-clock"></i>` + dateTime + `</strong></li>
             <li><strong><i class="fas fa-hourglass-half"></i><span class="total_time_spend">1 </span> minutes</strong></li>
             <li><strong><i class="fas fa-coins"></i><span class="total_coin">1 </span> coin</strong></li>
-            <li><strong><i class="fas fa-coins"></i>spent so far <span class="total_coin">1 </span> coin</strong></li>
+            <li><strong><i class="fas fa-coins"></i>spent so far <span class="total_spend_so_far">` + data.follower_spent_so_far + ` </span> coin</strong></li>
           </ul>
         </div>
       </div>`);
@@ -3345,12 +3345,12 @@ function display_chatbox_message(data) {
         if (data.follower_id == prop.user_data.id) {
             myInterval = setInterval(function() {
                 group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
-            }, 61 * 1000);
+            }, 60 * 1000);
         }
         if (data.vip_id == prop.user_data.id) {
             myInterval = setInterval(function() {
                 group_chat_user_list_value_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
-            }, 61 * 1000);
+            }, 60 * 1000);
         }
 
     }
@@ -3647,6 +3647,7 @@ function group_chat_user_list_value_update(model_id = null, follower_id = null, 
                 $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_time_spend').text('1');
                 $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_coin').text(v.coins);
                 $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_time_spend').text(v.video_chat_duration);
+                //$('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.total_spend_so_far').text(v.follower_spent_so_far);
                 if (v.exit_session == 0) {
                     $('.onlineuser_list #live_user_list_box_' + v.follower_id).find('.user_online_status').addClass('offlie').removeClass('onlie');
                 } else {

@@ -327,7 +327,7 @@ function opentok_destroyPubSession() {
 
 
   $(document).ready(function(){
-
+    opentok_end_session_page_refresh();
     $(document).on('click', '.opentok_start_session', function(){
 
       $(".mw_loader").show();
@@ -384,7 +384,29 @@ function opentok_destroyPubSession() {
     //setInterval(function(){ live_viewer_track(); }, 3000);
 
   });
-    
+  
+  function opentok_end_session_page_refresh(){
+    var data = new FormData();
+      data.append('action', 'opentok_end_session');
+      data.append('_token', prop.csrf_token);
+      $.ajax({type: 'POST', dataType: 'json', url: prop.ajaxurl, data: data, processData: false, contentType: false, success: function(data){
+          opentok_destroyPubSession();
+          $('.opentok_start_session').show();
+          $('.opentok_end_session').hide();
+          $('.chatbox').addClass('offline');
+          $('.chatbox .chatlist').html('');
+          $('.private-chat-req').css('display','none');
+          $('.private-req-tbody').html('');
+          $('.req_user_list_wrap .onlineuser_list').html('');
+          //window['live_viewer'] = {};
+          window['live_viewer_count'] = 0;
+          $('.golive_page .view_counter span').text('0');
+          $('.online_user_count').text('0');
+          clearInterval(myInterval);
+          $('#model_low_alert').val('no');
+        }
+      });
+  }
    
   </script>
 

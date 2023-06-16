@@ -279,8 +279,14 @@
           return confirm("Confirm refresh");
         }
       }; */
+      /* window.addEventListener('beforeunload', (event) => {
+        event.preventDefault();
+        if(prop.opentok.sessionId !=''){
+          event.returnValue = '';
+        }
+      }); */
       $(document).ready(function(){
-        
+        console.log('session-id - '+prop.opentok.sessionId);
         if(document.getElementById("opentok_subscriber").style.display != "none") {
           console.log('display');
         }
@@ -400,8 +406,8 @@
             session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name, 'vip_id': {{ $user->id }}
             })}); */
     }
-    function opentok_initializeSubSessionForGroup(data) {
-      //console.log(data);
+    function opentok_initializeSubSessionForGroup(data,follower_spent_so_far=0) {
+        console.log('initilize -'+follower_spent_so_far);
         var apiKey = data.apiKey;
         var sessionId = data.sessionId;
         var token = data.token;
@@ -430,7 +436,7 @@
           
             //session.publish(publisher, handleOpentokError);
             // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-            session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join_for_group', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name,'follower_id': prop.user_data.id, 'vip_id': {{ $user->id }} ,'sessionId':sessionId ,'token':token,'profile_photo': prop.user_data.meta_data.profile_photo
+            session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join_for_group', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name,'follower_id': prop.user_data.id, 'vip_id': {{ $user->id }} ,'sessionId':sessionId ,'token':token,'profile_photo': prop.user_data.meta_data.profile_photo,'follower_spent_so_far':follower_spent_so_far
             })});
 
         }
@@ -492,7 +498,7 @@
     }
 
     $(document).ready(function(){
-
+      opentok_end_session_for_follower_page_refresh();
         //check_user_session({'user_id': {{ $user->id }}});
 
         /*  var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
@@ -557,7 +563,7 @@
                                 $('.send_tip_btn').css('display','block');
                                 reset_opentok_player_area();
                                 //opentok_initializeSubSession(ot);
-                                opentok_initializeSubSessionForGroup(ot);
+                                opentok_initializeSubSessionForGroup(ot,data.data.follower_spent_so_far);
                                     // console.log(OT);
                               } else {
                                 session_is_offline();
@@ -664,7 +670,39 @@
       
     })
     
-
+    function opentok_end_session_for_follower_page_refresh(){
+      //update follower group chat by ajax call
+      var data = new FormData();
+      let follower_id = prop.user_data.id;
+      let vip_id = "{{ $user->id }}";
+      data.append('action', 'opentok_end_session_for_follower');
+      data.append('follower_id', follower_id);
+      data.append('model_id', vip_id);
+      data.append('_token', prop.csrf_token);
+      $.ajax(
+          {type: 'POST', dataType: 'json', url: prop.ajaxurl, data: data, processData: false, contentType: false,
+          success: function(data){
+            // console.log(data);
+            var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+            session.disconnect();
+            prop.opentok.apiKey = '';
+            prop.opentok.sessionId = '';
+            prop.opentok.token = '';
+            $('#opentok_subscriber').hide();
+            $('.opentok_placeholder_img').show();
+            $('.chatbox').addClass('offline');
+            $('.exit_session_btn').css('display','none');
+            $('.send_tip_btn').css('display','none');
+            //$('.private-chat').css('display','none');
+            //$('.private-chat-msg').hide();
+            
+            clearInterval(myInterval);
+            $('#model_low_alert').val('no'); 
+            //location.reload();
+           
+          }
+      });
+    }
     
   </script>
 
