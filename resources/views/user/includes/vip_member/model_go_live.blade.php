@@ -39,8 +39,15 @@
 
 <section class="golive_page model-section live-model-sec-new">
   <div class="container-fluid">
-    <div class="row header_height">
-        <div class="col-12">
+    <div class="row header_height justify-content-between align-items-center">
+      <div class="col-auto">
+        <div class="website-logo">
+          <a href="#">
+            <img src="http://localhost/fan-space/public/uploads/settings/settings_website_logo/f32ed34d-5e31-494f-b20a-65de6c6c981f.png" alt="">
+          </a>
+        </div>
+      </div>
+        <div class="col-auto">
           <div class="chat-top-control model-live-control">
             <ul class="d-flex justify-content-end">
               <li><button type="button" class="chat-control-btn d-flex align-items-center req_user_list"><span>user</span> <span class="total-live-badge ml-2 online_user_count">0</span></button></li>
@@ -184,13 +191,13 @@
 </section>
 
 
+
 <script src="{{ URL::asset('/public/front/js/jquery-ui.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/popper.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/bootstrap.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/wow.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/wow.custom.js') }}" type="text/javascript"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/css/intlTelInput.min.css"
-        rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/css/intlTelInput.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/js/intlTelInput.min.js"></script>
     <script src="{{ URL::asset('/public/front/js/croppie.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/paralax.js') }}" type="text/javascript"></script>
