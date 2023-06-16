@@ -345,6 +345,7 @@
         //$('.private-chat-msg').hide();
         clearInterval(myInterval);
         $('#model_low_alert').val('no');
+        location.reload();
     }
 
 
@@ -505,6 +506,7 @@
     $('.join_group_chat_btn').click(()=>{
       //check_user_session({'user_id': {{ $user->id }}});
       var live_session = "{{@$live_session->id}}";
+      console.log(live_session);
       if(live_session != ''){
         Swal.fire({
           title: 'Are you sure you want group chat ?',
@@ -527,33 +529,52 @@
                   $.ajax(
                       {type: 'POST', dataType: 'json', url: prop.ajaxurl, data: data, processData: false, contentType: false,
                       success: function(data){
-                          // console.log(data);
-                          if(!data.data.insufficient_balance){
-                            var ot = data.data.opentok_data;
-                            if(typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
-                            var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-                              session.unsubscribe(prop.opentok.subscriber);
-                            }
-                            prop.opentok.apiKey = ot.apiKey;
-                            prop.opentok.sessionId = ot.sessionId;
-                            prop.opentok.token = ot.token;
-                            if(ot.sessionId != '') {
-                              $('#opentok_subscriber').show();
-                              $('.opentok_placeholder_img').hide();
-                              $('.chatbox').removeClass('offline');
-                              $('.private-chat').css('display','block');
-                              $('.exit_session_btn').css('display','block');
-                              $('.send_tip_btn').css('display','block');
-                              reset_opentok_player_area();
-                              //opentok_initializeSubSession(ot);
-                              opentok_initializeSubSessionForGroup(ot);
-                                  // console.log(OT);
-                            } else {
-                              session_is_offline();
-                            }
+                           console.log(data.data.model_online_status);
+                           //user offline
+                          if(data.data.model_online_status == false){
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Model currently offline',
+                              //text: 'Something went wrong!',
+                            });
+                            location.reload();
                           }else{
-                              alert('Insufficient balance for this group chat !');
+                            if(!data.data.insufficient_balance){
+                              var ot = data.data.opentok_data;
+                              if(typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
+                              var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                                session.unsubscribe(prop.opentok.subscriber);
+                              }
+                              prop.opentok.apiKey = ot.apiKey;
+                              prop.opentok.sessionId = ot.sessionId;
+                              prop.opentok.token = ot.token;
+                              if(ot.sessionId != '') {
+                                $('#opentok_subscriber').show();
+                                $('.opentok_placeholder_img').hide();
+                                $('.chatbox').removeClass('offline');
+                                $('.private-chat').css('display','block');
+                                $('.exit_session_btn').css('display','block');
+                                $('.send_tip_btn').css('display','block');
+                                reset_opentok_player_area();
+                                //opentok_initializeSubSession(ot);
+                                opentok_initializeSubSessionForGroup(ot);
+                                    // console.log(OT);
+                              } else {
+                                session_is_offline();
+                              }
+                            }else{
+                                //alert('Insufficient balance for this group chat !');
+                                Swal.fire('Insufficient balance for this group chat !');
+                                Swal.fire({
+                                  title: '<strong>Insufficient balance for this group chat !</strong>',
+                                  icon: 'error',
+                                  html:'<a href="' + prop.url + '/dashboard/buy_coins" target="_blank">Click to recharge Now.</a> ',
+                                  showCloseButton: true,
+
+                                });
+                            }
                           }
+                          
                       }
                   });
               // }

@@ -124,6 +124,7 @@
           <div class="new-model-video-chat-lft-wrap new_model_video">
             <div class="new_model_video_main">
               <input type="hidden" name="model_low_alert" id="model_low_alert" value="no">
+              <div class="relative"><div id="opentok_pvt_subscriber" class="opentok_player_area" style="display: block;"></div></div>
               <div id="opentok_publisher" class="opentok_player_area"></div>
             </div>
             {{-- <div class="d-flex justify-content-center mt-3">

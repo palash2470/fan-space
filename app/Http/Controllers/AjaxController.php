@@ -3040,6 +3040,7 @@ class AjaxController extends Controller
       'insufficient_balance' => true,
       'follower_sub_to_models' => $follower_sub_to_models,
       'follower_detail' => $follower_detail,
+      'model_online_status' => true,
     ];
 
     $apiKey = $this->meta_data['settings']['settings_opentok_api_key'];
@@ -3069,11 +3070,18 @@ class AjaxController extends Controller
 
       $opentok_data = ['apiKey' => $apiKey, 'sessionId' => $live_session->session_id, 'token' => $live_session->token];
       
+      $data['opentok_data'] = $opentok_data;
+      if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
+        $data['insufficient_balance'] = false;
+      }
+      //dd($data);
+      if($data['insufficient_balance'] == true){
+        GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
+      }
+    }else{
+      $data['model_online_status'] = false;
     }
-    $data['opentok_data'] = $opentok_data;
-    if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
-      $data['insufficient_balance'] = false;
-    }
+    
     // dd($model_charge,$follower_bal);
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
     // return ['request'=>$request->all()];

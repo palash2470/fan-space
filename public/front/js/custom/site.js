@@ -3511,7 +3511,7 @@ function group_chat_balance_update(model_id = null, follower_id = null, sessionI
         success: function(res) {
             //console.log('private balance', res);
             // let low_alert=0;
-            console.log(res.data.group_chat_details);
+            //console.log(res.data.group_chat_details);
             if (res.data.follower_coin != 0) {
                 $("#follower_wallet_coins").html(res.data.follower_coin + ' Coins');
             }
@@ -3521,7 +3521,15 @@ function group_chat_balance_update(model_id = null, follower_id = null, sessionI
                 if (prop.user_data.id == follower_id) {
                     var model_low_alert = $('#model_low_alert').val();
                     if (model_low_alert == 'no') {
-                        alert('your account balance is low. please recharge to continue this chat');
+                        //alert('your account balance is low. please recharge to continue this chat');
+                        Swal.fire({
+                            title: '<strong>Your account balance is low.</strong>',
+                            icon: 'info',
+                            html: 'Please recharge to continue this chat, ' +
+                                '<a href="' + prop.url + '/dashboard/buy_coins" target="_blank">Click to Recharge</a> ',
+                            showCloseButton: true,
+
+                        });
                     }
                     $('#model_low_alert').val('yes');
                 }
@@ -3712,8 +3720,8 @@ $(document).on('click', ".balanceBtn", () => {
     if (prop.user_data.role == '3' || prop.user_data.role == 3)
         var a = confirm("Would you like to purchase coins?");
     if (a == true) {
-        window.location.href = prop.url + '/dashboard/buy_coins';
-
+        //window.location.href = prop.url + '/dashboard/buy_coins';
+        window.open(prop.url + '/dashboard/buy_coins', '_blank');
 
     }
 });

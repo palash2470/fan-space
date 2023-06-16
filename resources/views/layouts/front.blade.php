@@ -50,6 +50,8 @@ if (isset($url_segment)) {
     {{-- <link href="{{ url('public/front/css/mCustomScrollbar.css') }}" rel="stylesheet" /> --}}
 
     <link rel="stylesheet" href="{{ URL::asset('/public/front/css/jquery-ui.css') }}">    
+     {{-- Toastr --}}
+     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/toastr.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/developer.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('/public/front/css/media.css') }}">
@@ -311,6 +313,9 @@ if (isset($url_segment)) {
     <!--<script src="{{ url('public/front/js/mCustomScrollbar.js') }}"></script>-->
     <script src="{{ url('public/front/js/jquery.mCustomScrollbar.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- Toastr --}}
+    <script src="{{ URL::asset('/public/front/js/toastr.min.js') }}"></script>
     <script>
         {{-- mithun da script --}}
         {{-- $(document).ready(function() {
