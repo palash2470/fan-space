@@ -3332,6 +3332,7 @@ function display_chatbox_message(data) {
             <li><strong><i class="far fa-clock"></i>` + dateTime + `</strong></li>
             <li><strong><i class="fas fa-hourglass-half"></i><span class="total_time_spend">1 </span> minutes</strong></li>
             <li><strong><i class="fas fa-coins"></i><span class="total_coin">1 </span> coin</strong></li>
+            <li><strong><i class="fas fa-coins"></i>spent so far <span class="total_coin">1 </span> coin</strong></li>
           </ul>
         </div>
       </div>`);
