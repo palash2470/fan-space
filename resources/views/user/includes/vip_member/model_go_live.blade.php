@@ -47,9 +47,14 @@
               <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list"><span>private</span> <span class="total-live-badge ml-2">0</span></button></li>
             </ul>
             <div class="live-user-list req_user_list_wrap">
-              <span class="hide-popup"><button class="hide_popup"><i class="fas fa-times"></i></button></span>
               <div class="live-user-list-head">
-                <h4>user list</h4>
+                <div class="live-user-list-head-close">
+                  <span class="hide-popup"><button class="hide_popup"><i class="fas fa-angle-right"></i></button></span>
+                </div>
+                <div class="live-user-list-head-text">
+                  <h4>user list</h4>
+                </div>
+                
                 {{-- <h5>online - 5</h5> --}}
               </div>
               <div class="live-user-list-body onlineuser_list">
@@ -124,8 +129,14 @@
           <div class="new-model-video-chat-lft-wrap new_model_video">
             <div class="new_model_video_main">
               <input type="hidden" name="model_low_alert" id="model_low_alert" value="no">
-              <div class="relative"><div id="opentok_pvt_subscriber" class="opentok_player_area" style="display: block;"></div></div>
-              <div id="opentok_publisher" class="opentok_player_area"></div>
+              <div class="live-main-videowrap">
+                <div class="live-main-videowrap-lft" style="display: none;">
+                  <div class="relative"><div id="opentok_pvt_subscriber" class="opentok_player_area" style="display: none;"></div></div>
+                </div>
+                <div class="live-main-videowrap-rgt">
+                  <div id="opentok_publisher" class="opentok_player_area"></div>
+                </div>                
+              </div>
             </div>
             {{-- <div class="d-flex justify-content-center mt-3">
                 <a href="javascript:void(0);" class="commonBtn2 opentok_start_session">Start session</a>
