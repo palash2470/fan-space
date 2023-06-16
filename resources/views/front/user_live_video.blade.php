@@ -245,7 +245,7 @@
       </div>
     </div>
   </section>
-  <div class="video-chat-ask-popup" style="display: ;">
+  <div class="video-chat-ask-popup" style="display: none;">
     <div class="ask-popup-wrap">
       <h2>Please click Group or Private button</h2>
       <ul class="d-flex">
