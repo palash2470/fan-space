@@ -244,7 +244,10 @@
 
 
         $(document).on('click', '.req_user_list', function(){
-          $('.req_user_list_wrap').toggleClass('user_open');
+          if($('.online_user_count').text() > 0){
+            $('.req_user_list_wrap').toggleClass('user_open');
+          }
+          
         });
         $(document).on('click', '.hide_popup', function(){
           $('.req_user_list_wrap').removeClass('user_open');
