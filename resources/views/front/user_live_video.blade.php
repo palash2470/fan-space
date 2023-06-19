@@ -103,8 +103,15 @@
     <section class="live-sec follower-section live-sec-new">
       <input type="hidden" name="model_low_alert" id="model_low_alert" value="no">
     <div class="container-fluid">
-      <div class="row header_height">
-        <div class="col-12">
+      <div class="row header_height justify-content-between align-items-center">
+        <div class="col-auto">
+          <div class="website-logo">
+            <a href="#">
+              <img src="http://localhost/fan-space/public/uploads/settings/settings_website_logo/f32ed34d-5e31-494f-b20a-65de6c6c981f.png" alt="">
+            </a>
+          </div>
+        </div>
+        <div class="col-auto">
           <div class="chat-top-control">
             <ul class="d-flex justify-content-end">
               <li class="chat-tip">
@@ -238,14 +245,22 @@
       </div>
     </div>
   </section>
+  <div class="video-chat-ask-popup" style="display: none;">
+    <div class="ask-popup-wrap">
+      <h2>Please click Group or Private button</h2>
+      <ul class="d-flex">
+        <li><button type="button" class="mode-chat-btn"><i class="fas fa-users"></i>group {{ @$usermeta['group_chat_charge'] }} coin P/M</button></li>
+        <li><button type="button" class="mode-chat-btn"><i class="fas fa-chalkboard-teacher"></i> private {{ $usermeta['private_chat_charge'] }} coin P/M</button></li>
+      </ul>
+    </div>
+  </div>
 
     <script src="{{ URL::asset('/public/front/js/jquery-ui.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/popper.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/bootstrap.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/wow.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/wow.custom.js') }}" type="text/javascript"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/css/intlTelInput.min.css"
-        rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/css/intlTelInput.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/js/intlTelInput.min.js"></script>
     <script src="{{ URL::asset('/public/front/js/croppie.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/paralax.js') }}" type="text/javascript"></script>
@@ -253,8 +268,7 @@
     <script src="{{ URL::asset('/public/front/js/video.min.js') }}"></script>
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
-    <script src="{{ url('public/front/library/emojionearea-3.3.1/dist/emojionearea.min.js') }}" type="text/javascript">
-    </script>
+    <script src="{{ url('public/front/library/emojionearea-3.3.1/dist/emojionearea.min.js') }}" type="text/javascript"></script>
     <script src="{{ url('public/front/js/select2.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/jquery.timeago.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/custom/common.js') }}" type="text/javascript"></script>
