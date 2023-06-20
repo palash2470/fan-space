@@ -270,15 +270,15 @@
       }; */
       $(document).ready(function(){
         var bodyHeight = $(document).height();
-        $('body').css({"min-height": bodyHeight });
+        // $('body').css({"min-height": bodyHeight });
         var headerHeight = $('.header_height').outerHeight(true);
         var controlHeight = $('.control_left').outerHeight(true);
         $('.new_model_video').css({"padding-bottom": controlHeight});
-        var wrapHeight = bodyHeight - (headerHeight + controlHeight);
-        $('.new_model_video_main').css({"height": wrapHeight});
+        // var wrapHeight = bodyHeight - (headerHeight + controlHeight);
+        // $('.new_model_video_main').css({"height": wrapHeight});
         // Right        
         $('.chatbox_wrap').css({"padding-bottom": controlHeight});
-        $('.chat_box_wrap').css({"height": wrapHeight - 2});
+        // $('.chat_box_wrap').css({"height": wrapHeight - 2});
 
 
         // Tip toggle
