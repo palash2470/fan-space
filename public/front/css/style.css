@@ -8603,6 +8603,11 @@ input[type=number]::-webkit-outer-spin-button {
     text-align: center;
     border-radius: 4px;
     font-weight: 800;
+    width: 100%;
+    background: #fff;
+    height: 20px;
+    line-height: 20px;
+    outline: none !important;
 }
 
 .live-user-info-rgt li .privet-chat-req.req-accept {
@@ -8706,7 +8711,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .ask-popup-wrap h2 {
     color: #fff;
-    font-size: 34px;
+    font-size: 2.125rem;
     margin-bottom: 8px;
 }
 .ask-popup-wrap li{
@@ -8740,5 +8745,18 @@ input[type=number]::-webkit-outer-spin-button {
 .website-logo a img{
     display: block;
     width: 100%;
+}
+.private-text-msg {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px;
+    z-index: 2;
+}
+.privet-chat-req-msg {
+    background-color: #0cb3f0;
+    color: #fff;
+    font-size: 1rem;
+    padding: 5px 18px;
 }
 /* New Design user Live Chat End */

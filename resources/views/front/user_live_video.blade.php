@@ -166,11 +166,6 @@
                       <li><a href="javascript:;" class="prv-chat-btn" data-toggle="tooltip" data-placement="top" title="{{ $usermeta['private_chat_charge'] }} coin per minute">private chat</a></li>
                   </ul>
               </div>-->
-              <div class="private-chat-msg" style="display: none;">
-                  <ul class="d-flex justify-content-center">
-                      <li>You have requested for private chat. wait for model response</li>
-                  </ul>
-              </div>
             </div>
             <?php if(isset($user_data['id'])) {
               if(in_array($user_data['role'], [2, 3])) {
@@ -257,6 +252,9 @@
         <h2>I am currently offline</h2>
       @endif
     </div>
+  </div>
+  <div class="private-text-msg private-chat-msg" style="display: none;">
+    <div class="privet-chat-req-msg">You have requested for private chat. wait for model response</div>
   </div>
 
     <script src="{{ URL::asset('/public/front/js/jquery-ui.js') }}" type="text/javascript"></script>

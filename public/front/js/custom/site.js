@@ -3382,6 +3382,7 @@ function display_chatbox_message(data) {
                     <ul class="d-flex">
                         <li><strong><i class="fas fa-user"></i>${data.follower_detail.gender==1?'Male':(data.follower_detail.gender==2?'Female':(data.follower_detail.gender==3?'Transgender':'Undefined'))}</strong></li>
                         <li>${data.follower_sub_to_models?'<span class="badge badge-success">Subscriber</span>':'<span class="badge badge-danger">Non Subscriber</span>'}</li>
+                        <li><strong><i class="fas fa-coins"></i>spent so far <span class="total_spend_so_far"> 5369 </span> coin</strong></li>
                     </ul>
                     </div>
                     <div class="live-user-info-rgt">
