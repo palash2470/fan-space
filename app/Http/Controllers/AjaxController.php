@@ -3118,6 +3118,8 @@ class AjaxController extends Controller
     if (isset($live_session->id)) {
       $opentok_data = ['apiKey' => $apiKey, 'sessionId' => $live_session->session_id, 'token' => $live_session->token];
       $data['opentok_data'] = $opentok_data;
+      $follower_spent_so_far =  GroupChat::where('model_id',$model_id)->where('follower_id',$follower_id)->sum('coins');
+      $data['follower_spent_so_far'] = $follower_spent_so_far;
     }
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
     // return ['request'=>$request->all()];

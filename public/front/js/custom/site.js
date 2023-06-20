@@ -3332,7 +3332,7 @@ function display_chatbox_message(data) {
             <li><strong><i class="far fa-clock"></i>` + dateTime + `</strong></li>
             <li><strong><i class="fas fa-hourglass-half"></i><span class="total_time_spend">1 </span> minutes</strong></li>
             <li><strong><i class="fas fa-coins"></i><span class="total_coin">1 </span> coin</strong></li>
-            <li><strong><i class="fas fa-coins"></i>spent so far <span class="total_spend_so_far">` + data.follower_spent_so_far + ` </span> coin</strong></li>
+            <li><strong><i class="fas fa-coins"></i>spent so far <span class="total_spend_so_far">` + data.follower_spent_so_far + ` </span> coins</strong></li>
           </ul>
         </div>
       </div>`);
@@ -3367,11 +3367,16 @@ function display_chatbox_message(data) {
             $('.private-chat-msg').show();
         }
         if (prop.user_data.id == data.vip_id) {
+            console.log(data);
+            var user_profile_photo = prop.url + '/public/front/images/user-placeholder.jpg';
+            if (data.profile_photo != '') {
+                user_profile_photo = prop.url + '/public/uploads/profile_photo/' + data.profile_photo;
+            }
             $('.private-chat-req').css('display', 'block');
             $('.private_request_user_list').append(`<div class="live-user-list-box d-flex">
                 <div class="live-user-img">
                 <span class="live-user-img-box">
-                    <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    <img src="${user_profile_photo}" alt="">
                     <span class="online-badge onlie"></span>
                 </span>
                 </div>
@@ -3382,7 +3387,7 @@ function display_chatbox_message(data) {
                     <ul class="d-flex">
                         <li><strong><i class="fas fa-user"></i>${data.follower_detail.gender==1?'Male':(data.follower_detail.gender==2?'Female':(data.follower_detail.gender==3?'Transgender':'Undefined'))}</strong></li>
                         <li>${data.follower_sub_to_models?'<span class="badge badge-success">Subscriber</span>':'<span class="badge badge-danger">Non Subscriber</span>'}</li>
-                        <li><strong><i class="fas fa-coins"></i>spent so far <span class="total_spend_so_far"> 5369 </span> coin</strong></li>
+                        <li><strong><i class="fas fa-coins"></i>spent so far <span class="pvt_total_spend_so_far"> ${data.follower_spent_so_far} </span> coins</strong></li>
                     </ul>
                     </div>
                     <div class="live-user-info-rgt">

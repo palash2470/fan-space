@@ -249,7 +249,7 @@
           <li><button type="button" class="mode-chat-btn private-chat"><i class="fas fa-chalkboard-teacher"></i> private {{ $usermeta['private_chat_charge'] }} coin P/M</button></li>
         </ul>
       @else
-        <h2>I am currently offline</h2>
+        <h3>I am currently offline</h3>
       @endif
     </div>
   </div>
@@ -476,7 +476,7 @@
             })}); */
     }
 
-    function opentok_initializeSubSessionForPrivateRequest(data,other_details) {
+    function opentok_initializeSubSessionForPrivateRequest(data,other_details,follower_spent_so_far=0) {
       console.log(data);
         var apiKey = data.apiKey;
         var sessionId = data.sessionId;
@@ -507,7 +507,7 @@
             
               //session.publish(publisher, handleOpentokError);
               // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-              session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_private_chat_request', 'follower_id': other_details.follower_id, 'vip_id': other_details.model_id,'follower_bal':other_details.follower_bal,'model_charge':other_details.model_charge,'follower_sub_to_models':other_details.follower_sub_to_models,'follower_detail':other_details.follower_detail})});
+              session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_private_chat_request', 'follower_id': other_details.follower_id, 'vip_id': other_details.model_id,'follower_bal':other_details.follower_bal,'model_charge':other_details.model_charge,'follower_sub_to_models':other_details.follower_sub_to_models,'follower_detail':other_details.follower_detail,'follower_spent_so_far':follower_spent_so_far,'profile_photo': prop.user_data.meta_data.profile_photo})});
 
           }
         });
@@ -714,7 +714,7 @@
                               //console.log(ot);
                               //reset_opentok_player_area();
                               //opentok_initializeSubSession(ot);
-                              opentok_initializeSubSessionForPrivateRequest(ot,other_details);
+                              opentok_initializeSubSessionForPrivateRequest(ot,other_details,data.data.follower_spent_so_far);
 
 
                               /* var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
