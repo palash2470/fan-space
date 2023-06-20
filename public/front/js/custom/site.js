@@ -3368,8 +3368,33 @@ function display_chatbox_message(data) {
         }
         if (prop.user_data.id == data.vip_id) {
             $('.private-chat-req').css('display', 'block');
+            $('.private_request_user_list').append(`<div class="live-user-list-box d-flex">
+                <div class="live-user-img">
+                <span class="live-user-img-box">
+                    <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                    <span class="online-badge onlie"></span>
+                </span>
+                </div>
+                <div class="live-user-info">
+                <div class="d-flex justify-content-between">
+                    <div class="live-user-info-lft">
+                    <h4>${data.follower_detail.first_name} ${data.follower_detail.last_name}</h4>
+                    <ul class="d-flex">
+                        <li><strong><i class="fas fa-user"></i>${data.follower_detail.gender==1?'Male':(data.follower_detail.gender==2?'Female':(data.follower_detail.gender==3?'Transgender':'Undefined'))}</strong></li>
+                        <li>${data.follower_sub_to_models?'<span class="badge badge-success">Subscriber</span>':'<span class="badge badge-danger">Non Subscriber</span>'}</li>
+                    </ul>
+                    </div>
+                    <div class="live-user-info-rgt">
+                    <ul>
+                        <li><button type="button" data-follower-id="${data.follower_id}" data-model-id="${data.vip_id}" class="privet-chat-req req-accept accept-private-chat-req">Accept</button></li>
+                        <li><button type="button" data-follower-id="${data.follower_id}" class="privet-chat-req req-decline reject-private-chat-req">Decline</button></li>
+                    </ul>
+                    </div>
+                </div>
+                </div>
+            </div>`);
 
-            $('.private-req-tbody').append(`
+            /* $('.private-req-tbody').append(`
             <tr>
                 <td>${data.follower_detail.first_name} ${data.follower_detail.last_name}</td>
                 <td class="text-center">${data.follower_detail.gender==1?'Male':(data.follower_detail.gender==2?'Female':(data.follower_detail.gender==3?'Transgender':'Undefined'))}</td>
@@ -3384,7 +3409,7 @@ function display_chatbox_message(data) {
                     </div>
                 </td>
             </tr>
-            `);
+            `); */
         }
     }
     if (action == 'live_session_private_chat_accept') {
@@ -3397,6 +3422,7 @@ function display_chatbox_message(data) {
             alert('model is on private chat');
         }
         if (prop.user_data.id == data.follower_id) {
+            check_user_session({ 'user_id': data.model_id });
             alert('your private chat request has been accepted. now you are on private chat');
         }
         // if(prop.user_data.id==data.model_id){

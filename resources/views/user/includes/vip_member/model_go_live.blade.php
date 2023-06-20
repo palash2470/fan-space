@@ -42,9 +42,9 @@
     <div class="row header_height justify-content-between align-items-center">
       <div class="col-auto">
         <div class="website-logo">
-          <a href="#">
-            <img src="http://localhost/fan-space/public/uploads/settings/settings_website_logo/f32ed34d-5e31-494f-b20a-65de6c6c981f.png" alt="">
-          </a>
+          <a href="{{ url('/') }}" target="_blank"><img
+            src="{{ url('public/uploads/settings/settings_website_logo/' . $meta_data['global_settings']['settings_website_logo']) }}"
+            alt=""></a>
         </div>
       </div>
         <div class="col-auto">
@@ -99,6 +99,47 @@
                     </ul>
                   </div>
                 </div> --}}
+                {{-- <div class="live-user-list-box d-flex">
+                  <div class="live-user-img">
+                    <span class="live-user-img-box">
+                      <img src="{{asset('public/front/images/prf-lft-img.png')}}" alt="">
+                      <span class="online-badge onlie"></span>
+                    </span>
+                  </div>
+                  <div class="live-user-info">
+                    <div class="d-flex justify-content-between">
+                      <div class="live-user-info-lft">
+                        <h4>barlowe</h4>
+                        <ul class="d-flex">
+                          <li><p>Lorem Ipsum Lorem Ipsum</p></li>
+                          <li><strong><i class="fas fa-user"></i>male</strong></li>
+                          <li><strong>Subscribe</strong></li>
+                        </ul>
+                      </div>
+                      <div class="live-user-info-rgt">
+                        <ul>
+                          <li><a class="privet-chat-req req-accept" href="#">accept</a></li>
+                          <li><a class="privet-chat-req req-decline" href="#">decline</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div> --}}
+                
+              </div>
+            </div>
+            <div class="live-user-list req_private_list">
+              <div class="live-user-list-head">
+                <div class="live-user-list-head-close">
+                  <span class="hide-popup"><button class="hide_popup"><i class="fas fa-angle-right"></i></button></span>
+                </div>
+                <div class="live-user-list-head-text">
+                  <h4>Private chat request list</h4>
+                </div>
+                
+                {{-- <h5>online - 5</h5> --}}
+              </div>
+              <div class="live-user-list-body private_request_user_list">
                 {{-- <div class="live-user-list-box d-flex">
                   <div class="live-user-img">
                     <span class="live-user-img-box">
@@ -260,10 +301,11 @@
           $('.req_user_list_wrap').removeClass('user_open');
         });
         $(document).on('click', '.req_private_list', function(){
-          $('.req_private_list_wrap').toggleClass('private_open');
+          //console.log('dsfds');
+          $('.req_private_list').toggleClass('private_open');
         });
         $(document).on('click', '.hide_popup', function(){
-          $('.req_private_list_wrap').removeClass('private_open');
+          $('.req_private_list').removeClass('private_open');
         });
       });
     </script>

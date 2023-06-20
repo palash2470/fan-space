@@ -3095,7 +3095,6 @@ class AjaxController extends Controller
     $follower_id = $request->follower_id;
     $model_id = $request->vip_id;
 
-
     $model_charge = User::find($model_id)->user_meta_array()['private_chat_charge'];
     $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];
     $follower_detail = User::find($follower_id);
@@ -3113,6 +3112,13 @@ class AjaxController extends Controller
       $data['insufficient_balance'] = false;
     }
     // dd($model_charge,$follower_bal);
+    $opentok_data = ['apiKey' => '', 'apiSecret' => '', 'sessionId' => '', 'token' => ''];
+    $apiKey = $this->meta_data['settings']['settings_opentok_api_key'];
+    $live_session = Live_session::where('user_id', $model_id)->first();
+    if (isset($live_session->id)) {
+      $opentok_data = ['apiKey' => $apiKey, 'sessionId' => $live_session->session_id, 'token' => $live_session->token];
+      $data['opentok_data'] = $opentok_data;
+    }
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
     // return ['request'=>$request->all()];
   }
