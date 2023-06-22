@@ -3365,15 +3365,17 @@ function display_chatbox_message(data) {
         if (prop.user_data.id == data.follower_id) {
             $('.private-chat').hide();
             $('.private-chat-msg').show();
+            //var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+            //session.disconnect();
         }
         if (prop.user_data.id == data.vip_id) {
-            console.log(data);
             var user_profile_photo = prop.url + '/public/front/images/user-placeholder.jpg';
             if (data.profile_photo != '') {
                 user_profile_photo = prop.url + '/public/uploads/profile_photo/' + data.profile_photo;
             }
             $('.private-chat-req').css('display', 'block');
-            $('.private_request_user_list').append(`<div class="live-user-list-box d-flex">
+            $('.private_request_user_list #private_request_user_list_box_' + data.follower_id).remove();
+            $('.req_private_list .private_request_user_list').append(`<div class="live-user-list-box d-flex count_pvt_request_div" id="private_request_user_list_box_${data.follower_id}">
                 <div class="live-user-img">
                 <span class="live-user-img-box">
                     <img src="${user_profile_photo}" alt="">
@@ -3399,6 +3401,8 @@ function display_chatbox_message(data) {
                 </div>
                 </div>
             </div>`);
+            $('.pvt_chat_request_count').text($('.count_pvt_request_div').length); //private chat count
+            //console.log(prop.opentok.apiKey);
 
             /* $('.private-req-tbody').append(`
             <tr>
@@ -3428,11 +3432,28 @@ function display_chatbox_message(data) {
             alert('model is on private chat');
         }
         if (prop.user_data.id == data.follower_id) {
-            check_user_session({ 'user_id': data.model_id });
+            private_chat_session_start({ 'user_id': data.model_id });
             alert('your private chat request has been accepted. now you are on private chat');
         }
         // if(prop.user_data.id==data.model_id){
         // alert(data.private_chat_id);
+        if (prop.user_data.id == data.model_id) {
+            console.log("accept private");
+            $('.live-main-videowrap-lft').css('display', 'block');
+            $('#opentok_pvt_subscriber').css('display', 'block');
+            //var session = OT.initSession(apiKey, sessionId);
+            var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+            // Subscribe to a newly created stream
+            //session.disconnect();
+            session.on('streamCreated', function(event) {
+                prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_pvt_subscriber', {
+                    insertMode: 'append',
+                    width: '100%',
+                    height: '100%'
+                }, handleOpentokError);
+            });
+            //opentok_initializePubSession(data);
+        }
         private_chat_balance_update(data.model_id, data.follower_id, data.private_chat_id, prop.user_data.id);
         myInterval = setInterval(function() { private_chat_balance_update(data.model_id, data.follower_id, data.private_chat_id, prop.user_data.id); }, 61 * 1000);
         // }
@@ -3443,6 +3464,7 @@ function display_chatbox_message(data) {
             alert('your private chat request has been rejected. you can request again');
             $('.private-chat').css('display', 'block');
             $('.private-chat-msg').hide();
+            opentok_end_session();
         }
     }
     //if(atbottom == 1)
@@ -3469,6 +3491,16 @@ function private_chat_balance_update(model_id = null, follower_id = null, privat
         success: function(res) {
             console.log('private balance', res);
             // let low_alert=0;
+            if (prop.user_data.id == follower_id) {
+                if (res.data.follower_coin != 0) {
+                    $("#follower_wallet_coins").html(res.data.follower_coin + ' Coins');
+                }
+            }
+            if (prop.user_data.id == model_id) {
+                if (res.data.follower_coin != 0) {
+                    $("#model_wallet_coins").html(res.data.model_earning_for_this_session + ' Coins Earn');
+                }
+            }
             if (res.data.low_balance_alert) {
                 console.log(prop.user_data.id, follower_id, model_id);
                 if (prop.user_data.id == follower_id) {
@@ -3764,7 +3796,10 @@ $(document).on('click', '.reject-private-chat-req', function() {
     if (a == true) {
         let follower_id = $(this).attr('data-follower-id');
         // console.log(follower_id_new);
-        $(this).closest('tr').remove();
+        //$(this).closest('tr').remove();
+        $('.pvt_chat_request_count').text(parseInt($('.count_pvt_request_div').length) - 1);
+        $('.private_request_user_list #private_request_user_list_box_' + follower_id).remove();
+
         var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
         session.signal({ type: 'msg', data: JSON.stringify({ 'action': 'live_session_private_chat_reject', 'follower_id': follower_id }) });
     }
@@ -3794,7 +3829,8 @@ $(document).on('click', '.accept-private-chat-req', function() {
             processData: false,
             contentType: false,
             success: function(data) {
-                console.log('private_id ', data.data.private_chat_id);
+                //console.log('private_id ', data.data.private_chat_id);
+                $('.private_request_user_list #private_request_user_list_box_' + follower_id).remove();
                 var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
                 session.signal({ type: 'msg', data: JSON.stringify({ 'action': 'live_session_private_chat_accept', 'follower_id': follower_id, 'model_id': model_id, 'private_chat_id': data.data.private_chat_id }) });
             }

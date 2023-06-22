@@ -2900,7 +2900,8 @@ class AjaxController extends Controller
     $vip_member = User::find($model_id);
     $model_charge = $vip_member->user_meta_array()['private_chat_charge'];
     $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];
-
+    $live_session = Live_session::where('user_id', $model_id)->first();
+    $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
     $total_private_chat_minutes = (int)$follower_bal / $model_charge;
     if ($total_private_chat_minutes <= 3) {
       $low_balance_alert = 1;
@@ -2912,6 +2913,8 @@ class AjaxController extends Controller
         User_meta::where('user_id', $follower_id)->where('key', 'wallet_coins')->update([
           'value' => $value
         ]);
+        $live_session = Live_session::where('user_id', $model_id)->first();
+        $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
 
         //model coin update
         $model_earning_for_this_chat = User_earning::where('private_chat_id', $request->private_chat_id)->first();
@@ -2920,13 +2923,19 @@ class AjaxController extends Controller
         if ($vip_member->affiliate_user_id == '') $affiliate_earning = 0;
         // dd($model_earning_for_this_chat);
         if (empty($model_earning_for_this_chat)) {
+          $live_session = Live_session::where('user_id', $model_id)->first();
+          $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
           $dd = User_earning::create([
             'user_id' => $model_id,
             'token_coins' => $model_charge,
             'referral_user_id' => ($vip_member->affiliate_user_id == null ? 0 : $vip_member->affiliate_user_id),
             'referral_token_coins' => round($affiliate_earning),
-            'private_chat_id' => $request->private_chat_id
+            'private_chat_id' => $request->private_chat_id,
+            'live_session_history_id' => $live_session_history->id
           ]);
+
+          $model_earning_for_this_session = User_earning::where('live_session_history_id', $live_session_history->id)->sum('token_coins');
+          
           // dd($dd->id);
         } else {
           User_earning::where('private_chat_id', $request->private_chat_id)->update([
@@ -2934,12 +2943,16 @@ class AjaxController extends Controller
             'referral_token_coins' => round($model_earning_for_this_chat->referral_token_coins + $affiliate_earning),
 
           ]);
+          
         }
       }
     } else {
       $insufficient_bal = 1;
     }
-    $data = ['low_balance_alert' => $low_balance_alert, 'insufficient_bal' => $insufficient_bal, 'private_chat_id' => $request->private_chat_id];
+    //dd($live_session_history);
+    $model_earning_for_this_session = User_earning::where('live_session_history_id', $live_session_history->id)->sum('token_coins');
+
+    $data = ['low_balance_alert' => $low_balance_alert, 'insufficient_bal' => $insufficient_bal, 'private_chat_id' => $request->private_chat_id,'follower_coin' => $follower_bal,'model_earning_for_this_session'=>$model_earning_for_this_session];
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
   }
   public function ajaxpost_group_chat_balance_update($request)
@@ -3130,12 +3143,16 @@ class AjaxController extends Controller
 
     $follower_id = $request->follower_id;
     $model_id = $request->model_id;
+    $private_session_chk = Live_session::where('type', '2')->where('user_id', $model_id)->get();
+    
     $live_session = Live_session::where('user_id', $model_id)->first();
+    $live_session_udate_pvt = Live_session::where('user_id', $model_id)->update(['private_user_id'=>$follower_id,'type'=>2]); //update private chat
     $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
 
     $private_chat = PrivateChat::create([
       'follower_id' => $follower_id,
       'live_session_history_id' => $live_session_history->id,
+      'model_id' => $model_id,
     ]);
     $data = ['private_chat_id' => $private_chat->id];
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);

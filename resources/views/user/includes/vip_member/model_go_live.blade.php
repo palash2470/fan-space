@@ -51,12 +51,12 @@
           <div class="chat-top-control model-live-control">
             <ul class="d-flex justify-content-end">
               <li><button type="button" class="chat-control-btn d-flex align-items-center req_user_list"><span>user</span> <span class="total-live-badge ml-2 online_user_count">0</span></button></li>
-              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list"><span>private</span> <span class="total-live-badge ml-2">0</span></button></li>
+              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list_btn"><span>private</span> <span class="total-live-badge ml-2 pvt_chat_request_count">0</span></button></li>
             </ul>
             <div class="live-user-list req_user_list_wrap">
               <div class="live-user-list-head">
                 <div class="live-user-list-head-close">
-                  <span class="hide-popup"><button class="hide_popup"><i class="fas fa-angle-right"></i></button></span>
+                  <span class="hide-popup"><button class="hide_popup hide_popup_user_list"><i class="fas fa-angle-right"></i></button></span>
                 </div>
                 <div class="live-user-list-head-text">
                   <h4>user list</h4>
@@ -131,7 +131,7 @@
             <div class="live-user-list req_private_list">
               <div class="live-user-list-head">
                 <div class="live-user-list-head-close">
-                  <span class="hide-popup"><button class="hide_popup"><i class="fas fa-angle-right"></i></button></span>
+                  <span class="hide-popup"><button class="hide_popup hide_popup_pvt_list"><i class="fas fa-angle-right"></i></button></span>
                 </div>
                 <div class="live-user-list-head-text">
                   <h4>Private chat request list</h4>
@@ -294,17 +294,19 @@
         $(document).on('click', '.req_user_list', function(){
           if($('.online_user_count').text() > 0){
             $('.req_user_list_wrap').toggleClass('user_open');
+            $('.req_private_list').removeClass('private_open');
           }
           
         });
-        $(document).on('click', '.hide_popup', function(){
+        $(document).on('click', '.hide_popup_user_list', function(){
           $('.req_user_list_wrap').removeClass('user_open');
         });
-        $(document).on('click', '.req_private_list', function(){
+        $(document).on('click', '.req_private_list_btn', function(){
           //console.log('dsfds');
           $('.req_private_list').toggleClass('private_open');
+          $('.req_user_list_wrap').removeClass('user_open');
         });
-        $(document).on('click', '.hide_popup', function(){
+        $(document).on('click', '.hide_popup_pvt_list', function(){
           $('.req_private_list').removeClass('private_open');
         });
       });
@@ -318,11 +320,11 @@
   var session = OT.initSession(apiKey, sessionId);
   // Subscribe to a newly created stream
   session.on('streamCreated', function(event) {
-    /*prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_pvt_subscriber', {
+   /*  prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_pvt_subscriber', {
       insertMode: 'append',
       width: '100%',
       height: '100%'
-    }, handleOpentokError);*/
+    }, handleOpentokError); */
   });
 
   session.on('streamDestroyed', function(event) {
@@ -434,6 +436,8 @@ function opentok_destroyPubSession() {
           $('.private-chat-req').css('display','none');
           $('.private-req-tbody').html('');
           $('.req_user_list_wrap .onlineuser_list').html('');
+          $('.req_private_list .private_request_user_list').html('');
+          $('.pvt_chat_request_count').text('0');
           //window['live_viewer'] = {};
           window['live_viewer_count'] = 0;
           $('.golive_page .view_counter span').text('0');
