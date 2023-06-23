@@ -57,6 +57,9 @@
             margin-top: 200px;
         }
     </style>
+    
+    <div class="mw_loader"><i class="fa fa-spinner fa-spin"></i></div>
+   
     <?php
         $helper_settings = $meta_data['helper_settings'];
         $my_fav_user_ids = [];
@@ -141,8 +144,9 @@
                   <button type="button" class="video-screen-mode" onclick="$('#opentok_subscriber').fullScreen(true)"><i class="fas fa-expand"></i></button>
                 </div>
                 {{-- <div class="full-video-wrap" id="full-screen-video-wrap"> --}}
-                  <div class="user-two-video">
-                    <div class="user-two-video-lft">
+                  <div class="user-two-video-wrap h-100" style="display: none">
+                    <div class="user-two-video">
+                    <div class="user-two-video-lft" style="display: none">
                       <div id="opentok_pvt_publisher" class="opentok_player_area" style="display: none;"></div>
                     </div>
                     <div class="user-two-video-rgt">
@@ -153,6 +157,7 @@
                       </div>
                     </div>
                   </div>
+                </div>
                   
                   
                   
@@ -512,7 +517,7 @@
           if (error) {
               handleOpentokError(error);
           } else {
-            
+              $(".mw_loader").hide();
               //session.publish(publisher, handleOpentokError);
               // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
               session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_private_chat_request', 'follower_id': other_details.follower_id, 'vip_id': other_details.model_id,'follower_bal':other_details.follower_bal,'model_charge':other_details.model_charge,'follower_sub_to_models':other_details.follower_sub_to_models,'follower_detail':other_details.follower_detail,'follower_spent_so_far':follower_spent_so_far,'profile_photo': prop.user_data.meta_data.profile_photo})});
@@ -602,6 +607,7 @@
           confirmButtonText: 'Yes'
           }).then((result) => {
             if (result.isConfirmed) {
+                
               // if (conf == true) {
                 let follower_id = prop.user_data.id;
                 let vip_id = "{{ $user->id }}";
@@ -622,6 +628,13 @@
                               //text: 'Something went wrong!',
                             });
                             location.reload();
+                          }else if(data.data.model_group_status == false){
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Model currently Busy',
+                              //text: 'Something went wrong!',
+                            });
+                            //location.reload();
                           }else{
                             if(!data.data.insufficient_balance){
                               var ot = data.data.opentok_data;
@@ -633,6 +646,7 @@
                               prop.opentok.sessionId = ot.sessionId;
                               prop.opentok.token = ot.token;
                               if(ot.sessionId != '') {
+                                $('.user-two-video-wrap').css('display','block');
                                 $('#opentok_subscriber').show();
                                 $('.opentok_placeholder_img').hide();
                                 $('.join_group_chat_btn').hide();
@@ -691,6 +705,7 @@
           confirmButtonText: 'Yes'
           }).then((result) => {
             // $('#block_user_'+user_id).html('blocked');
+            $(".mw_loader").show();
             if (result.isConfirmed) {
               let follower_id = prop.user_data.id;
               let vip_id = "{{ $user->id }}";
@@ -730,6 +745,7 @@
                               session_is_offline();
                             }
                       }else{
+                          $(".mw_loader").hide();
                           alert('Insufficient balance for this private chat !');
                       }
                   }
@@ -751,7 +767,7 @@
         }
     });
     $('.exit_session_btn').click(()=>{
-      
+      $('.user-two-video-wrap').css('display','none');
       //update follower group chat by ajax call
       var data = new FormData();
       let follower_id = prop.user_data.id;
@@ -774,7 +790,7 @@
             $('.chatbox').addClass('offline');
             $('.exit_session_btn').css('display','none');
             $('.send_tip_btn').css('display','none');
-            //$('.private-chat').css('display','none');
+            
             //$('.private-chat-msg').hide();
             
             clearInterval(myInterval);
@@ -858,6 +874,7 @@
 
     function opentok_initializePrivateChat(data) {
       //console.log(data);
+        $('.user-two-video-wrap').css('display','block');
         var apiKey = data.apiKey;
         var sessionId = data.sessionId;
         var token = data.token;
@@ -883,6 +900,7 @@
         if (error) {
             handleOpentokError(error);
         } else {
+          $('.user-two-video-lft').show();
           $('#opentok_pvt_publisher').show();
           $('#opentok_pvt_publisher').html('');
           var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);

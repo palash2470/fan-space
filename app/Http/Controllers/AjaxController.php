@@ -772,7 +772,12 @@ class AjaxController extends Controller
       $live_session_history = Live_session_history::where(['session_id' => $live_session->session_id, 'token' => $live_session->token])->first();
       Live_session_history::find($live_session_history->id)->touch();
     }
-    echo json_encode(array('success' => 1, 'data' => [], 'message' => ''));
+    if(Auth::user()){
+      $data['login_user_id'] = Auth::user()->id;
+    }else{
+      $data['login_user_id'] = false;
+    }
+    echo json_encode(array('success' => 1, 'data' => $data, 'message' => ''));
   }
 
 
@@ -3063,36 +3068,41 @@ class AjaxController extends Controller
     if (isset($live_session->id)) {
       
       //$live_session = Live_session::where('user_id', $model_id)->first();
-      $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+      if($live_session->type == 1){ //check user private or not
+        $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
 
-      $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->first();
-      if($chek_group_chat){
-        GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
-      }
-      $group_chat = GroupChat::create([
-        'live_session_history_id' => $live_session_history->id,
-        'session_id' => $live_session->session_id,
-        'model_id' => $model_id,
-        'follower_id' => $follower_id,
-        'video_chat_duration' => 0,
-        'coins' => 0,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s'),
+        $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->first();
+        if($chek_group_chat){
+          GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
+        }
+        $group_chat = GroupChat::create([
+          'live_session_history_id' => $live_session_history->id,
+          'session_id' => $live_session->session_id,
+          'model_id' => $model_id,
+          'follower_id' => $follower_id,
+          'video_chat_duration' => 0,
+          'coins' => 0,
+          'created_at' => date('Y-m-d H:i:s'),
+          'updated_at' => date('Y-m-d H:i:s'),
+          
+        ]);
+        //$data = ['private_chat_id' => $private_chat->id];
+        $follower_spent_so_far =  GroupChat::where('model_id',$model_id)->where('follower_id',$follower_id)->sum('coins');
+        $data['follower_spent_so_far'] = $follower_spent_so_far;
+        $opentok_data = ['apiKey' => $apiKey, 'sessionId' => $live_session->session_id, 'token' => $live_session->token];
         
-      ]);
-      //$data = ['private_chat_id' => $private_chat->id];
-      $follower_spent_so_far =  GroupChat::where('model_id',$model_id)->where('follower_id',$follower_id)->sum('coins');
-      $data['follower_spent_so_far'] = $follower_spent_so_far;
-      $opentok_data = ['apiKey' => $apiKey, 'sessionId' => $live_session->session_id, 'token' => $live_session->token];
+        $data['opentok_data'] = $opentok_data;
+        if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
+          $data['insufficient_balance'] = false;
+        }
+        //dd($data);
+        if($data['insufficient_balance'] == true){
+          GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
+        }
+      }else{
+        $data['model_group_status'] = false;
+      }
       
-      $data['opentok_data'] = $opentok_data;
-      if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
-        $data['insufficient_balance'] = false;
-      }
-      //dd($data);
-      if($data['insufficient_balance'] == true){
-        GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
-      }
     }else{
       $data['model_online_status'] = false;
     }
@@ -3143,18 +3153,23 @@ class AjaxController extends Controller
 
     $follower_id = $request->follower_id;
     $model_id = $request->model_id;
-    $private_session_chk = Live_session::where('type', '2')->where('user_id', $model_id)->get();
+    //$private_session_chk = Live_session::where('type', '2')->where('user_id', $model_id)->get();
     
     $live_session = Live_session::where('user_id', $model_id)->first();
     $live_session_udate_pvt = Live_session::where('user_id', $model_id)->update(['private_user_id'=>$follower_id,'type'=>2]); //update private chat
     $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
 
-    $private_chat = PrivateChat::create([
-      'follower_id' => $follower_id,
-      'live_session_history_id' => $live_session_history->id,
-      'model_id' => $model_id,
-    ]);
-    $data = ['private_chat_id' => $private_chat->id];
+    $check_private_chat = PrivateChat::where('live_session_history_id',$live_session_history->id)->where('follower_id',$follower_id)->where('model_id',$model_id)->first();
+    if($check_private_chat){
+      $data = ['private_chat_id' => $check_private_chat->id];
+    }else{
+      $private_chat = PrivateChat::create([
+        'follower_id' => $follower_id,
+        'live_session_history_id' => $live_session_history->id,
+        'model_id' => $model_id,
+      ]);
+      $data = ['private_chat_id' => $private_chat->id];
+    }
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
     /*   $model_charge = User::find($model_id)->user_meta_array()['private_chat_charge'];
         $follower_bal = User::wallet(['user_id'=>$follower_id])['balance'];

@@ -854,7 +854,20 @@ function user_last_activity() {
     var data = new FormData();
     data.append('action', 'user_last_activity');
     data.append('_token', prop.csrf_token);
-    $.ajax({ type: 'POST', dataType: 'json', url: prop.ajaxurl, data: data, processData: false, contentType: false, success: function(data) {} });
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: prop.ajaxurl,
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            //console.log(data);
+            if (prop.user_data.id != data.data.login_user_id) {
+                location.reload();
+            }
+        }
+    });
 }
 
 function change_password() {

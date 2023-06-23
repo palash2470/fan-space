@@ -404,7 +404,7 @@ function opentok_destroyPubSession() {
           $('.opentok_start_session').hide();
           $('.opentok_end_session').show();
           $('.req_user_list_wrap .onlineuser_list').html('');
-
+          $("#model_wallet_coins").html('0 Coin Earn');
           var ot = data.data.opentok_data;
           var type = data.data.type;
           var old_opentok = {'apiKey': prop.opentok.apiKey, 'sessionId': prop.opentok.sessionId, 'token': prop.opentok.token};
@@ -438,12 +438,15 @@ function opentok_destroyPubSession() {
           $('.req_user_list_wrap .onlineuser_list').html('');
           $('.req_private_list .private_request_user_list').html('');
           $('.pvt_chat_request_count').text('0');
+          $('.private-chat-req').css('display','none');
           //window['live_viewer'] = {};
           window['live_viewer_count'] = 0;
           $('.golive_page .view_counter span').text('0');
           $('.online_user_count').text('0');
           clearInterval(myInterval);
           $('#model_low_alert').val('no');
+          $('.live-main-videowrap-lft').css('display','none');
+          $('#opentok_pvt_subscriber').css('display','none');
         }
       });
     });
@@ -471,6 +474,8 @@ function opentok_destroyPubSession() {
           $('.online_user_count').text('0');
           clearInterval(myInterval);
           $('#model_low_alert').val('no');
+          $('.live-main-videowrap-lft').css('display','none');
+          $('#opentok_pvt_subscriber').css('display','none');
         }
       });
   }
