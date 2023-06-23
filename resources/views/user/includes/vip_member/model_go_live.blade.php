@@ -179,7 +179,7 @@
               <input type="hidden" name="model_low_alert" id="model_low_alert" value="no">
               <div class="live-main-videowrap">
                 <div class="live-main-videowrap-lft" style="display: none;">
-                  <div class="relative"><div id="opentok_pvt_subscriber" class="opentok_player_area" style="display: none;"></div></div>
+                  <div class="relative h-100"><div id="opentok_pvt_subscriber" class="opentok_player_area" style="display: none;"></div></div>
                 </div>
                 <div class="live-main-videowrap-rgt">
                   <div id="opentok_publisher" class="opentok_player_area"></div>

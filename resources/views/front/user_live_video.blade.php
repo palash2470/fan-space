@@ -141,12 +141,20 @@
                   <button type="button" class="video-screen-mode" onclick="$('#opentok_subscriber').fullScreen(true)"><i class="fas fa-expand"></i></button>
                 </div>
                 {{-- <div class="full-video-wrap" id="full-screen-video-wrap"> --}}
-                  <div id="opentok_pvt_publisher" class="opentok_player_area" style="display: none;"></div>
-                  <div id="opentok_subscriber" class="opentok_player_area" style="display: none;">
-                    <div class="small-screen-mode small_screen_mode" style="display: none;">
-                      <button type="button" class="video-screen-mode" onclick="$(document).fullScreen(false)"><i class="fas fa-compress"></i></button>
+                  <div class="user-two-video">
+                    <div class="user-two-video-lft">
+                      <div id="opentok_pvt_publisher" class="opentok_player_area" style="display: none;"></div>
+                    </div>
+                    <div class="user-two-video-rgt">
+                      <div id="opentok_subscriber" class="opentok_player_area" style="display: none;">
+                        <div class="small-screen-mode small_screen_mode" style="display: none;">
+                          <button type="button" class="video-screen-mode" onclick="$(document).fullScreen(false)"><i class="fas fa-compress"></i></button>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                  
+                  
                   
                 {{-- </div> --}}
                 {{-- <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a> --}}
