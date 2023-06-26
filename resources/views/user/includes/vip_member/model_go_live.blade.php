@@ -319,13 +319,13 @@
   var token = prop.opentok.token;
   var session = OT.initSession(apiKey, sessionId);
   // Subscribe to a newly created stream
-  session.on('streamCreated', function(event) {
-   /*  prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_pvt_subscriber', {
+  /* session.on('streamCreated', function(event) {
+    prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_pvt_subscriber', {
       insertMode: 'append',
       width: '100%',
       height: '100%'
-    }, handleOpentokError); */
-  });
+    }, handleOpentokError);
+  }); */
 
   session.on('streamDestroyed', function(event) {
     //console.log('streamDestroyed = streamDestroyed');

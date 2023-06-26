@@ -441,6 +441,7 @@
         var sessionId = data.sessionId;
         var token = data.token;
         var session = OT.initSession(apiKey, sessionId);
+        session.disconnect();
         session.on('streamCreated', function(event) {
         //$('#opentok_subscriber').html('');
         $('.full_screen_mode').css('display','block');
@@ -471,11 +472,11 @@
         }
         });
 
-        session.on('signal:global', function signalCallback(event) {
+        /* session.on('signal:global', function signalCallback(event) {
         console.log(event.data);
         var dt = JSON.parse(event.data);
         process_global_message(dt);
-        });
+        }); */
 
         session.on('signal:msg', function signalCallback(event) {
         //console.log(event.data);
@@ -490,7 +491,7 @@
     }
 
     function opentok_initializeSubSessionForPrivateRequest(data,other_details,follower_spent_so_far=0) {
-      console.log(data);
+      
         var apiKey = data.apiKey;
         var sessionId = data.sessionId;
         var token = data.token;
@@ -639,13 +640,16 @@
                             if(!data.data.insufficient_balance){
                               var ot = data.data.opentok_data;
                               if(typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
+                                console.log('subscriber group');
                               var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
                                 session.unsubscribe(prop.opentok.subscriber);
                               }
+                              console.log('subscriber not group');
                               prop.opentok.apiKey = ot.apiKey;
                               prop.opentok.sessionId = ot.sessionId;
                               prop.opentok.token = ot.token;
                               if(ot.sessionId != '') {
+                                console.log('subscriber group session');
                                 $('.user-two-video-wrap').css('display','block');
                                 $('#opentok_subscriber').show();
                                 $('.opentok_placeholder_img').hide();
@@ -705,8 +709,8 @@
           confirmButtonText: 'Yes'
           }).then((result) => {
             // $('#block_user_'+user_id).html('blocked');
-            $(".mw_loader").show();
             if (result.isConfirmed) {
+              $(".mw_loader").show();
               let follower_id = prop.user_data.id;
               let vip_id = "{{ $user->id }}";
 
@@ -727,23 +731,31 @@
                           //console.log(ot);
                           if(typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
                             var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-                              session.unsubscribe(prop.opentok.subscriber);
-                            }
-                            prop.opentok.apiKey = ot.apiKey;
-                            prop.opentok.sessionId = ot.sessionId;
-                            prop.opentok.token = ot.token;
-                            if(ot.sessionId != '') {
-                              //console.log(ot);
-                              //reset_opentok_player_area();
-                              //opentok_initializeSubSession(ot);
-                              opentok_initializeSubSessionForPrivateRequest(ot,other_details,data.data.follower_spent_so_far);
+                              //session.unsubscribe(prop.opentok.subscriber);
+                              console.log('unsubscriber');
+                              $(".mw_loader").hide();
+                              //session.publish(publisher, handleOpentokError);
+                              // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                              session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_private_chat_request', 'follower_id': other_details.follower_id, 'vip_id': other_details.model_id,'follower_bal':other_details.follower_bal,'model_charge':other_details.model_charge,'follower_sub_to_models':other_details.follower_sub_to_models,'follower_detail':other_details.follower_detail,'follower_spent_so_far':data.data.follower_spent_so_far,'profile_photo': prop.user_data.meta_data.profile_photo})});
+                            }else{
+                              prop.opentok.apiKey = ot.apiKey;
+                              prop.opentok.sessionId = ot.sessionId;
+                              prop.opentok.token = ot.token;
+                              if(ot.sessionId != '') {
+                                console.log('is session');
+                                //console.log(ot);
+                                //reset_opentok_player_area();
+                                //opentok_initializeSubSession(ot);
+                                opentok_initializeSubSessionForPrivateRequest(ot,other_details,data.data.follower_spent_so_far);
 
 
-                              /* var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-                              session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_private_chat_request', 'follower_id': follower_id, 'vip_id': vip_id,'follower_bal':data.data.follower_bal,'model_charge':data.data.model_charge,'follower_sub_to_models':data.data.follower_sub_to_models,'follower_detail':data.data.follower_detail})}); */
-                            }else {
-                              session_is_offline();
+                                /* var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                                session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_private_chat_request', 'follower_id': follower_id, 'vip_id': vip_id,'follower_bal':data.data.follower_bal,'model_charge':data.data.model_charge,'follower_sub_to_models':data.data.follower_sub_to_models,'follower_detail':data.data.follower_detail})}); */
+                              }else {
+                                session_is_offline();
+                              }
                             }
+                            
                       }else{
                           $(".mw_loader").hide();
                           alert('Insufficient balance for this private chat !');

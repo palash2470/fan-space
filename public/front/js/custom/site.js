@@ -3451,6 +3451,7 @@ function display_chatbox_message(data) {
         // if(prop.user_data.id==data.model_id){
         // alert(data.private_chat_id);
         if (prop.user_data.id == data.model_id) {
+
             console.log("accept private");
             $('.live-main-videowrap-lft').css('display', 'block');
             $('#opentok_pvt_subscriber').css('display', 'block');
@@ -3458,6 +3459,7 @@ function display_chatbox_message(data) {
             var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
             // Subscribe to a newly created stream
             //session.disconnect();
+            //session.unsubscribe(prop.opentok.subscriber);
             session.on('streamCreated', function(event) {
                 prop.opentok.subscriber = session.subscribe(event.stream, 'opentok_pvt_subscriber', {
                     insertMode: 'append',
@@ -3466,9 +3468,12 @@ function display_chatbox_message(data) {
                 }, handleOpentokError);
             });
             //opentok_initializePubSession(data);
+
         }
+        clearInterval(myInterval);
         private_chat_balance_update(data.model_id, data.follower_id, data.private_chat_id, prop.user_data.id);
         myInterval = setInterval(function() { private_chat_balance_update(data.model_id, data.follower_id, data.private_chat_id, prop.user_data.id); }, 61 * 1000);
+
         // }
 
     }
@@ -3477,7 +3482,13 @@ function display_chatbox_message(data) {
             alert('your private chat request has been rejected. you can request again');
             $('.private-chat').css('display', 'block');
             $('.private-chat-msg').hide();
-            opentok_end_session();
+            if (typeof prop.opentok.subscriber != 'undefined' && prop.opentok.subscriber != null) {
+                var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                console.log('active sesion');
+            } else {
+                opentok_end_session();
+            }
+
         }
     }
     //if(atbottom == 1)
@@ -3843,6 +3854,7 @@ $(document).on('click', '.accept-private-chat-req', function() {
             contentType: false,
             success: function(data) {
                 //console.log('private_id ', data.data.private_chat_id);
+                $('.pvt_chat_request_count').text(parseInt($('.count_pvt_request_div').length) - 1);
                 $('.private_request_user_list #private_request_user_list_box_' + follower_id).remove();
                 var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
                 session.signal({ type: 'msg', data: JSON.stringify({ 'action': 'live_session_private_chat_accept', 'follower_id': follower_id, 'model_id': model_id, 'private_chat_id': data.data.private_chat_id }) });

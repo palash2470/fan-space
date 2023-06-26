@@ -2784,6 +2784,11 @@ class AjaxController extends Controller
     $live_session = Live_session::where('user_id', $user_id)->first();
     if (isset($live_session->id)) {
       $live_session_history = Live_session_history::where(['session_id' => $live_session->session_id, 'token' => $live_session->token])->first();
+      if($live_session->type == 2){
+        //update private chat table
+        PrivateChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$user_id)->where('exit_session',1)->update(['exit_session'=>0,'exit_session_time' => date('Y-m-d H:i:s')]);
+      
+      }
       Live_session_history::find($live_session_history->id)->touch();
       DB::table('live_sessions')->where('user_id', $user_id)->delete();
     }
@@ -2907,6 +2912,12 @@ class AjaxController extends Controller
     $follower_bal = User::wallet(['user_id' => $follower_id])['balance'];
     $live_session = Live_session::where('user_id', $model_id)->first();
     $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+    //exit group chat 
+    $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('follower_id',$request->follower_id)->where('exit_session',1)->first();
+    if($chek_group_chat){
+      GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('follower_id',$request->follower_id)->where('exit_session',1)->update(['exit_session'=>0,'exit_session_time'=>date('Y-m-d H:i:s')]);
+    }
+    //end exit group chat
     $total_private_chat_minutes = (int)$follower_bal / $model_charge;
     if ($total_private_chat_minutes <= 3) {
       $low_balance_alert = 1;
@@ -2950,14 +2961,19 @@ class AjaxController extends Controller
           ]);
           
         }
+        
+        //Private chat table user spend coin this event
+       $private_chat_update = PrivateChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1);
+       $private_chat_update->increment('coins',$model_charge);
+       $private_chat_update->increment('video_chat_duration',1);
       }
     } else {
       $insufficient_bal = 1;
     }
     //dd($live_session_history);
     $model_earning_for_this_session = User_earning::where('live_session_history_id', $live_session_history->id)->sum('token_coins');
-
-    $data = ['low_balance_alert' => $low_balance_alert, 'insufficient_bal' => $insufficient_bal, 'private_chat_id' => $request->private_chat_id,'follower_coin' => $follower_bal,'model_earning_for_this_session'=>$model_earning_for_this_session];
+    $follower_update_bal = User::wallet(['user_id' => $follower_id])['balance'];
+    $data = ['low_balance_alert' => $low_balance_alert, 'insufficient_bal' => $insufficient_bal, 'private_chat_id' => $request->private_chat_id,'follower_coin' => $follower_update_bal,'model_earning_for_this_session'=>$model_earning_for_this_session];
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
   }
   public function ajaxpost_group_chat_balance_update($request)
@@ -2979,43 +2995,47 @@ class AjaxController extends Controller
     }
     if ($follower_bal >= $model_charge) {
       if ($request->created_by == $follower_id) {
-        // follower coin update
-        //dd($request->sessionId);
-        $value = $follower_bal - $model_charge;
-        User_meta::where('user_id', $follower_id)->where('key', 'wallet_coins')->update([
-          'value' => $value
-        ]);
-        
+       
         $live_session = Live_session::where('user_id', $model_id)->first();
-        $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
-        //model coin update
-        $model_earning_for_this_chat = User_earning::where('live_session_history_id', $live_session_history->id)->first();
-        $affiliate_earning_percentage = $this->meta_data['settings']['settings_payment_affiliate_earning_percentage'];
-        $affiliate_earning = (($model_charge * $affiliate_earning_percentage / 100));
-        if ($vip_member->affiliate_user_id == '') $affiliate_earning = 0;
-        // dd($model_earning_for_this_chat);
-        if (empty($model_earning_for_this_chat)) {
-          //dd( $live_session_history->id);
+        if($live_session->type == 1){
+          
+          $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+          //model coin update
+          $model_earning_for_this_chat = User_earning::where('live_session_history_id', $live_session_history->id)->first();
 
-          $dd = User_earning::create([
-            'user_id' => $model_id,
-            'token_coins' => $model_charge,
-            'referral_user_id' => ($vip_member->affiliate_user_id == null ? 0 : $vip_member->affiliate_user_id),
-            'referral_token_coins' => round($affiliate_earning),
-            'live_session_history_id' => $live_session_history->id
+          // follower coin update
+          $value = $follower_bal - $model_charge;
+          User_meta::where('user_id', $follower_id)->where('key', 'wallet_coins')->update([
+            'value' => $value
           ]);
-          // dd($dd->id);
-        } else {
-          User_earning::where('live_session_history_id', $live_session_history->id)->update([
-            'token_coins' => $model_earning_for_this_chat->token_coins + $model_charge,
-            'referral_token_coins' => round($model_earning_for_this_chat->referral_token_coins + $affiliate_earning),
 
-          ]);
+          $affiliate_earning_percentage = $this->meta_data['settings']['settings_payment_affiliate_earning_percentage'];
+          $affiliate_earning = (($model_charge * $affiliate_earning_percentage / 100));
+          if ($vip_member->affiliate_user_id == '') $affiliate_earning = 0;
+          // dd($model_earning_for_this_chat);
+          if (empty($model_earning_for_this_chat)) {
+            //dd( $live_session_history->id);
+
+            $dd = User_earning::create([
+              'user_id' => $model_id,
+              'token_coins' => $model_charge,
+              'referral_user_id' => ($vip_member->affiliate_user_id == null ? 0 : $vip_member->affiliate_user_id),
+              'referral_token_coins' => round($affiliate_earning),
+              'live_session_history_id' => $live_session_history->id
+            ]);
+            // dd($dd->id);
+          } else {
+            User_earning::where('live_session_history_id', $live_session_history->id)->update([
+              'token_coins' => $model_earning_for_this_chat->token_coins + $model_charge,
+              'referral_token_coins' => round($model_earning_for_this_chat->referral_token_coins + $affiliate_earning),
+
+            ]);
+          }
+          //Group chat table user spend coin this event
+          $group_chat_update = GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1);
+          $group_chat_update->increment('coins',$model_charge);
+          $group_chat_update->increment('video_chat_duration',1);
         }
-        //Group chat table user spend coin this event
-       $group_chat_update = GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1);
-       $group_chat_update->increment('coins',$model_charge);
-       $group_chat_update->increment('video_chat_duration',1);
         
       }
     } else {
