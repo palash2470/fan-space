@@ -3302,6 +3302,7 @@ function display_chatbox_message(data) {
 
     }
     if (action == 'live_session_follower_join_for_group') {
+        console.log('dgfsdgsd');
         console.log('data -' + data.follower_spent_so_far);
         toastr.success("<b>" + data.follower_name + " </b>has joined")
         toastr.options = {
@@ -3356,14 +3357,15 @@ function display_chatbox_message(data) {
             group_chat_user_list_value_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
         }
         if (data.follower_id == prop.user_data.id) {
+            console.log('set intervel');
             myInterval = setInterval(function() {
                 group_chat_balance_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
-            }, 60 * 1000);
+            }, 30 * 1000);
         }
         if (data.vip_id == prop.user_data.id) {
             myInterval = setInterval(function() {
                 group_chat_user_list_value_update(data.vip_id, data.follower_id, data.sessionId, prop.user_data.id, data.token);
-            }, 60 * 1000);
+            }, 30 * 1000);
         }
 
     }
@@ -3442,9 +3444,12 @@ function display_chatbox_message(data) {
             $('.follower-section .chatbox').addClass('offline');
             $('.private-chat').css('display', 'none');
             $('.private-chat-msg').hide();
+
             alert('model is on private chat');
         }
         if (prop.user_data.id == data.follower_id) {
+            $('.exit_session_btn').css('display', 'none');
+            $('.join_group_chat_btn').hide();
             private_chat_session_start({ 'user_id': data.model_id });
             alert('your private chat request has been accepted. now you are on private chat');
         }
@@ -3452,7 +3457,7 @@ function display_chatbox_message(data) {
         // alert(data.private_chat_id);
         if (prop.user_data.id == data.model_id) {
 
-            console.log("accept private");
+            //console.log("accept private");
             $('.live-main-videowrap-lft').css('display', 'block');
             $('#opentok_pvt_subscriber').css('display', 'block');
             //var session = OT.initSession(apiKey, sessionId);
@@ -3472,7 +3477,7 @@ function display_chatbox_message(data) {
         }
         clearInterval(myInterval);
         private_chat_balance_update(data.model_id, data.follower_id, data.private_chat_id, prop.user_data.id);
-        myInterval = setInterval(function() { private_chat_balance_update(data.model_id, data.follower_id, data.private_chat_id, prop.user_data.id); }, 61 * 1000);
+        myInterval = setInterval(function() { private_chat_balance_update(data.model_id, data.follower_id, data.private_chat_id, prop.user_data.id); }, 30 * 1000);
 
         // }
 

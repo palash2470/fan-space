@@ -36,7 +36,29 @@
          echo json_encode(['ajaxurl' => url('/ajaxpost'), 'ajaxgeturl' => url('/ajaxget'), 'url' => url('/'), 'csrf_token' => csrf_token(), 'user_data' => $user_data, 'opentok' => ['apiKey' => '', 'sessionId' => '', 'token' => '', 'session' => null]]); @endphp;
     </script>
 </head>
+<body>
+  <style type="text/css">
+    .mw_loader {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.6);
+        background: rgba(0, 0, 0, 1);
+        text-align: center;
+        z-index: 999999;
+        display: none;
+    }
 
+    .mw_loader i {
+        font-size: 80px;
+        color: #b7b7b7;
+        margin-top: 200px;
+    }
+</style>
+
+<div class="mw_loader"><i class="fa fa-spinner fa-spin"></i></div>
 <section class="golive_page model-section live-model-sec-new">
   <div class="container-fluid">
     <div class="row header_height justify-content-between align-items-center">
@@ -447,6 +469,7 @@ function opentok_destroyPubSession() {
           $('#model_low_alert').val('no');
           $('.live-main-videowrap-lft').css('display','none');
           $('#opentok_pvt_subscriber').css('display','none');
+          $('.req_private_list').removeClass('private_open');
         }
       });
     });
