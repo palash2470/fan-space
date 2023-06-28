@@ -191,6 +191,11 @@ class User extends Authenticatable
                 $query->orWhere(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'like', '%' . $search . '%')->orWhere('users.email', 'like', '%' . $search . '%')->orWhere('users.username', 'like', '%' . $search . '%')->orWhere('users.display_name', 'like', '%' . $search . '%');
             });
         }
+        if($result_type == 'live_user') {
+            $live_user_ids = Live_session::pluck('user_id')->toArray();
+            if(count($live_user_ids) == 0) $live_user_ids = [0];
+            $users->whereIn('users.id', $live_user_ids);
+        }
         if(count($online_status) > 0) {
             $users->where(function ($q) use ($online_status, $last_activity_time){
                 if(in_array('0', $online_status))

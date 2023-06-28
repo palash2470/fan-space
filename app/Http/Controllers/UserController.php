@@ -24,6 +24,7 @@ use App\Post_react;
 use App\Post_comment;
 use App\Post_comment_react;
 use App\Coin_price_plan;
+use App\Live_session;
 use App\Product;
 use App\Notification;
 use App\Subscriber;
@@ -85,6 +86,7 @@ class UserController extends Controller
         $meta_data['global_settings'] = $this->meta_data['settings'];
         $meta_data['helper_settings'] = $helper_settings;
         $meta_data['slug'] = $slug;
+        $meta_data['live_user_count'] = Live_session::count();
 		
 		//dd($user_data);
 		
@@ -590,6 +592,22 @@ class UserController extends Controller
     $return['page_title'] = 'Live';
     
     return view('user.includes.vip_member.model_go_live',['return' =>$return,'user_data' => $this->user_data,'page_title' => $return['page_title'],'meta_data'=>$meta_data]);
+  }
+
+  public function live_users($request){
+    $return = array();
+    $return['meta_data'] = array();
+    $user_id = $this->user_data['id'];
+    if($this->user_data['role'] == 3) {
+      $cur_page = trim($request->input('pg'));
+      $cur_page = ($cur_page == '' || $cur_page < 1 ? 1 : $cur_page);
+      $per_page = 16;
+      $live_users = User::vip_member_search(['result_type' => 'live_user', 'follower_id' => '', 'cur_page' => $cur_page, 'per_page' => $per_page]);
+      $return['live_users'] = $live_users['data'];
+    }
+    $return['page_title'] = 'Live Users';
+    //dd($return);
+    return $return;
   }
 	
 	
