@@ -3371,7 +3371,7 @@ function display_chatbox_message(data) {
     }
     if (action == 'live_session_chat_block') {
         if (prop.user_data.id == data.user_id) {
-            $('.chatfields').html('<div class="block-user">you have been blocked by the host !</div>');
+            $('.chatfields').html('<div class="block-user">group chat function has now ended !</div>');
             $('.private-chat').hide();
         }
     }

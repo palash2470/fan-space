@@ -840,12 +840,13 @@ function emoji_pad() {
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if (keycode == '13') {
                 //console.log(el[0].emojioneArea.getText());
-                /*var text = el[0].emojioneArea.getText();
+                var text = el[0].emojioneArea.getText();
                 el[0].emojioneArea.setText('');
-                window[save_action](text, save_params);*/
+                window[save_action](text, save_params);
             }
         });
         $(this).find('.emoji_submit').unbind('click').on('click', function() {
+            console.log("submit");
             //console.log(el[0].emojioneArea.getText());
             var text = el[0].emojioneArea.getText();
             el[0].emojioneArea.setText('');

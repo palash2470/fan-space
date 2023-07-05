@@ -211,6 +211,7 @@
                       <li><a href="{{ url('u/' . $user->username) }}" target="_blank" type="button" class="chat-control-btn"><i class="fas fa-user-alt"></i>view profile</a></li>
                       <li><button type="button" class="chat-control-btn"><i class="fas fa-percent"></i>super offer</button></li>
                       <li><button type="button" class="chat-control-btn"><i class="fas fa-cog"></i></button></li>
+                      <li><button type="button" class="chat-control-btn sub_opentok_close_video" data-video="false"></i>Video</button></li>
                     </ul>
                   </div>
                 </div>
@@ -267,7 +268,7 @@
     </div>
   </div>
   <div class="private-text-msg private-chat-msg" style="display: none;">
-    <div class="privet-chat-req-msg">You have requested for private chat. wait for model response</div>
+    <div class="privet-chat-req-msg">You have requested the private chat please wait for the model to accept the chat</div>
   </div>
 
     <script src="{{ URL::asset('/public/front/js/jquery-ui.js') }}" type="text/javascript"></script>
@@ -364,6 +365,23 @@
             console.log("Full screen error.");
             $("#status").text("Browser won't enter full screen mode for some reason.");
           });
+          $(document).on('click','.sub_opentok_close_video',function(){
+            
+            var video = $(this).data('video'); //true or false
+            console.log(video);
+            if(video == false){
+              $(this).data('video',true); //set value
+            }else{
+              $(this).data('video',false); ////set value
+            }
+            console.log(prop.opentok.subscriber);
+            prop.opentok.subscriber.subscribeToVideo(false);
+            /* session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+            session.getSubscribersForStream(prop.opentok.subscriber.stream).publishVideo(video); */
+            
+            //console.log(prop.opentok.connectData);
+            
+          })
       });
     </script>
 
@@ -820,6 +838,8 @@
       });
       
     })
+
+    
     
     function opentok_end_session_for_follower_page_refresh(){
       //update follower group chat by ajax call
@@ -948,7 +968,7 @@
         session.on('signal:msg', function signalCallback(event) {
         //console.log(event.data);
         var dt = JSON.parse(event.data);
-        display_chatbox_message(dt);
+        //display_chatbox_message(dt);
         });
 
 

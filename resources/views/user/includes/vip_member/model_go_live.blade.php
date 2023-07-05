@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     <script type="text/javascript">
         var prop = @php
-         echo json_encode(['ajaxurl' => url('/ajaxpost'), 'ajaxgeturl' => url('/ajaxget'), 'url' => url('/'), 'csrf_token' => csrf_token(), 'user_data' => $user_data, 'opentok' => ['apiKey' => '', 'sessionId' => '', 'token' => '', 'session' => null]]); @endphp;
+         echo json_encode(['ajaxurl' => url('/ajaxpost'), 'ajaxgeturl' => url('/ajaxget'), 'url' => url('/'), 'csrf_token' => csrf_token(), 'user_data' => $user_data, 'opentok' => ['apiKey' => '', 'sessionId' => '', 'token' => '', 'session' => null,'connectData'=>'']]); @endphp;
     </script>
 </head>
 <body>
@@ -225,7 +225,9 @@
                     <ul class="d-flex justify-content-end">
                       <li><a href="javascript:;" class="sesson-btn view_counter"><i class="fa fa-eye"></i> <span>0</span></a></li>
                       <li><a href="javascript:void(0);" class="sesson-btn opentok_start_session">Start session</a>
-                        <a href="javascript:void(0);" class="sesson-btn opentok_end_session" style="display: none;">End session</a></li>                      
+                        <a href="javascript:void(0);" class="sesson-btn opentok_end_session" style="display: none;">End session</a></li>    
+                        <li>
+                          <a href="javascript:void(0);" class="sesson-btn pub_opentok_close_video" style="" data-video="false">close Video</a></li>                  
                     </ul>
                   </div>
                 </div>
@@ -371,7 +373,9 @@
     if (error) {
       handleOpentokError(error);
     } else {
-      session.publish(publisher, handleOpentokError);
+      var connectData = session.publish(publisher, handleOpentokError);
+      //console.log(pub);
+      prop.opentok.connectData = connectData;
     }
   });
 
@@ -475,6 +479,19 @@ function opentok_destroyPubSession() {
     });
 
     //setInterval(function(){ live_viewer_track(); }, 3000);
+    $(document).on('click','.pub_opentok_close_video',function(){
+      var video = $(this).data('video'); //true or false
+      if(video == false){
+        $(this).data('video',true); //set value
+      }else{
+        $(this).data('video',false); ////set value
+      }
+      session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+      session.getPublisherForStream(prop.opentok.connectData.stream).publishVideo(video);
+      
+      //console.log(prop.opentok.connectData);
+      
+    })
 
   });
   
