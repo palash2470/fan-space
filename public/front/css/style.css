@@ -8753,7 +8753,7 @@ input[type=number]::-webkit-outer-spin-button {
 .ask-popup-wrap h2 {
     color: #fff;
     font-size: 2.125rem;
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */
 }
 
 .ask-popup-wrap h3 {
@@ -8761,7 +8761,14 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 2.125rem;
     margin-bottom: 8px;
 }
-
+.ask-popup-wrap h5 {
+    color: #fff;
+    padding-bottom: 0;
+    font-size: 15px;
+}
+.ask-popup-wrap ul {
+    margin-top: 10px;
+}
 .ask-popup-wrap li {
     flex: 1 0;
 }
