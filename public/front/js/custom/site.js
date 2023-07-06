@@ -3341,6 +3341,7 @@ function display_chatbox_message(data) {
           </span>
         </div>
         <div class="live-user-info">
+        <button type="button" class="delete-from-video-chat"><i class="fas fa-user-times"></i></button>
           <h4>` + data.follower_name + `</h4>
           <ul class="d-flex">
             <li><strong><i class="far fa-clock"></i>` + dateTime + `</strong></li>

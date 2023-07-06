@@ -8445,6 +8445,17 @@ input[type=number]::-webkit-outer-spin-button {
     height: 26px;
     width: 26px;
 }
+.notify{
+    animation: 2s infinite crtanimation;
+}
+@keyframes crtanimation {
+    0%{
+        box-shadow: 0 0 0 0 #f60;
+    }
+    100%{
+        box-shadow: 0 0 0 10px rgba(233, 17, 22, 0)
+    }
+}
 
 
 /* Slide popup */
@@ -8534,6 +8545,21 @@ input[type=number]::-webkit-outer-spin-button {
     max-width: calc(100% - 40px);
     padding-left: 10px;
     padding-right: 10px;
+    position: relative;
+}
+.delete-from-video-chat {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    font-size: 10px;
+    color: #f00;
+    background: transparent;
+    outline: none !important;
+    height: 20px;
+    width: 20px;
+    border: 1px solid;
+    border-radius: 4px;
+    line-height: 18px;
 }
 
 .live-user-img-box {
@@ -8812,7 +8838,7 @@ input[type=number]::-webkit-outer-spin-button {
     left: 50%;
     transform: translateX(-50%);
     top: 20px;
-    z-index: 2;
+    z-index: 8;
 }
 
 .privet-chat-req-msg {
@@ -8820,6 +8846,7 @@ input[type=number]::-webkit-outer-spin-button {
     color: #fff;
     font-size: 1rem;
     padding: 5px 18px;
+    text-align: center;
 }
 
 .user-two-video {
@@ -8837,5 +8864,24 @@ input[type=number]::-webkit-outer-spin-button {
     flex: 1 0;
 }
 
-
+.off-video {
+    position: relative;
+}
+.off-video-btn {
+    position: absolute;
+    top: 40px;
+    right: 8px;
+    color: #fff;
+    border: none;
+    outline: none !important;
+    box-shadow: none;
+    background-color: transparent;
+    z-index: 2;
+    font-size: 17px;
+    transition: all 0.5s ease-in-out;
+    transform: scale(0);
+}
+.off-video:hover .off-video-btn {
+    transform: scale(1);
+}
 /* New Design user Live Chat End */

@@ -57,9 +57,9 @@
             margin-top: 200px;
         }
     </style>
-    
+
     <div class="mw_loader"><i class="fa fa-spinner fa-spin"></i></div>
-   
+
     <?php
         $helper_settings = $meta_data['helper_settings'];
         $my_fav_user_ids = [];
@@ -126,7 +126,7 @@
                   </div>
                   <div class="ajax_response"></div>
                 </div>
-                
+
               </li>
               <li class="chat-group"><button type="button" class="chat-control-btn join_group_chat_btn">group {{ @$usermeta['group_chat_charge'] }} coin P/M</button></li>
               <li class="chat-private"><button type="button" class="chat-control-btn private-chat">private {{ $usermeta['private_chat_charge'] }} coin P/M</button></li>
@@ -138,7 +138,9 @@
       <div class="row h-100vh">
         <div class="new-video-chat-lft">
           <div class="video-chat-lft-video video_chat_lft">
-            <div class="video-wrap-lft video_wrap_lft">
+            <div class="video-wrap-lft video_wrap_lft off-video">
+                <button type="button" class="off-video-btn sub_opentok_close_video" data-video="false"><i class="fas fa-video"></i></button>
+                    {{-- <button type="button" class="off-video-btn pub_opentok_close_video" data-video="false"><i class="fas fa-video-slash"></i></button> --}}
               <div class="video_area relative video_area_jq">
                 <div class="full-screen-mode full_screen_mode" style="display: none;">
                   <button type="button" class="video-screen-mode" onclick="$('#opentok_subscriber').fullScreen(true)"><i class="fas fa-expand"></i></button>
@@ -158,9 +160,9 @@
                     </div>
                   </div>
                 </div>
-                  
-                  
-                  
+
+
+
                 {{-- </div> --}}
                 {{-- <a href="javascript:void(0);" class="commonBtn2 opentok_start_session" user_id="{{ $user->id }}" style="display: none;">Start session</a> --}}
                 <div class="opentok_placeholder_img opentok_placeholder_jq" style="background: url({{ $profile_photo }}) center center no-repeat; background-size: contain;">
@@ -170,7 +172,7 @@
                     @else
                       <h3>Sorry, I'm offline right now</h3>
                     @endif
-                    
+
                   </div>
                 </div>
               </div>
@@ -211,7 +213,6 @@
                       <li><a href="{{ url('u/' . $user->username) }}" target="_blank" type="button" class="chat-control-btn"><i class="fas fa-user-alt"></i>view profile</a></li>
                       <li><button type="button" class="chat-control-btn"><i class="fas fa-percent"></i>super offer</button></li>
                       <li><button type="button" class="chat-control-btn"><i class="fas fa-cog"></i></button></li>
-                      <li><button type="button" class="chat-control-btn sub_opentok_close_video" data-video="false"></i>Video</button></li>
                     </ul>
                   </div>
                 </div>
@@ -336,7 +337,7 @@
         // $('.video_wrap_lft').css({"height": wrapHeight});
         // $('.opentok_placeholder_jq').css({"height": wrapHeight});
         // $('.video_area_jq').css({"height": wrapHeight});
-        // Right        
+        // Right
         $('.chatbox_wrap').css({"padding-bottom": controlHeight});
         // $('.chat_box_wrap').css({"height": wrapHeight - 2});
 
@@ -371,7 +372,7 @@
             $("#status").text("Browser won't enter full screen mode for some reason.");
           });
           $(document).on('click','.sub_opentok_close_video',function(){
-            
+
             var video = $(this).data('video'); //true or false
             console.log(video);
             if(video == false){
@@ -385,9 +386,9 @@
             session.getPublisherForStream(prop.opentok.connectData.stream).publishVideo(video);
             /* session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
             session.getSubscribersForStream(prop.opentok.subscriber.stream).publishVideo(video); */
-            
+
             //console.log(prop.opentok.connectData);
-            
+
           })
       });
     </script>
@@ -488,12 +489,12 @@
         if (error) {
             handleOpentokError(error);
         } else {
-          
+
             //session.publish(publisher, handleOpentokError);
             // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
             session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join_for_group', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name,'follower_id': prop.user_data.id, 'vip_id': {{ $user->id }} ,'sessionId':sessionId ,'token':token,'profile_photo': prop.user_data.meta_data.profile_photo,'follower_spent_so_far':follower_spent_so_far
             })});
-            
+
         }
         });
 
@@ -519,7 +520,7 @@
     }
 
     function opentok_initializeSubSessionForPrivateRequest(data,other_details,follower_spent_so_far=0) {
-      
+
         var apiKey = data.apiKey;
         var sessionId = data.sessionId;
         var token = data.token;
@@ -636,7 +637,7 @@
           confirmButtonText: 'Yes'
           }).then((result) => {
             if (result.isConfirmed) {
-                
+
               // if (conf == true) {
                 let follower_id = prop.user_data.id;
                 let vip_id = "{{ $user->id }}";
@@ -704,14 +705,14 @@
                                 });
                             }
                           }
-                          
+
                       }
                   });
               // }
             }
         })
         // let conf = confirm("Are you sure you want group chat ? it charges {{ $usermeta['group_chat_charge'] }} coin per minute");
-        
+
       }else{
         Swal.fire({
         icon: 'error',
@@ -787,7 +788,7 @@
                                 session_is_offline();
                               }
                             }
-                            
+
                       }else{
                           $(".mw_loader").hide();
                           alert('Insufficient balance for this private chat !');
@@ -801,7 +802,7 @@
 
           });
           //let conf = confirm("Are you sure you want private chat ? it charges {{ $usermeta['private_chat_charge'] }} coin per minute");
-        
+
         }else{
           Swal.fire({
             icon: 'error',
@@ -834,20 +835,20 @@
             $('.chatbox').addClass('offline');
             $('.exit_session_btn').css('display','none');
             $('.send_tip_btn').css('display','none');
-            
+
             //$('.private-chat-msg').hide();
-            
+
             clearInterval(myInterval);
-            $('#model_low_alert').val('no'); 
+            $('#model_low_alert').val('no');
             location.reload();
-           
+
           }
       });
-      
+
     })
 
-    
-    
+
+
     function opentok_end_session_for_follower_page_refresh(){
       //update follower group chat by ajax call
       var data = new FormData();
@@ -873,11 +874,11 @@
             $('.send_tip_btn').css('display','none');
             //$('.private-chat').css('display','none');
             $('.private-chat-msg').hide();
-            
+
             clearInterval(myInterval);
-            $('#model_low_alert').val('no'); 
+            $('#model_low_alert').val('no');
             //location.reload();
-           
+
           }
       });
     }
@@ -999,12 +1000,12 @@
       $('.send_tip_btn').css('display','none');
       //$('.private-chat').css('display','none');
       $('.private-chat-msg').hide();
-      
+
       clearInterval(myInterval);
-      $('#model_low_alert').val('no'); 
+      $('#model_low_alert').val('no');
             //location.reload();
     }
-    
+
   </script>
 
 

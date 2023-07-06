@@ -73,7 +73,7 @@
           <div class="chat-top-control model-live-control">
             <ul class="d-flex justify-content-end">
               <li><button type="button" class="chat-control-btn d-flex align-items-center req_user_list"><span>user</span> <span class="total-live-badge ml-2 online_user_count">0</span></button></li>
-              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list_btn"><span>private</span> <span class="total-live-badge ml-2 pvt_chat_request_count">0</span></button></li>
+              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list_btn"><span>private</span> <span class="total-live-badge ml-2 pvt_chat_request_count notify">0</span></button></li>
             </ul>
             <div class="live-user-list req_user_list_wrap">
               <div class="live-user-list-head">
@@ -83,7 +83,7 @@
                 <div class="live-user-list-head-text">
                   <h4>user list</h4>
                 </div>
-                
+
                 {{-- <h5>online - 5</h5> --}}
               </div>
               <div class="live-user-list-body onlineuser_list">
@@ -147,7 +147,7 @@
                     </div>
                   </div>
                 </div> --}}
-                
+
               </div>
             </div>
             <div class="live-user-list req_private_list">
@@ -158,7 +158,7 @@
                 <div class="live-user-list-head-text">
                   <h4>Private chat request list</h4>
                 </div>
-                
+
                 {{-- <h5>online - 5</h5> --}}
               </div>
               <div class="live-user-list-body private_request_user_list">
@@ -188,7 +188,7 @@
                     </div>
                   </div>
                 </div> --}}
-                
+
               </div>
             </div>
           </div>
@@ -203,9 +203,11 @@
                 <div class="live-main-videowrap-lft" style="display: none;">
                   <div class="relative h-100"><div id="opentok_pvt_subscriber" class="opentok_player_area" style="display: none;"></div></div>
                 </div>
-                <div class="live-main-videowrap-rgt">
+                <div class="live-main-videowrap-rgt off-video">
+                    <button type="button" class="off-video-btn pub_opentok_close_video" data-video="false"><i class="fas fa-video"></i></button>
+                    {{-- <button type="button" class="off-video-btn pub_opentok_close_video" data-video="false"><i class="fas fa-video-slash"></i></button> --}}
                   <div id="opentok_publisher" class="opentok_player_area"></div>
-                </div>                
+                </div>
               </div>
             </div>
             {{-- <div class="d-flex justify-content-center mt-3">
@@ -225,9 +227,7 @@
                     <ul class="d-flex justify-content-end">
                       <li><a href="javascript:;" class="sesson-btn view_counter"><i class="fa fa-eye"></i> <span>0</span></a></li>
                       <li><a href="javascript:void(0);" class="sesson-btn opentok_start_session">Start session</a>
-                        <a href="javascript:void(0);" class="sesson-btn opentok_end_session" style="display: none;">End session</a></li>    
-                        <li>
-                          <a href="javascript:void(0);" class="sesson-btn pub_opentok_close_video" style="" data-video="false">close Video</a></li>                  
+                        <a href="javascript:void(0);" class="sesson-btn opentok_end_session" style="display: none;">End session</a></li>
                     </ul>
                   </div>
                 </div>
@@ -300,7 +300,7 @@
         $('.new_model_video').css({"padding-bottom": controlHeight});
         // var wrapHeight = bodyHeight - (headerHeight + controlHeight);
         // $('.new_model_video_main').css({"height": wrapHeight});
-        // Right        
+        // Right
         $('.chatbox_wrap').css({"padding-bottom": controlHeight});
         // $('.chat_box_wrap').css({"height": wrapHeight - 2});
 
@@ -320,7 +320,7 @@
             $('.req_user_list_wrap').toggleClass('user_open');
             $('.req_private_list').removeClass('private_open');
           }
-          
+
         });
         $(document).on('click', '.hide_popup_user_list', function(){
           $('.req_user_list_wrap').removeClass('user_open');
@@ -336,7 +336,7 @@
       });
     </script>
   <script type="text/javascript">
-   
+
    function opentok_initializePubSession(data) {
   var apiKey = prop.opentok.apiKey;
   var sessionId = prop.opentok.sessionId;
@@ -488,13 +488,13 @@ function opentok_destroyPubSession() {
       }
       session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
       session.getPublisherForStream(prop.opentok.connectData.stream).publishVideo(video);
-      
+
       //console.log(prop.opentok.connectData);
-      
+
     })
 
   });
-  
+
   function opentok_end_session_page_refresh(){
     var data = new FormData();
       data.append('action', 'opentok_end_session');
@@ -519,7 +519,7 @@ function opentok_destroyPubSession() {
         }
       });
   }
-   
+
   </script>
 
 
