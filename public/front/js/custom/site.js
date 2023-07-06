@@ -3448,7 +3448,7 @@ function display_chatbox_message(data) {
             alert('model is on private chat');
         }
         if (prop.user_data.id == data.follower_id) {
-            $('.exit_session_btn').css('display', 'none');
+            //$('.exit_session_btn').css('display', 'none');
             $('.join_group_chat_btn').hide();
             private_chat_session_start({ 'user_id': data.model_id });
             alert('your private chat request has been accepted. now you are on private chat');

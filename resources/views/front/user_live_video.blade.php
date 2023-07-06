@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     <script type="text/javascript">
         var prop = @php
-         echo json_encode(['ajaxurl' => url('/ajaxpost'), 'ajaxgeturl' => url('/ajaxget'), 'url' => url('/'), 'csrf_token' => csrf_token(), 'user_data' => $user_data, 'opentok' => ['apiKey' => '', 'sessionId' => '', 'token' => '', 'session' => null]]); @endphp;
+         echo json_encode(['ajaxurl' => url('/ajaxpost'), 'ajaxgeturl' => url('/ajaxget'), 'url' => url('/'), 'csrf_token' => csrf_token(), 'user_data' => $user_data, 'opentok' => ['apiKey' => '', 'sessionId' => '', 'token' => '', 'session' => null,'connectData'=>'']]); @endphp;
     </script>
 </head>
     <body>
@@ -168,7 +168,7 @@
                     @if (isset($live_session->id))
                       <h3>Please click Group or Private button </h3>
                     @else
-                      <h3>I am currently offline</h3>
+                      <h3>Sorry, I'm offline right now</h3>
                     @endif
                     
                   </div>
@@ -263,7 +263,12 @@
           <li><button type="button" class="mode-chat-btn private-chat"><i class="fas fa-chalkboard-teacher"></i> private {{ $usermeta['private_chat_charge'] }} coin P/M</button></li>
         </ul>
       @else
-        <h3>I am currently offline</h3>
+        <h2>Sorry, I'm offline right now</h2>
+        <h5>Why not ckeckout some of my other content?</h5>
+        <ul class="d-flex">
+          {{-- <li><button type="button" class="mode-chat-btn"><i class="fas fa-users"></i>Close Player</button></li> --}}
+          <li><a href="{{ url('u/' . $user->username) }}" type="button" class="mode-chat-btn"></i> View Profile</a></li>
+        </ul>
       @endif
     </div>
   </div>
@@ -374,8 +379,10 @@
             }else{
               $(this).data('video',false); ////set value
             }
-            console.log(prop.opentok.subscriber);
-            prop.opentok.subscriber.subscribeToVideo(false);
+            //console.log(prop.opentok.subscriber);
+            //prop.opentok.subscriber.subscribeToVideo(video);
+            session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+            session.getPublisherForStream(prop.opentok.connectData.stream).publishVideo(video);
             /* session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
             session.getSubscribersForStream(prop.opentok.subscriber.stream).publishVideo(video); */
             
@@ -895,7 +902,8 @@
               $('.opentok_placeholder_img').hide();
               $('.chatbox').removeClass('offline');
               $('.private-chat').css('display','none');
-              $('.exit_session_btn').css('display','none');
+              //$('.exit_session_btn').css('display','none');
+              $('.exit_session_btn').css('display','block');
               $('.send_tip_btn').css('display','block');
               $('.private-chat-msg').hide();
               reset_opentok_player_area();
@@ -950,7 +958,8 @@
               //enableStereo: true,
               audioBitrate: 28000
             }, handleOpentokError);
-          session.publish(publisher, handleOpentokError);
+            var connectData = session.publish(publisher, handleOpentokError);
+            prop.opentok.connectData = connectData;
             //session.publish(publisher, handleOpentokError);
             // var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
            /*  session.signal({type: 'msg', data: JSON.stringify({'action': 'live_session_follower_join', 'follower_name': prop.user_data.first_name+" "+prop.user_data.first_name,'follower_id': prop.user_data.id, 'vip_id': {{ $user->id }} ,'sessionId':sessionId
