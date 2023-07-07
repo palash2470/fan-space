@@ -121,8 +121,15 @@
                 <button type="button" class="chat-control-btn send_tip_btn" style="display: none;">tip</button>
                 <div class="send-tips-wrap video_chat_tips_popup" style="display: none;" vip_member_id="{{ $user->id }}">
                   <div class="input-wrap">
-                    <input type="number" class="form-control tip-input-style" name="vide_chat_tips_amount" value="" placeholder="Enter coin amount" />
-                    <button type="button" class="tip-send-btn tip_send_btn"><i class="far fa-paper-plane"></i></button>
+                    <div class="tip-input-box">
+                        <button class="donet-tip-btn minus_btn" type="button"><i class="fas fa-minus"></i></button>
+                        <div class="d-flex w-100">
+                            <input type="number" class="form-control tip-input-style quantity_show" value="5" min="5" readonly name="vide_chat_tips_amount" />
+                            <span class="credit-text">credit (S)</span>
+                        </div>
+                        <button class="donet-tip-btn plus_btn" type="button"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <button type="button" class="tip-send-btn tip_send_btn">Send Tip</button>
                   </div>
                   <div class="ajax_response"></div>
                 </div>
@@ -212,7 +219,7 @@
                       <li><button type="button" class="chat-control-btn balanceBtn"><i class="fas fa-coins"></i>buy credits</button></li>
                       <li><a href="{{ url('u/' . $user->username) }}" target="_blank" type="button" class="chat-control-btn"><i class="fas fa-user-alt"></i>view profile</a></li>
                       <li><button type="button" class="chat-control-btn"><i class="fas fa-percent"></i>super offer</button></li>
-                      <li><button type="button" class="chat-control-btn"><i class="fas fa-cog"></i></button></li>
+                      <li><button type="button" class="chat-control-btn modal_btn" data-toggle="modal" data-target="#videoSetting"><i class="fas fa-cog"></i></button></li>
                     </ul>
                   </div>
                 </div>
@@ -277,6 +284,55 @@
     <div class="privet-chat-req-msg">You have requested the private chat please wait for the model to accept the chat</div>
   </div>
 
+  <!-- Modal -->
+<div class="modal fade setting-modal" id="videoSetting" tabindex="-1" role="dialog" aria-labelledby="videoSettingModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="videoSettingModalLabel">Settings</h5>
+          <button type="button" class="close close_modal" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="chat-tab" data-toggle="tab" href="#chat" role="tab" aria-controls="chat" aria-selected="true">chat</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="devices-tab" data-toggle="tab" href="#devices" role="tab" aria-controls="devices" aria-selected="false">devices</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="chat" role="tabpanel" aria-labelledby="chat-tab">.a..</div>
+                <div class="tab-pane fade" id="devices" role="tabpanel" aria-labelledby="devices-tab">
+                    <div class="alert alert-danger d-flex align-items-center mt-3" role="alert">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        <p>You must enable browser permissions to start Two Way</p>
+                    </div>
+                    <div class="video-select-wrap">
+                        <div class="video-select-box">
+                            <label class="video-lbl">video device</label>
+                            <select class="video-select-style form-control">
+                                <option>videoinput</option>
+                                <option>videooutput</option>
+                            </select>
+                        </div>
+                        <div class="video-select-box">
+                            <label class="video-lbl">audio device</label>
+                            <select class="video-select-style form-control">
+                                <option>audioinput</option>
+                                <option>audiooutput</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
     <script src="{{ URL::asset('/public/front/js/jquery-ui.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/popper.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/bootstrap.js') }}" type="text/javascript"></script>
@@ -305,6 +361,33 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- Toastr --}}
     <script src="{{ URL::asset('/public/front/js/toastr.min.js') }}"></script>
+    <script>
+        $(document).on('click', '.modal_btn', function(){
+            $('body').addClass("hide-overlay");
+        });
+        // $(document).on('click', '.close_modal', function(){
+        //     $('body').removeClass("hide-overlay");
+        // });
+    </script>
+    <script>
+        var input = $('.quantity_show'),
+        minValue =  parseInt(input.attr('min')),
+        maxValue =  parseInt(input.attr('max'));
+
+        $('.plus_btn').on('click', function () {
+        var inputValue = input.val();
+        if (inputValue < maxValue) {
+            input.val(parseInt(inputValue) + 1);
+        }
+        });
+
+        $('.minus_btn').on('click', function () {
+        var inputValue = input.val();
+        if (inputValue < maxValue) {
+            input.val(parseInt(inputValue) - 1);
+            }
+        });
+    </script>
     <script>
       /* window.addEventListener('beforeunload', (event) => {
         event.returnValue = 'Are you sure you want to leave?';
