@@ -204,7 +204,7 @@
                   <div class="relative h-100"><div id="opentok_pvt_subscriber" class="opentok_player_area" style="display: none;"></div></div>
                 </div>
                 <div class="live-main-videowrap-rgt off-video">
-                    <button type="button" class="off-video-btn pub_opentok_close_video" data-video="false"><i class="fas fa-video"></i></button>
+                    <button type="button" class="off-video-btn pub_opentok_close_video" data-video="false" style="display:none"><i class="fas fa-video"></i></button>
                     {{-- <button type="button" class="off-video-btn pub_opentok_close_video" data-video="false"><i class="fas fa-video-slash"></i></button> --}}
                   <div id="opentok_publisher" class="opentok_player_area"></div>
                 </div>
@@ -429,6 +429,7 @@ function opentok_destroyPubSession() {
           $(".mw_loader").hide();
           $('.opentok_start_session').hide();
           $('.opentok_end_session').show();
+          $('.pub_opentok_close_video').css('display','block');
           $('.req_user_list_wrap .onlineuser_list').html('');
           $("#model_wallet_coins").html('0 Coin Earn');
           var ot = data.data.opentok_data;
@@ -457,6 +458,7 @@ function opentok_destroyPubSession() {
           opentok_destroyPubSession();
           $('.opentok_start_session').show();
           $('.opentok_end_session').hide();
+          $('.pub_opentok_close_video').css('display','none');
           $('.chatbox').addClass('offline');
           $('.chatbox .chatlist').html('');
           $('.private-chat-req').css('display','none');
@@ -483,8 +485,12 @@ function opentok_destroyPubSession() {
       var video = $(this).data('video'); //true or false
       if(video == false){
         $(this).data('video',true); //set value
+        $("i", this).removeClass("fas fa-video");
+        $("i", this).addClass("fas fa-video-slash");
       }else{
         $(this).data('video',false); ////set value
+        $("i", this).removeClass("fas fa-video-slash");
+        $("i", this).addClass("fas fa-video");
       }
       session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
       session.getPublisherForStream(prop.opentok.connectData.stream).publishVideo(video);
@@ -503,6 +509,7 @@ function opentok_destroyPubSession() {
           opentok_destroyPubSession();
           $('.opentok_start_session').show();
           $('.opentok_end_session').hide();
+          $('.pub_opentok_close_video').css('display','none');
           $('.chatbox').addClass('offline');
           $('.chatbox .chatlist').html('');
           $('.private-chat-req').css('display','none');
