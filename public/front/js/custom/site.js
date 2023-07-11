@@ -2935,7 +2935,7 @@ function product_vip_member() {
         var data = new FormData();
         let follower_id = prop.user_data.id;
         let vip_id = $(this).data('vip_member_id');
-        console.log(vip_id);
+        //console.log(vip_id);
         data.append('action', 'opentok_end_session_for_follower');
         data.append('follower_id', follower_id);
         data.append('model_id', vip_id);
@@ -2948,10 +2948,11 @@ function product_vip_member() {
             processData: false,
             contentType: false,
             success: function(data) {
-                console.log(data);
-                console.log(data);
                 if (data.data.session_type == 2) {
                     console.log('private');
+                    var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                    console.log(session);
+                    session.signal({ type: 'msg', data: JSON.stringify({ 'action': 'live_session_pvt_video_end', 'model_id': vip_id, 'follower_id': prop.user_data.id }) });
 
                     //opentok_destroyPubSession();
                     //reset_opentok_player_area();
@@ -3609,6 +3610,32 @@ function display_chatbox_message(data) {
                 prop.opentok.token = '';
             }
 
+        }
+    }
+    if (action == 'live_session_pvt_video_end') {
+        if (prop.user_data.id == data.model_id) {
+            opentok_destroyPubSession();
+            reset_opentok_player_area();
+            $('.opentok_start_session').show();
+            $('.opentok_end_session').hide();
+            $('.pub_opentok_close_video').css('display', 'none');
+            $('.chatbox').addClass('offline');
+            $('.chatbox .chatlist').html('');
+            $('.private-chat-req').css('display', 'none');
+            $('.private-req-tbody').html('');
+            $('.req_user_list_wrap .onlineuser_list').html('');
+            $('.req_private_list .private_request_user_list').html('');
+            $('.pvt_chat_request_count').text('0');
+            $('.private-chat-req').css('display', 'none');
+            //window['live_viewer'] = {};
+            window['live_viewer_count'] = 0;
+            $('.golive_page .view_counter span').text('0');
+            $('.online_user_count').text('0');
+            clearInterval(myInterval);
+            $('#model_low_alert').val('no');
+            $('.live-main-videowrap-lft').css('display', 'none');
+            $('#opentok_pvt_subscriber').css('display', 'none');
+            $('.req_private_list').removeClass('private_open');
         }
     }
     //if(atbottom == 1)

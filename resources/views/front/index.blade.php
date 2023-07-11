@@ -1,9 +1,7 @@
 @extends('layouts.front')
 @section('content')
 
-<?php if(Session::has('error')) {
-    echo '<div class="alert alert-danger" role="alert">' . Session::get('error') . '</div>';
-} ?>
+
     <section class="homeBanner relative bCover d-flex align-items-center"
         style="background: url({{ asset('public/admin/dist/img/dynamic-home-content/' . $meta_data['page_content']->content['banner_background_image']) }}) center right no-repeat;">
         <div class="container">
@@ -119,14 +117,16 @@
         </div>
     </section>
 
+    <?php if(Session::has('error')) { ?>
     <div class="allready-login-popup">
         <div class="allready-login-wrap">
-            <h2>You have all reddy login another browser</h2>
+            <h2>{{Session::get('error')}}</h2>
             <ul class="d-flex justify-content-center">
               <li><a href="javascript:;" type="button" class="mode-chat-btn close_allready"> ok</a></li>
             </ul>
         </div>
       </div>
+    <?php } ?>
 @stop
 
 

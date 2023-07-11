@@ -8267,7 +8267,7 @@ h5.alert-content {
 
 .send-tips-wrap {
     position: absolute;
-    width: 300px;
+    width: 250px;
     left: 0;
     top: 45px;
     z-index: 9;
@@ -8973,7 +8973,7 @@ input[type=number]::-webkit-outer-spin-button {
     margin-bottom: 15px;
 }
 
-.allready-login-popup{
+.allready-login-popup {
     background-color: rgba(0, 0, 0, .5);
     position: fixed;
     left: 0;
@@ -8982,6 +8982,7 @@ input[type=number]::-webkit-outer-spin-button {
     width: 100%;
     z-index: 8;
 }
+
 .allready-login-wrap {
     position: absolute;
     left: 50%;
@@ -8993,13 +8994,16 @@ input[type=number]::-webkit-outer-spin-button {
     text-align: center;
     width: 450px;
 }
+
 .allready-login-wrap h2 {
     color: #fff;
     font-size: 1.25rem;
 }
+
 .allready-login-wrap ul {
     margin-top: 10px;
 }
+
 .allready-login-wrap .mode-chat-btn {
     height: 40px;
     line-height: 40px;
@@ -9015,4 +9019,6 @@ input[type=number]::-webkit-outer-spin-button {
     border: none;
     outline: none !important;
 }
+
+
 /* New Design user Live Chat End */

@@ -163,7 +163,7 @@ class LoginController extends Controller
                     if(in_array($user->role, [2, 3])) return redirect('dashboard');
                 }else{
                     Auth::logout();
-                    return back()->withInput()->with(['error' => 'Login failed. other device already login']);
+                    return back()->withInput()->with(['error' => 'Login failed. User is already logged in from another device/computer.']);
                 }
             }
             
