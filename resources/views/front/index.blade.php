@@ -1,7 +1,9 @@
 @extends('layouts.front')
 @section('content')
 
-
+<?php if(Session::has('error')) {
+    echo '<div class="alert alert-danger" role="alert">' . Session::get('error') . '</div>';
+} ?>
     <section class="homeBanner relative bCover d-flex align-items-center"
         style="background: url({{ asset('public/admin/dist/img/dynamic-home-content/' . $meta_data['page_content']->content['banner_background_image']) }}) center right no-repeat;">
         <div class="container">

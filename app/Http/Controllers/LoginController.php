@@ -14,6 +14,7 @@ use Session;
 use App\Http\Helpers;
 use App\User;
 use App\Setting;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -140,6 +141,7 @@ class LoginController extends Controller
 
 
     public function login(Request $request) {
+        //dd($request->all());
         $role = trim($request->role);
         $email = trim($request->email);
         $password = trim($request->password);
@@ -149,8 +151,22 @@ class LoginController extends Controller
         $data = ['email' => $email, 'password' => $password, 'role' => $role, 'status' => 1];
         if(Auth::attempt($data, $remember)){
             $user = Auth::getLastAttempted();
-            if($user->role == 1) return redirect('admin/dashboard');
-            if(in_array($user->role, [2, 3])) return redirect('dashboard');
+            if($user->last_activity == null){
+                if($user->role == 1) return redirect('admin/dashboard');
+                if(in_array($user->role, [2, 3])) return redirect('dashboard');
+            }else{
+                $to = Carbon::createFromFormat('Y-m-d H:i:s', $user->last_activity);
+                $from = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now());
+                $diffInMinutes = $to->diffInMinutes($from);
+                if($diffInMinutes > 2 ){
+                    if($user->role == 1) return redirect('admin/dashboard');
+                    if(in_array($user->role, [2, 3])) return redirect('dashboard');
+                }else{
+                    Auth::logout();
+                    return back()->withInput()->with(['error' => 'Login failed. other device already login']);
+                }
+            }
+            
         } else {
             return back()->withInput()->with(['error' => 'Login failed']);
         }

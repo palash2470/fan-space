@@ -375,17 +375,20 @@
         maxValue =  parseInt(input.attr('max'));
 
         $('.plus_btn').on('click', function () {
-        var inputValue = input.val();
-        if (inputValue < maxValue) {
+          console.log('plus');
+          var inputValue = input.val();
+            console.log(inputValue);
+          //if (inputValue < maxValue) {
             input.val(parseInt(inputValue) + 1);
-        }
+          //}
         });
 
         $('.minus_btn').on('click', function () {
-        var inputValue = input.val();
-        if (inputValue < maxValue) {
-            input.val(parseInt(inputValue) - 1);
-            }
+          console.log('minus');
+          var inputValue = input.val();
+          if (inputValue > minValue) {
+              input.val(parseInt(inputValue) - 1);
+          }
         });
     </script>
     <script>

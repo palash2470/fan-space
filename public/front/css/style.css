@@ -8290,6 +8290,7 @@ h5.alert-content {
     text-align: right;
     padding: 5px 0 5px 5px;
     background-color: transparent;
+    box-shadow: none;
 }
 
 .hide-overlay.modal-open .modal-backdrop.show {

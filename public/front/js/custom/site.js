@@ -3296,7 +3296,7 @@ function opentok_live_stream() {
                 success: function(data) {
                     $('.mw_loader').hide();
                     if (data.success == '1') {
-                        $('.video_chat_tips_popup input[name="vide_chat_tips_amount"]').val('');
+                        $('.video_chat_tips_popup input[name="vide_chat_tips_amount"]').val('5');
                         //$('.chatbox .chat_tips_popup').hide();
                         $('.send-tips-wrap').slideToggle();
                         var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
