@@ -8973,5 +8973,46 @@ input[type=number]::-webkit-outer-spin-button {
     margin-bottom: 15px;
 }
 
-
+.allready-login-popup{
+    background-color: rgba(0, 0, 0, .5);
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 8;
+}
+.allready-login-wrap {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #11180c;
+    padding: 20px;
+    border-radius: 10px 0;
+    text-align: center;
+    width: 450px;
+}
+.allready-login-wrap h2 {
+    color: #fff;
+    font-size: 1.25rem;
+}
+.allready-login-wrap ul {
+    margin-top: 10px;
+}
+.allready-login-wrap .mode-chat-btn {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    display: block;
+    width: 100%;
+    color: #fff;
+    background-color: #0cb3f0;
+    box-shadow: none;
+    border: none;
+    outline: none !important;
+}
 /* New Design user Live Chat End */

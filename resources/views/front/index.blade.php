@@ -119,7 +119,14 @@
         </div>
     </section>
 
-
+    <div class="allready-login-popup">
+        <div class="allready-login-wrap">
+            <h2>You have all reddy login another browser</h2>
+            <ul class="d-flex justify-content-center">
+              <li><a href="javascript:;" type="button" class="mode-chat-btn close_allready"> ok</a></li>
+            </ul>
+        </div>
+      </div>
 @stop
 
 
@@ -130,10 +137,8 @@
 
 @push('script')
     <script type="text/javascript">
-        $(document).ready(function() {
-
-
-
+        $(document).on('click', '.close_allready', function(){
+            $('.allready-login-popup').hide();
         });
     </script>
 @endpush
