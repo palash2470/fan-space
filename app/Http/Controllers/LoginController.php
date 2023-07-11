@@ -158,7 +158,7 @@ class LoginController extends Controller
                 $to = Carbon::createFromFormat('Y-m-d H:i:s', $user->last_activity);
                 $from = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now());
                 $diffInMinutes = $to->diffInMinutes($from);
-                if($diffInMinutes > 2 ){
+                if($diffInMinutes > 1 ){
                     if($user->role == 1) return redirect('admin/dashboard');
                     if(in_array($user->role, [2, 3])) return redirect('dashboard');
                 }else{
