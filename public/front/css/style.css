@@ -8269,7 +8269,7 @@ h5.alert-content {
     position: absolute;
     width: 300px;
     left: 0;
-    top: 100%;
+    top: 45px;
     z-index: 9;
     background: #fff;
     padding: 0.75rem;
@@ -8285,17 +8285,53 @@ h5.alert-content {
     border-radius: 0.25rem;
     height: 42px;
     line-height: 40px;
-    padding-right: 3rem;
+    /* padding-right: 3rem; */
+    border: none;
+    text-align: right;
+    padding: 5px 0 5px 5px;
+    background-color: transparent;
+}
+
+.hide-overlay.modal-open .modal-backdrop.show {
+    opacity: 0;
 }
 
 .input-wrap .tip-input-style::placeholder {
     font-size: 0.875rem;
 }
 
+.credit-text {
+    height: 42px;
+    line-height: 40px;
+    display: inline-block;
+    white-space: nowrap;
+    padding: 0 6px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.tip-input-box {
+    display: flex;
+}
+
+.donet-tip-btn {
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    border: none;
+    outline: none !important;
+    padding: 0 0.75rem;
+    background: #b7b7b7;
+    color: #fff;
+    display: block;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+
 .tip-send-btn {
-    position: absolute;
+    /* position: absolute;
     right: 0;
-    top: 0;
+    top: 0; */
     height: 42px;
     line-height: 42px;
     border: none;
@@ -8306,6 +8342,8 @@ h5.alert-content {
     display: block;
     border-radius: 0.25rem;
     text-align: center;
+    width: 100%;
+    margin-top: 15px;
 }
 
 input[type=number] {
@@ -8899,6 +8937,39 @@ input[type=number]::-webkit-outer-spin-button {
 
 .off-video:hover .off-video-btn {
     transform: scale(1);
+}
+
+.setting-modal .modal-header h5 {
+    padding-bottom: 0;
+}
+
+.setting-modal .modal-body .nav-item .nav-link {
+    color: #363636;
+    text-transform: capitalize;
+}
+
+.setting-modal .modal-body .nav-item .nav-link.active {
+    color: #0cb3f0;
+}
+
+.video-lbl {
+    display: block;
+    text-transform: capitalize;
+    margin-bottom: 5px;
+}
+
+.video-select-style {
+    height: 40px;
+    border-color: #999;
+    background-color: transparent;
+}
+
+.video-select-wrap {
+    margin-top: 25px;
+}
+
+.video-select-wrap .video-select-box:not(:last-child) {
+    margin-bottom: 15px;
 }
 
 
