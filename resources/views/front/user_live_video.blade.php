@@ -130,7 +130,7 @@
               </li>
               <li class="chat-group"><button type="button" class="chat-control-btn join_group_chat_btn">group {{ @$usermeta['group_chat_charge'] }} coin P/M</button></li>
               <li class="chat-private"><button type="button" class="chat-control-btn private-chat">private {{ $usermeta['private_chat_charge'] }} coin P/M</button></li>
-              <li class="chat-exit"><button type="button" class="chat-control-btn exit_session_btn" style="display: none;">exit session</button></li>
+              <li class="chat-exit"><button type="button" class="chat-control-btn exit_session_btn" style="display: none;" data-vip_member_id="{{ $user->id }}">exit session</button></li>
             </ul>
           </div>
         </div>
@@ -139,7 +139,7 @@
         <div class="new-video-chat-lft">
           <div class="video-chat-lft-video video_chat_lft">
             <div class="video-wrap-lft video_wrap_lft off-video">
-                <button type="button" class="off-video-btn sub_opentok_close_video" data-video="false"><i class="fas fa-video"></i></button>
+                <button type="button" class="off-video-btn sub_opentok_close_video" data-video="false" style="display:none"><i class="fas fa-video"></i></button>
                     {{-- <button type="button" class="off-video-btn pub_opentok_close_video" data-video="false"><i class="fas fa-video-slash"></i></button> --}}
               <div class="video_area relative video_area_jq">
                 <div class="full-screen-mode full_screen_mode" style="display: none;">
@@ -377,8 +377,12 @@
             console.log(video);
             if(video == false){
               $(this).data('video',true); //set value
+              $("i", this).removeClass("fas fa-video");
+              $("i", this).addClass("fas fa-video-slash");
             }else{
               $(this).data('video',false); ////set value
+              $("i", this).removeClass("fas fa-video-slash");
+              $("i", this).addClass("fas fa-video");
             }
             //console.log(prop.opentok.subscriber);
             //prop.opentok.subscriber.subscribeToVideo(video);
@@ -665,6 +669,12 @@
                               //text: 'Something went wrong!',
                             });
                             //location.reload();
+                          }else if(data.data.blocked_user == false){
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Group live cam function has now ended !',
+                              //text: 'Something went wrong!',
+                            });
                           }else{
                             if(!data.data.insufficient_balance){
                               var ot = data.data.opentok_data;
@@ -811,7 +821,7 @@
           })
         }
     });
-    $('.exit_session_btn').click(()=>{
+    /* $('.exit_session_btn').click(()=>{
       $('.user-two-video-wrap').css('display','none');
       //update follower group chat by ajax call
       var data = new FormData();
@@ -831,6 +841,7 @@
             prop.opentok.sessionId = '';
             prop.opentok.token = '';
             $('#opentok_subscriber').hide();
+            //$('.live-main-videowrap-lft').css('display','none');
             $('.opentok_placeholder_img').show();
             $('.chatbox').addClass('offline');
             $('.exit_session_btn').css('display','none');
@@ -845,7 +856,7 @@
           }
       });
 
-    })
+    }) */
 
 
 
@@ -907,6 +918,7 @@
               $('.exit_session_btn').css('display','block');
               $('.send_tip_btn').css('display','block');
               $('.private-chat-msg').hide();
+              $('.sub_opentok_close_video').css('display','block');
               reset_opentok_player_area();
               opentok_initializePrivateChat(ot);
                   // console.log(OT);

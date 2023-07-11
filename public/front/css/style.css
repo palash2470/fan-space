@@ -6830,6 +6830,7 @@ span.inlove-emoji {
     align-items: center;
     position: relative;
 }
+
 .online-user {
     position: absolute;
     height: 20px;
@@ -8445,14 +8446,16 @@ input[type=number]::-webkit-outer-spin-button {
     height: 26px;
     width: 26px;
 }
-.notify{
+
+.notify {
     animation: 2s infinite crtanimation;
 }
+
 @keyframes crtanimation {
-    0%{
+    0% {
         box-shadow: 0 0 0 0 #f60;
     }
-    100%{
+    100% {
         box-shadow: 0 0 0 10px rgba(233, 17, 22, 0)
     }
 }
@@ -8547,10 +8550,14 @@ input[type=number]::-webkit-outer-spin-button {
     padding-right: 10px;
     position: relative;
 }
-.delete-from-video-chat {
+
+.delete-from-video-wrap {
     position: absolute;
     right: 10px;
     top: 0;
+}
+
+.delete-from-video-chat {
     font-size: 10px;
     color: #f00;
     background: transparent;
@@ -8560,6 +8567,10 @@ input[type=number]::-webkit-outer-spin-button {
     border: 1px solid;
     border-radius: 4px;
     line-height: 18px;
+}
+
+.delete-from-video-wrap p {
+    color: #f00;
 }
 
 .live-user-img-box {
@@ -8787,14 +8798,17 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 2.125rem;
     margin-bottom: 8px;
 }
+
 .ask-popup-wrap h5 {
     color: #fff;
     padding-bottom: 0;
     font-size: 15px;
 }
+
 .ask-popup-wrap ul {
     margin-top: 10px;
 }
+
 .ask-popup-wrap li {
     flex: 1 0;
 }
@@ -8867,6 +8881,7 @@ input[type=number]::-webkit-outer-spin-button {
 .off-video {
     position: relative;
 }
+
 .off-video-btn {
     position: absolute;
     top: 40px;
@@ -8881,7 +8896,10 @@ input[type=number]::-webkit-outer-spin-button {
     transition: all 0.5s ease-in-out;
     transform: scale(0);
 }
+
 .off-video:hover .off-video-btn {
     transform: scale(1);
 }
+
+
 /* New Design user Live Chat End */

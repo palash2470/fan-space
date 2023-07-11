@@ -73,7 +73,7 @@
           <div class="chat-top-control model-live-control">
             <ul class="d-flex justify-content-end">
               <li><button type="button" class="chat-control-btn d-flex align-items-center req_user_list"><span>user</span> <span class="total-live-badge ml-2 online_user_count">0</span></button></li>
-              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list_btn"><span>private</span> <span class="total-live-badge ml-2 pvt_chat_request_count notify">0</span></button></li>
+              <li><button type="button" class="chat-control-btn d-flex align-items-center req_private_list_btn"><span>private</span> <span class="total-live-badge ml-2 pvt_chat_request_count">0</span></button></li>
             </ul>
             <div class="live-user-list req_user_list_wrap">
               <div class="live-user-list-head">
@@ -255,8 +255,6 @@
   </div>
 </section>
 
-
-
 <script src="{{ URL::asset('/public/front/js/jquery-ui.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/popper.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('/public/front/js/bootstrap.js') }}" type="text/javascript"></script>
@@ -329,6 +327,7 @@
           //console.log('dsfds');
           $('.req_private_list').toggleClass('private_open');
           $('.req_user_list_wrap').removeClass('user_open');
+          $('.pvt_chat_request_count').removeClass('notify');
         });
         $(document).on('click', '.hide_popup_pvt_list', function(){
           $('.req_private_list').removeClass('private_open');

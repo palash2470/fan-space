@@ -49,6 +49,7 @@ use App\Live_session_tip;
 use App\PrivateChat;
 use App\AdminNotification;
 use App\GroupChat;
+use App\GroupChatBlockedUser;
 use OpenTok\OpenTok;
 use OpenTok\MediaMode;
 use OpenTok\ArchiveMode;
@@ -3089,39 +3090,46 @@ class AjaxController extends Controller
       
       //$live_session = Live_session::where('user_id', $model_id)->first();
       if($live_session->type == 1){ //check user private or not
-        $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
 
-        $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->first();
-        if($chek_group_chat){
-          GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
-        }
-        $group_chat = GroupChat::create([
-          'live_session_history_id' => $live_session_history->id,
-          'session_id' => $live_session->session_id,
-          'model_id' => $model_id,
-          'follower_id' => $follower_id,
-          'video_chat_duration' => 0,
-          'coins' => 0,
-          'created_at' => date('Y-m-d H:i:s'),
-          'updated_at' => date('Y-m-d H:i:s'),
+        $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+        $blocked_user = GroupChatBlockedUser::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('session_id',$live_session->session_id)->first();
+
+        if($blocked_user){
+          $data['blocked_user'] = false;
+        }else{
+          $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->first();
+          if($chek_group_chat){
+            GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
+          }
+          $group_chat = GroupChat::create([
+            'live_session_history_id' => $live_session_history->id,
+            'session_id' => $live_session->session_id,
+            'model_id' => $model_id,
+            'follower_id' => $follower_id,
+            'video_chat_duration' => 0,
+            'coins' => 0,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+            
+          ]);
+          //$data = ['private_chat_id' => $private_chat->id];
+          $follower_spent_so_far =  GroupChat::where('model_id',$model_id)->where('follower_id',$follower_id)->sum('coins');
+          $data['follower_spent_so_far'] = $follower_spent_so_far;
+          $opentok_data = ['apiKey' => $apiKey, 'sessionId' => $live_session->session_id, 'token' => $live_session->token];
           
-        ]);
-        //$data = ['private_chat_id' => $private_chat->id];
-        $follower_spent_so_far =  GroupChat::where('model_id',$model_id)->where('follower_id',$follower_id)->sum('coins');
-        $data['follower_spent_so_far'] = $follower_spent_so_far;
-        $opentok_data = ['apiKey' => $apiKey, 'sessionId' => $live_session->session_id, 'token' => $live_session->token];
-        
-        $data['opentok_data'] = $opentok_data;
-        if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
-          $data['insufficient_balance'] = false;
-        }
-        //dd($data);
-        if($data['insufficient_balance'] == true){
-          GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
+          $data['opentok_data'] = $opentok_data;
+          if ($follower_bal != '' && $follower_bal != 0 && $follower_bal >= $model_charge) {
+            $data['insufficient_balance'] = false;
+          }
+          //dd($data);
+          if($data['insufficient_balance'] == true){
+            GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$model_id)->where('follower_id',$follower_id)->where('exit_session',1)->update(['exit_session'=>0]);
+          }
         }
       }else{
         $data['model_group_status'] = false;
       }
+      
       
     }else{
       $data['model_online_status'] = false;
@@ -3222,6 +3230,21 @@ class AjaxController extends Controller
     Laravel_session::flash('success', 'Order successfully updated');
     echo json_encode(['success' => 1, 'data' => $data, 'message' => '']);
   }
+  public function ajaxpost_delete_group_live_cam_user($request){
+    //dd($request->all());
+    $follower_id = $request->follower_id;
+    $model_id = $request->model_id;
+    //$private_session_chk = Live_session::where('type', '2')->where('user_id', $model_id)->get();
+    $live_session = Live_session::where('user_id', $model_id)->first();
+    $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+    GroupChatBlockedUser::create([
+      'live_session_history_id' => $live_session_history->id,
+      'session_id' => $live_session->session_id,
+      'model_id' => $model_id,
+      'follower_id' => $follower_id,
+    ]);
+    echo json_encode(['success' => 1, 'message' => 'delete group live cam user']);
+  }
 
   // ***** ajaxget *****
 
@@ -3286,15 +3309,28 @@ class AjaxController extends Controller
   public function ajaxpost_opentok_end_session_for_follower($request){
     //dd($request->all());
     $live_session = Live_session::where('user_id', $request->model_id)->first();
+    $data = [];
     if($live_session){
-      $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
+      //for private session
+      if($live_session->type == 2){
+        $data['session_type']=2; //for private
+        $live_session_history = Live_session_history::where(['session_id' => $live_session->session_id, 'token' => $live_session->token])->first();
+        //update private chat table
+        PrivateChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('exit_session',1)->update(['exit_session'=>0,'exit_session_time' => date('Y-m-d H:i:s')]);
+        Live_session_history::find($live_session_history->id)->touch();
+        DB::table('live_sessions')->where('user_id', $request->model_id)->delete();
+      }else{
+        $data['session_type']= 1; //for group
+        $live_session_history = Live_session_history::where('user_id', $live_session->user_id)->where('session_id', $live_session->session_id)->where('token', $live_session->token)->first();
 
-      $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('follower_id',$request->follower_id)->where('exit_session',1)->first();
-      if($chek_group_chat){
-        GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('follower_id',$request->follower_id)->where('exit_session',1)->update(['exit_session'=>0,'exit_session_time'=>date('Y-m-d H:i:s')]);
-      }
+        $chek_group_chat =GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('follower_id',$request->follower_id)->where('exit_session',1)->first();
+        if($chek_group_chat){
+          GroupChat::where('live_session_history_id',$live_session_history->id)->where('model_id',$request->model_id)->where('follower_id',$request->follower_id)->where('exit_session',1)->update(['exit_session'=>0,'exit_session_time'=>date('Y-m-d H:i:s')]);
+        }
+      }  
+      
     }
-    echo json_encode(['success' => 1, 'message' => 'message sent successfully']);
+    echo json_encode(['success' => 1,'data'=>$data, 'message' => 'message sent successfully']);
   }
 
   
