@@ -778,6 +778,7 @@ class AjaxController extends Controller
     }else{
       $data['login_user_id'] = false;
     }
+    $data['live_user_count'] = Live_session::count();
     echo json_encode(array('success' => 1, 'data' => $data, 'message' => ''));
   }
 

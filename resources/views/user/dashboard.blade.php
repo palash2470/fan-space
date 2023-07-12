@@ -142,7 +142,7 @@
                                     <p>Buy Coins</p>
                                 </a></li>
                             <li class="{{ $meta_data['slug'] == 'live_users' ? 'active' : '' }}"><a
-                                href="{{ url('dashboard/live_users') }}"><i class="fas fa-video"></i><span class="online-user">{{$meta_data['live_user_count']}}</span>
+                                href="{{ url('dashboard/live_users') }}"><i class="fas fa-video"></i><span class="online-user live_user_count">{{$meta_data['live_user_count']}}</span>
                                 <p>Live Users</p>
                             </a></li>
                             <?php } ?>

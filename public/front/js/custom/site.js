@@ -863,6 +863,7 @@ function user_last_activity() {
         contentType: false,
         success: function(data) {
             //console.log(data);
+            $('.live_user_count').html(data.data.live_user_count);
             if (prop.user_data.id != data.data.login_user_id) {
                 location.reload();
             }
