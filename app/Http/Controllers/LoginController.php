@@ -151,7 +151,8 @@ class LoginController extends Controller
         $data = ['email' => $email, 'password' => $password, 'role' => $role, 'status' => 1];
         if(Auth::attempt($data, $remember)){
             $user = Auth::getLastAttempted();
-            if($user->last_activity == null){
+            if($user->last_activity == null || $user->is_login == 0){
+                User::where('id', Auth::id())->update(['is_login' => 1]);
                 if($user->role == 1) return redirect('admin/dashboard');
                 if(in_array($user->role, [2, 3])) return redirect('dashboard');
             }else{
@@ -159,6 +160,7 @@ class LoginController extends Controller
                 $from = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now());
                 $diffInMinutes = $to->diffInMinutes($from);
                 if($diffInMinutes > 1 ){
+                    User::where('id', Auth::id())->update(['is_login' => 1]);
                     if($user->role == 1) return redirect('admin/dashboard');
                     if(in_array($user->role, [2, 3])) return redirect('dashboard');
                 }else{

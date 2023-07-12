@@ -584,6 +584,7 @@ class FrontController extends Controller
 
     public function logout()
     {
+        User::where('id', Auth::id())->update(['is_login' => 0]);
         Auth::logout();
         return redirect('/');
     }
