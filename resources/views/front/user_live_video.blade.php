@@ -305,7 +305,40 @@
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="chat" role="tabpanel" aria-labelledby="chat-tab">.a..</div>
+                <div class="tab-pane fade show active" id="chat" role="tabpanel" aria-labelledby="chat-tab">
+                    <div class="video-select-wrap">
+                        <div class="timestamps-wrap">
+                            <div class="timestamps-wrap-text">Timestamps</div>
+                            <div class="timestamps">
+                                <div class="switches-container">
+                                    <input type="radio" id="switchMonthly" name="switchPlan" value="Monthly" checked="checked" />
+                                    <input type="radio" id="switchYearly" name="switchPlan" value="Yearly" />
+                                    <label for="switchMonthly">Show</label>
+                                    <label for="switchYearly">Hide</label>
+                                    <div class="switch-wrapper">
+                                    <div class="time-switch">
+                                        <div>Show</div>
+                                        <div>Hide</div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="size-wrap mt-3">
+                            <div class="size-wrap-text">size</div>
+                            <div class="size-box">
+                                <div class="video-select-box">
+                                    <select class="video-select-style form-control">
+                                        <option>Defult</option>
+                                        <option>Medium</option>
+                                        <option>Small</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 <div class="tab-pane fade" id="devices" role="tabpanel" aria-labelledby="devices-tab">
                     <div class="alert alert-danger d-flex align-items-center mt-3" role="alert">
                         <i class="fas fa-exclamation-circle mr-2"></i>
@@ -316,14 +349,14 @@
                             <label class="video-lbl">video device</label>
                             <select class="video-select-style form-control video_device_select_input">
                                 <option>videoinput</option>
-                                
+
                             </select>
                         </div>
                         <div class="video-select-box">
                             <label class="video-lbl">audio device</label>
                             <select class="video-select-style form-control audio_device_select_input">
                                 <option>audioinput</option>
-                                
+
                             </select>
                         </div>
                     </div>
@@ -1120,7 +1153,7 @@
         return `<option value="${audioDevice.deviceId}">${audioDevice.label}</option>`;
       });
       audioOptions.innerHTML = audio_options.join('');
-      $('#videoSetting').modal('show'); 
+      $('#videoSetting').modal('show');
     };
 
   </script>
