@@ -239,30 +239,30 @@
           <div class="chatbox chatbox_wrap offline blk-user-wrap" vip_member_id="{{ $user_data['id'] }}" ts="{{ time() }}">
             <div class="chat-box-wrap chat_box_wrap">
               <div class="chatoffline">Chatting unavailable. Model is not live</div>
-                <div class="user-add tipped">
+                {{-- <div class="user-add tipped">
                     <div class="user-add-name">
                         <span class="user-name-ltr">a</span>
                     </div>
                     <div class="user-add-msg">
                         <div class="user-msg-text"><strong>adad dd</strong> has tipped 6 coins</div>
                     </div>
-                </div>
-                <div class="user-add join">
+                </div> --}}
+                {{-- <div class="user-add join">
                     <div class="user-add-name">
                         <span class="user-name-ltr">a</span>
                     </div>
                     <div class="user-add-msg">
                         <div class="user-msg-text"><strong>adad dd</strong> has join</div>
                     </div>
-                </div>
-                <div class="user-add left">
+                </div> --}}
+                {{-- <div class="user-add left">
                     <div class="user-add-name">
                         <span class="user-name-ltr">a</span>
                     </div>
                     <div class="user-add-msg">
                         <div class="user-msg-text"><strong>adad dd</strong> has left the room</div>
                     </div>
-                </div>
+                </div> --}}
               <div class="chatlist"></div>
               <div class="chatfields">
               <!-- <input type="text" class="form-control" placeholder="Say Something ...." name="chat_input"> -->
@@ -403,6 +403,7 @@
   });
 
   session.on("connectionCreated", function(event) {
+    //console.log(OT.getDevices());
     //console.log('connectionCreated',event);
     if(typeof window['live_viewer_count'] == 'undefined') window['live_viewer_count'] = 0;
       window['live_viewer_count']++;
@@ -428,6 +429,8 @@
     var dt = JSON.parse(event.data);
     display_chatbox_message(dt);
   });
+
+  
 
 }
 

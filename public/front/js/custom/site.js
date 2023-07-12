@@ -2952,32 +2952,10 @@ function product_vip_member() {
                 if (data.data.session_type == 2) {
                     console.log('private');
                     var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
-                    console.log(session);
                     session.signal({ type: 'msg', data: JSON.stringify({ 'action': 'live_session_pvt_video_end', 'model_id': vip_id, 'follower_id': prop.user_data.id }) });
-
-                    //opentok_destroyPubSession();
-                    //reset_opentok_player_area();
-                    /*  $('.opentok_start_session').show();
-                     $('.opentok_end_session').hide();
-                     $('.pub_opentok_close_video').css('display', 'none');
-                     $('.chatbox').addClass('offline');
-                     $('.chatbox .chatlist').html('');
-                     $('.private-chat-req').css('display', 'none');
-                     $('.private-req-tbody').html('');
-                     $('.req_user_list_wrap .onlineuser_list').html('');
-                     $('.req_private_list .private_request_user_list').html('');
-                     $('.pvt_chat_request_count').text('0');
-                     $('.private-chat-req').css('display', 'none');
-                     //window['live_viewer'] = {};
-                     window['live_viewer_count'] = 0;
-                     $('.golive_page .view_counter span').text('0');
-                     $('.online_user_count').text('0');
-                     clearInterval(myInterval);
-                     $('#model_low_alert').val('no');
-                     $('.live-main-videowrap-lft').css('display', 'none');
-                     $('#opentok_pvt_subscriber').css('display', 'none');
-                     $('.req_private_list').removeClass('private_open'); */
                 }
+                var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
+                session.signal({ type: 'msg', data: JSON.stringify({ 'action': 'live_session_group_video_end', 'follower_name': prop.user_data.first_name + " " + prop.user_data.first_name, 'follower_id': prop.user_data.id, 'model_id': vip_id, 'profile_photo': prop.user_data.meta_data.profile_photo }) });
                 var session = OT.initSession(prop.opentok.apiKey, prop.opentok.sessionId);
                 session.disconnect();
                 prop.opentok.apiKey = '';
@@ -3369,7 +3347,15 @@ function display_chatbox_message(data) {
         $('.chatbox .chatlist').append('<div class="chatitem ' + cls + '" user_id="' + data.user_id + '"><div class="chatitemin relative"><b>' + name + ': </b><br>' + data.msg.replace(/\n\r?/g, '<br />') + ((prop.user_data.role == '2' || prop.user_data.role == 2) && (data.role == '3' || data.role == 3) ? '<span class="block_user" id="block_user_' + data.user_id + '" onclick="block_user(' + data.user_id + ',' + prop.user_data.id + ')"><button type="button"><i class="fas fa-user-slash"></i></button></span>' : '') + '</div></div>');
     if (action == 'live_session_chat_tip') {
         var tips_amount = parseInt(data.tips_amount);
-        $('.chatbox .chatlist').append('<div class="chatitem info" user_id="' + data.user_id + '"><div class="chatitemin"><b>' + name + ' </b>has tipped ' + tips_amount + ' ' + (tips_amount > 1 ? 'coins' : 'coin') + '</div></div>');
+        /* $('.chatbox .chatlist').append('<div class="chatitem info" user_id="' + data.user_id + '"><div class="chatitemin"><b>' + name + ' </b>has tipped ' + tips_amount + ' ' + (tips_amount > 1 ? 'coins' : 'coin') + '</div></div>'); */
+        $('.chatbox .chatlist').append(`<div class="user-add tipped" user_id="` + data.user_id + `">
+            <div class="user-add-name">
+                <span class="user-name-ltr">` + name.charAt(0) + `</span>
+            </div>
+            <div class="user-add-msg">
+                <div class="user-msg-text"><strong>` + name + `</strong> has tipped ` + tips_amount + ' ' + (tips_amount > 1 ? 'coins' : 'coin') + `</div>
+            </div>
+        </div>`);
     }
     if (action == 'live_session_follower_join') {
         //console.log('live session');
@@ -3638,6 +3624,16 @@ function display_chatbox_message(data) {
             $('#opentok_pvt_subscriber').css('display', 'none');
             $('.req_private_list').removeClass('private_open');
         }
+    }
+    if (action == 'live_session_group_video_end') {
+        $('.chatbox .chatlist').append(`<div class="user-add left">
+            <div class="user-add-name">
+                <span class="user-name-ltr">` + data.follower_name.charAt(0) + `</span>
+            </div>
+            <div class="user-add-msg">
+                <div class="user-msg-text"><strong>` + data.follower_name + `</strong> has left the room</div>
+            </div>
+        </div>`);
     }
     //if(atbottom == 1)
     $('.chatbox .chatlist')[0].scrollTop = $('.chatbox .chatlist')[0].scrollHeight;

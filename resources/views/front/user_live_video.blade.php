@@ -219,7 +219,8 @@
                       <li><button type="button" class="chat-control-btn balanceBtn"><i class="fas fa-coins"></i>buy credits</button></li>
                       <li><a href="{{ url('u/' . $user->username) }}" target="_blank" type="button" class="chat-control-btn"><i class="fas fa-user-alt"></i>view profile</a></li>
                       <li><button type="button" class="chat-control-btn"><i class="fas fa-percent"></i>super offer</button></li>
-                      <li><button type="button" class="chat-control-btn modal_btn" data-toggle="modal" data-target="#videoSetting"><i class="fas fa-cog"></i></button></li>
+                      {{-- <li><button type="button" class="chat-control-btn modal_btn" data-toggle="modal" data-target="#videoSetting" onclick="getDevices()"><i class="fas fa-cog"></i></button></li> --}}
+                      <li><button type="button" class="chat-control-btn modal_btn" onclick="getDevices()"><i class="fas fa-cog"></i></button></li>
                     </ul>
                   </div>
                 </div>
@@ -313,16 +314,16 @@
                     <div class="video-select-wrap">
                         <div class="video-select-box">
                             <label class="video-lbl">video device</label>
-                            <select class="video-select-style form-control">
+                            <select class="video-select-style form-control video_device_select_input">
                                 <option>videoinput</option>
-                                <option>videooutput</option>
+                                
                             </select>
                         </div>
                         <div class="video-select-box">
                             <label class="video-lbl">audio device</label>
-                            <select class="video-select-style form-control">
+                            <select class="video-select-style form-control audio_device_select_input">
                                 <option>audioinput</option>
-                                <option>audiooutput</option>
+                                
                             </select>
                         </div>
                     </div>
@@ -1103,6 +1104,24 @@
       $('#model_low_alert').val('no');
             //location.reload();
     }
+
+    const cameraOptions = document.querySelector('.video_device_select_input');
+    const audioOptions = document.querySelector('.audio_device_select_input');
+
+    const getDevices = async () => {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      const audioDevices = devices.filter(audio_device => audio_device.kind === 'audioinput');
+      const options = videoDevices.map(videoDevice => {
+        return `<option value="${videoDevice.deviceId}">${videoDevice.label}</option>`;
+      });
+      cameraOptions.innerHTML = options.join('');
+      const audio_options = audioDevices.map(audioDevice => {
+        return `<option value="${audioDevice.deviceId}">${audioDevice.label}</option>`;
+      });
+      audioOptions.innerHTML = audio_options.join('');
+      $('#videoSetting').modal('show'); 
+    };
 
   </script>
 
